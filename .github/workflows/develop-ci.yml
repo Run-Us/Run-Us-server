@@ -31,6 +31,9 @@ jobs:
           echo "${{ secrets.APPLICATION_DEV }}" > ./src/main/resources/application.yml
         shell: bash
 
+      - name: Build and analyze
+        run: ./gradlew build
+
       - name: Upload Gradle Report
         uses: actions/upload-artifact@v4
         if: ${{ failure() }}
