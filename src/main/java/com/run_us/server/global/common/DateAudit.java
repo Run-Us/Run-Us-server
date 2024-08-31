@@ -8,11 +8,11 @@ import jakarta.persistence.PreUpdate;
 import java.io.Serializable;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import lombok.Data;
+import lombok.Getter;
 
 @MappedSuperclass
-@Data
-public class DateAudit implements Serializable {
+@Getter
+public abstract class DateAudit implements Serializable {
 
   protected ZonedDateTime createdAt;
 
