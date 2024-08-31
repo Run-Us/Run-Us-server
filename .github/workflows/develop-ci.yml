@@ -3,8 +3,9 @@ on:
   push:
     branches:
       - main
+      - 'feature/**'
   pull_request:
-    types: [ opened, reopened ]
+    types: [ opened, reopened, edited ]
 jobs:
   build:
     name: Build and analyze
