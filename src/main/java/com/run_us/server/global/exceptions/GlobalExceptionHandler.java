@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
   * protected ResponseEntity<ErrorResponse> handleExampleException(final ExampleException e) {
   *   log.error("ExampleException Caught! [{}]", e.getLogMessage());
   *   final ErrorResponse response = ErrorResponse.of(ExampleErrorCode.EXAMPLE);
-      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(response, e.getHttpStatusCode());
   * }
   */
 
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
   protected ResponseEntity<ErrorResponse> handleBusinessException(final BusinessException e) {
     log.error("BusinessException Caught! [{}]", e.getLogMessage());
     final ErrorResponse response = ErrorResponse.of(e.getMessage(), e.getName());
-    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(response, e.getHttpStatusCode());
   }
 
   /*
