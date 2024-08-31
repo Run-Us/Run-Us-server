@@ -1,22 +1,31 @@
 package com.run_us.server.global.common;
 
-import jakarta.persistence.EntityListeners;
+import static com.run_us.server.global.common.GlobalConsts.TIME_ZONE_ID;
+
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 @Data
 public class DateAudit implements Serializable {
 
-  @CreatedDate
-  protected LocalDateTime createdAt;
+  protected ZonedDateTime createdAt;
 
-  @LastModifiedDate
-  protected LocalDateTime updatedAt;
+  protected ZonedDateTime updatedAt;
+
+  @PrePersist
+  public void prePersist() {
+    this.createdAt = ZonedDateTime.now(ZoneId.of(TIME_ZONE_ID));
+    this.updatedAt = ZonedDateTime.now(ZoneId.of(TIME_ZONE_ID));
+  }
+
+  @PreUpdate
+  public void preUpdate() {
+    this.updatedAt = ZonedDateTime.now();
+  }
 }
