@@ -26,6 +26,6 @@ public abstract class DateAudit implements Serializable {
 
   @PreUpdate
   public void preUpdate() {
-    this.updatedAt = ZonedDateTime.now();
+    this.updatedAt = ZonedDateTime.now(ZoneId.of(TIME_ZONE_ID));
   }
 }
