@@ -25,7 +25,7 @@ public class TestController {
     @MessageMapping("/test/hello")
     public void initTest() {
         //TODO : 소켓 응답 코드에 대한 논의 필요. 임시로 EXAMPLE 응답
-        simpMessagingTemplate.convertAndSend("/hello", SuccessResponse.messageOnly(ExampleErrorCode.EXAMPLE));
         log.info("initTest : /topic/test/hello");
+        simpMessagingTemplate.convertAndSend("/topic/test/hello", SuccessResponse.messageOnly(ExampleErrorCode.EXAMPLE));
     }
 }
