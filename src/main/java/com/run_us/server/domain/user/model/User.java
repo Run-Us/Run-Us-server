@@ -48,7 +48,7 @@ public class User extends DateAudit{
   private Gender gender;
 
   @Column(name = "img_url")
-  private String imgUrl = DEFAULT_IMG_URL;
+  private String imgUrl;
 
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
@@ -72,7 +72,7 @@ public class User extends DateAudit{
    * @param nickname 사용자 닉네임, 중복가능, Not null
    * @param birthDate 사용자 생년월일
    * @param gender 사용자 성별, default NONE
-   * @param imgUrl 사용자 프로필 이미지 URL, default DEFAULT_IMG_URL
+   * @param imgUrl 사용자 프로필 이미지 URL
    */
   @Builder
   public User(@NotNull String nickname, LocalDate birthDate, Gender gender, String imgUrl) {
@@ -96,10 +96,6 @@ public class User extends DateAudit{
    * @param newImgUrl 변경할 이미지 URL
    * */
   public void changeProfileImgUrl(@NotNull String newImgUrl) {
-    if(newImgUrl.isEmpty()) {
-      this.imgUrl = DEFAULT_IMG_URL;
-      return;
-    }
     this.imgUrl = newImgUrl;
   }
 
