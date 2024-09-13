@@ -19,13 +19,13 @@ public abstract class DateAudit implements Serializable {
   protected ZonedDateTime updatedAt;
 
   @PrePersist
-  public void prePersist() {
+  protected void prePersist() {
     this.createdAt = ZonedDateTime.now(ZoneId.of(TIME_ZONE_ID));
     this.updatedAt = ZonedDateTime.now(ZoneId.of(TIME_ZONE_ID));
   }
 
   @PreUpdate
-  public void preUpdate() {
+  protected void preUpdate() {
     this.updatedAt = ZonedDateTime.now(ZoneId.of(TIME_ZONE_ID));
   }
 }
