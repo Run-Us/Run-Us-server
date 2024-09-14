@@ -29,7 +29,7 @@ class PenaltyRepositoryTest {
   @Test
   void create_penalty() {
     //given
-    User user = new User("nickname", LocalDate.now());
+    User user = UserFixtures.getDefaultUser();
     userRepository.saveAndFlush(user);
 
 
