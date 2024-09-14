@@ -1,7 +1,5 @@
 package com.run_us.server.domain.user.model;
 
-import static com.run_us.server.global.common.GlobalConsts.DEFAULT_IMG_URL;
-
 import com.run_us.server.global.common.DateAudit;
 import io.hypersistence.tsid.TSID;
 import jakarta.persistence.Column;
@@ -55,20 +53,8 @@ public class User extends DateAudit{
 
   // 생성 관련 메소드
 
-  /**
-   * User Constructor
-   *
-   * @param nickname 사용자 닉네임, 중복가능, Not null
-   * @param birthDate 사용자 생년월일
-   * */
-  @Builder
-  public User(@NotNull String nickname, LocalDate birthDate) {
-    this.nickname = nickname;
-    this.birthDate = birthDate;
-  }
-
   /***
-   *
+   * User 생성자
    * @param nickname 사용자 닉네임, 중복가능, Not null
    * @param birthDate 사용자 생년월일
    * @param gender 사용자 성별, default NONE
