@@ -39,7 +39,7 @@ class PenaltyRepositoryTest {
         .expiresAt(ZonedDateTime.of(LocalDateTime.now(), ZoneId.of(TIME_ZONE_ID)))
         .build();
     //when
-    User savedUser = userRepository.findByNickname("nickname").get();
+    User savedUser = userRepository.findByNickname("NICKNAME").get();
     penalty.applyPenaltyToUser(savedUser);
     penaltyRepository.save(penalty);
 
