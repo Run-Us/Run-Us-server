@@ -22,7 +22,7 @@ class UserRepositoryTest {
   @Test
   void create_user() {
     //given
-    User user = new User("nickname", LocalDate.now());
+    User user = UserFixtures.getDefaultUser();
 
     //when
     userRepository.save(user);
@@ -37,7 +37,7 @@ class UserRepositoryTest {
   @Test
   void remove_user() {
     //given
-    User user = new User("nickname", LocalDate.now());
+    User user = UserFixtures.getDefaultUser();
     userRepository.save(user);
 
     //when
