@@ -26,7 +26,7 @@ class UserRepositoryTest {
 
     //when
     userRepository.save(user);
-    Optional<User> createdUser = userRepository.findByNickname("nickname");
+    Optional<User> createdUser = userRepository.findByNickname("NICKNAME");
 
     //then
     assertEquals(user, createdUser.get());
@@ -42,7 +42,7 @@ class UserRepositoryTest {
 
     //when
     user.remove();
-    Optional<User> savedUser = userRepository.findByNickname("nickname");
+    Optional<User> savedUser = userRepository.findByNickname("NICKNAME");
 
     //then
     assertNotNull(user.getDeletedAt());
