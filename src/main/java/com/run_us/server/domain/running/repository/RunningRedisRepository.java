@@ -30,7 +30,7 @@ public class RunningRedisRepository {
      * @param status 참가자의 상태(enum: RUN, PAUSE, END)
      */
     public void updateParticipantStatus(String runningId, String userId, ParticipantStatus status) {
-        String key = RUNNING_PREFIX + runningId + ":" + userId + STATUS_SUFFIX;
+        String key = createRedisKey(runningId, userId, STATUS_SUFFIX);
         redisTemplate.opsForValue().set(key, status.name());
     }
 
@@ -41,7 +41,7 @@ public class RunningRedisRepository {
      * @return 질의한 유저의 상태(enum: RUN, PAUSE, END)
      */
     public ParticipantStatus getParticipantStatus(String runningId, String userId) {
-        String key = RUNNING_PREFIX + runningId + ":" + userId + STATUS_SUFFIX;
+        String key = createRedisKey(runningId, userId, STATUS_SUFFIX);
         String status = redisTemplate.opsForValue().get(key);
         return status != null ? ParticipantStatus.valueOf(status) : null;
     }
@@ -55,7 +55,7 @@ public class RunningRedisRepository {
      * @param count 송신 횟수
      */
     public void updateParticipantLocation(String runningId, String userId, double latitude, double longitude, long count) {
-        String key = RUNNING_PREFIX + runningId + ":" + userId + LOCATION_SUFFIX;
+        String key = createRedisKey(runningId, userId, LOCATION_SUFFIX);
         String currentValue = redisTemplate.opsForValue().get(key);
 
         try {
@@ -81,7 +81,7 @@ public class RunningRedisRepository {
      * @return 마지막(최신) 위치정보
      */
     public LocationData.POINT getParticipantLocation(String runningId, String userId) {
-        String key = RUNNING_PREFIX + runningId + ":" + userId + LOCATION_SUFFIX;
+        String key = createRedisKey(runningId, userId, LOCATION_SUFFIX);
         String value = redisTemplate.opsForValue().get(key);
         try {
             if (value != null) {
@@ -99,7 +99,7 @@ public class RunningRedisRepository {
      * @param runningId 러닝세션 외부 노출용 ID
      */
     public void deleteRunningSession(String runningId) {
-        String pattern = RUNNING_PREFIX + runningId + ":*";
+        String pattern = createRedisKey(runningId, "*", "");
         Set<String> keys = redisTemplate.keys(pattern);
         if (keys != null && !keys.isEmpty()) {
             redisTemplate.delete(keys);
@@ -112,15 +112,13 @@ public class RunningRedisRepository {
      * @return 러닝세션 참가자의 외부 노출용 ID 목록
      */
     public Set<String> getSessionParticipants(String runningId) {
-        String pattern = RUNNING_PREFIX + runningId + ":*" + STATUS_SUFFIX;
+        String pattern = createRedisKey(runningId, "*", STATUS_SUFFIX);
         Set<String> keys = redisTemplate.keys(pattern);
         Set<String> participants = new HashSet<>();
         if (keys != null) {
             for (String key : keys) {
-                String[] parts = key.split(":");
-                if (parts.length >= 3) {
-                    participants.add(parts[2]); // 유저 외부 노출용 ID 추출 | PREFIX:RUNNING_ID:{USER_ID}:STATUS:VALUE
-                }
+                String userId = extractUserIdFromKey(key);
+                participants.add(userId);
             }
         }
         return participants;
@@ -133,13 +131,12 @@ public class RunningRedisRepository {
      */
     private Map<String, LocationData.POINT> getAllParticipantsLocations(String runningId) {
         Map<String, LocationData.POINT> participantsLocations = new HashMap<>();
-        String pattern = RUNNING_PREFIX + runningId + ":*" + LOCATION_SUFFIX;
+        String pattern = createRedisKey(runningId, "*", LOCATION_SUFFIX);
         Set<String> keys = redisTemplate.keys(pattern);
 
         if (keys != null) {
             for (String key : keys) {
-                String[] parts = key.split(":");
-                String userId = parts[2];
+                String userId = extractUserIdFromKey(key);
                 String locationJson = redisTemplate.opsForValue().get(key);
                 try {
                     LocationData locationData = objectMapper.readValue(locationJson, LocationData.class);
@@ -187,5 +184,14 @@ public class RunningRedisRepository {
         } catch (Exception e) {
             throw new RuntimeException("Failed to publish location updates", e);
         }
+    }
+
+    private String createRedisKey(String runningId, String userId, String suffix) {
+        return RUNNING_PREFIX + runningId + ":" + userId + suffix;
+    }
+
+    private String extractUserIdFromKey(String key) {
+        String[] parts = key.split(":");
+        return parts.length >= 3 ? parts[2] : null;
     }
 }
