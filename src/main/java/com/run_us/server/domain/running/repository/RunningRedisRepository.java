@@ -1,6 +1,7 @@
 package com.run_us.server.domain.running.repository;
 
 import com.run_us.server.domain.running.model.ParticipantStatus;
+import com.run_us.server.domain.running.model.RunningConstants;
 import com.run_us.server.domain.running.model.LocationData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,10 +15,6 @@ public class RunningRedisRepository {
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
 
-    private static final String RUNNING_PREFIX = "running:";
-    private static final String STATUS_SUFFIX = ":status";
-    private static final String LOCATION_SUFFIX = ":location";
-
     public RunningRedisRepository(RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper) {
         this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
@@ -30,7 +27,7 @@ public class RunningRedisRepository {
      * @param status 참가자의 상태(enum: RUN, PAUSE, END)
      */
     public void updateParticipantStatus(String runningId, String userId, ParticipantStatus status) {
-        String key = createRedisKey(runningId, userId, STATUS_SUFFIX);
+        String key = createRedisKey(runningId, userId, RunningConstants.STATUS_SUFFIX);
         redisTemplate.opsForValue().set(key, status.name());
     }
 
@@ -41,7 +38,7 @@ public class RunningRedisRepository {
      * @return 질의한 유저의 상태(enum: RUN, PAUSE, END)
      */
     public ParticipantStatus getParticipantStatus(String runningId, String userId) {
-        String key = createRedisKey(runningId, userId, STATUS_SUFFIX);
+        String key = createRedisKey(runningId, userId, RunningConstants.STATUS_SUFFIX);
         String status = redisTemplate.opsForValue().get(key);
         return status != null ? ParticipantStatus.valueOf(status) : null;
     }
@@ -55,7 +52,7 @@ public class RunningRedisRepository {
      * @param count 송신 횟수
      */
     public void updateParticipantLocation(String runningId, String userId, double latitude, double longitude, long count) {
-        String key = createRedisKey(runningId, userId, LOCATION_SUFFIX);
+        String key = createRedisKey(runningId, userId, RunningConstants.LOCATION_SUFFIX);
         String currentValue = redisTemplate.opsForValue().get(key);
 
         try {
@@ -81,7 +78,7 @@ public class RunningRedisRepository {
      * @return 마지막(최신) 위치정보
      */
     public LocationData.POINT getParticipantLocation(String runningId, String userId) {
-        String key = createRedisKey(runningId, userId, LOCATION_SUFFIX);
+        String key = createRedisKey(runningId, userId, RunningConstants.LOCATION_SUFFIX);
         String value = redisTemplate.opsForValue().get(key);
         try {
             if (value != null) {
@@ -112,7 +109,7 @@ public class RunningRedisRepository {
      * @return 러닝세션 참가자의 외부 노출용 ID 목록
      */
     public Set<String> getSessionParticipants(String runningId) {
-        String pattern = createRedisKey(runningId, "*", STATUS_SUFFIX);
+        String pattern = createRedisKey(runningId, "*", RunningConstants.STATUS_SUFFIX);
         Set<String> keys = redisTemplate.keys(pattern);
         Set<String> participants = new HashSet<>();
         if (keys != null) {
@@ -131,7 +128,7 @@ public class RunningRedisRepository {
      */
     private Map<String, LocationData.POINT> getAllParticipantsLocations(String runningId) {
         Map<String, LocationData.POINT> participantsLocations = new HashMap<>();
-        String pattern = createRedisKey(runningId, "*", LOCATION_SUFFIX);
+        String pattern = createRedisKey(runningId, "*", RunningConstants.LOCATION_SUFFIX);
         Set<String> keys = redisTemplate.keys(pattern);
 
         if (keys != null) {
@@ -187,7 +184,7 @@ public class RunningRedisRepository {
     }
 
     private String createRedisKey(String runningId, String userId, String suffix) {
-        return RUNNING_PREFIX + runningId + ":" + userId + suffix;
+        return RunningConstants.RUNNING_PREFIX + runningId + ":" + userId + suffix;
     }
 
     private String extractUserIdFromKey(String key) {
