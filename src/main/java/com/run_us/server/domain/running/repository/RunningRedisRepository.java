@@ -1,6 +1,7 @@
 package com.run_us.server.domain.running.repository;
 
 import com.run_us.server.domain.running.model.ParticipantStatus;
+import com.run_us.server.domain.running.model.LocationData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -60,7 +61,7 @@ public class RunningRedisRepository {
         try {
             if (currentValue != null) {
                 LocationData current = objectMapper.readValue(currentValue, LocationData.class);
-                if (count <= current.count()) {
+                if (count <= current.getCount()) {
                     return; // 기존 정보보다 과거 정보라면 업데이트 하지 않고 폐기
                 }
             }
@@ -79,13 +80,13 @@ public class RunningRedisRepository {
      * @param userId 유저 외부 노출용 ID
      * @return 마지막(최신) 위치정보
      */
-    public Point getParticipantLocation(String runningId, String userId) {
+    public LocationData.POINT getParticipantLocation(String runningId, String userId) {
         String key = RUNNING_PREFIX + runningId + ":" + userId + LOCATION_SUFFIX;
         String value = redisTemplate.opsForValue().get(key);
         try {
             if (value != null) {
                 LocationData locationData = objectMapper.readValue(value, LocationData.class);
-                return new Point(locationData.latitude(), locationData.longitude());
+                return new LocationData.POINT(locationData.getLatitude(), locationData.getLongitude());
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to get location", e);
@@ -130,8 +131,8 @@ public class RunningRedisRepository {
      * @param runningId 러닝세션 외부 노출용 ID
      * @return 러닝세션 참가자 전체의 위치정보 목록
      */
-    private Map<String, Point> getAllParticipantsLocations(String runningId) {
-        Map<String, Point> participantsLocations = new HashMap<>();
+    private Map<String, LocationData.POINT> getAllParticipantsLocations(String runningId) {
+        Map<String, LocationData.POINT> participantsLocations = new HashMap<>();
         String pattern = RUNNING_PREFIX + runningId + ":*" + LOCATION_SUFFIX;
         Set<String> keys = redisTemplate.keys(pattern);
 
@@ -142,7 +143,8 @@ public class RunningRedisRepository {
                 String locationJson = redisTemplate.opsForValue().get(key);
                 try {
                     LocationData locationData = objectMapper.readValue(locationJson, LocationData.class);
-                    participantsLocations.put(userId, new Point(locationData.latitude, locationData.longitude));
+                    participantsLocations.put(userId,
+                            new LocationData.POINT(locationData.getLatitude(), locationData.getLongitude()));
                 } catch (Exception e) {
                     throw new RuntimeException("Failed to read location data", e);
                 }
@@ -161,8 +163,8 @@ public class RunningRedisRepository {
      */
     public void publishLocationUpdateSingle(String runningId, String userId, double latitude, double longitude) {
         String channel = "location_updates:" + runningId;
-        Map<String, Point> locationUpdate = new HashMap<>();
-        locationUpdate.put(userId, new Point(latitude, longitude));
+        Map<String, LocationData.POINT> locationUpdate = new HashMap<>();
+        locationUpdate.put(userId, new LocationData.POINT(latitude, longitude));
 
         try {
             String message = objectMapper.writeValueAsString(locationUpdate);
@@ -178,7 +180,7 @@ public class RunningRedisRepository {
      */
     public void publishLocationUpdatesAll(String runningId) {
         String channel = "location_updates:" + runningId;
-        Map<String, Point> participantsLocations = getAllParticipantsLocations(runningId);
+        Map<String, LocationData.POINT> participantsLocations = getAllParticipantsLocations(runningId);
         try {
             String message = objectMapper.writeValueAsString(participantsLocations);
             redisTemplate.convertAndSend(channel, message);
@@ -186,8 +188,4 @@ public class RunningRedisRepository {
             throw new RuntimeException("Failed to publish location updates", e);
         }
     }
-
-
-    public record LocationData(double latitude, double longitude, long count) { }
-    public record Point(double latitude, double longitude) { }
 }

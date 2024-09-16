@@ -2,6 +2,8 @@ package com.run_us.server.domain.running.service;
 
 import com.run_us.server.domain.running.repository.RunningRedisRepository;
 import com.run_us.server.domain.running.model.ParticipantStatus;
+import com.run_us.server.domain.running.model.RunningConstants;
+import com.run_us.server.domain.running.model.LocationData;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -15,9 +17,6 @@ public class RunningService {
 
     private final RunningRedisRepository runningRedisRepository;
     private final Map<String, ScheduledExecutorService> sessionSchedulers = new ConcurrentHashMap<>();
-
-    private static final long UPDATE_INTERVAL = 1000; // 전체 참가자의 위치 업데이트 주기(1초)
-    private static final double SIGNIFICANT_DISTANCE = 4; // 즉시 업데이트 중요 이벤트 기준(4미터 이상 이동시)
 
     public RunningService(RunningRedisRepository runningRedisRepository) {
         this.runningRedisRepository = runningRedisRepository;
@@ -75,7 +74,7 @@ public class RunningService {
     public void startRunningSession(String runningId) {
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(() -> runningRedisRepository.publishLocationUpdatesAll(runningId),
-                0, UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
+                0, RunningConstants.UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
         sessionSchedulers.put(runningId, scheduler);
 
         Set<String > participants = runningRedisRepository.getSessionParticipants(runningId);
@@ -111,8 +110,8 @@ public class RunningService {
     public void updateLocation(String runningId, String userId, double latitude, double longitude, long count) {
         runningRedisRepository.updateParticipantLocation(runningId, userId, latitude, longitude, count);
 
-        RunningRedisRepository.Point lastLocation = runningRedisRepository.getParticipantLocation(runningId, userId);
-        RunningRedisRepository.Point newLocation = new RunningRedisRepository.Point(latitude, longitude);
+        LocationData.POINT lastLocation = runningRedisRepository.getParticipantLocation(runningId, userId);
+        LocationData.POINT newLocation = new LocationData.POINT(latitude, longitude);
 
         if (lastLocation != null && isSignificantMove(lastLocation, newLocation)) {
             runningRedisRepository.publishLocationUpdateSingle(runningId, userId, latitude, longitude);
@@ -125,29 +124,8 @@ public class RunningService {
      * @param newLocation 신규 위치
      * @return 이동 거리가 일정 이상인지 여부
      */
-    private boolean isSignificantMove(RunningRedisRepository.Point oldLocation, RunningRedisRepository.Point newLocation) {
-        double distance = calculateDistance(oldLocation, newLocation);
-        return distance >= SIGNIFICANT_DISTANCE;
-    }
-
-    /***
-     * (내부용) 두 지점 사이의 거리 계산
-     * @param p1 첫번째 지점
-     * @param p2 두번째 지점
-     * @return 두 지점 사이의 거리(미터)
-     */
-    private double calculateDistance(RunningRedisRepository.Point p1, RunningRedisRepository.Point p2) {
-        double R = 6371e3;
-        double lat1 = Math.toRadians(p1.latitude());
-        double lat2 = Math.toRadians(p2.latitude());
-        double deltaLat = Math.toRadians(p2.latitude() - p1.latitude());
-        double deltaLon = Math.toRadians(p2.longitude() - p1.longitude());
-
-        double a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
-                Math.cos(lat1) * Math.cos(lat2) *
-                        Math.sin(deltaLon/2) * Math.sin(deltaLon/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-        return R * c;
+    private boolean isSignificantMove(LocationData.POINT oldLocation, LocationData.POINT newLocation) {
+        double distance = oldLocation.distanceTo(newLocation);
+        return distance >= RunningConstants.SIGNIFICANT_DISTANCE;
     }
 }
