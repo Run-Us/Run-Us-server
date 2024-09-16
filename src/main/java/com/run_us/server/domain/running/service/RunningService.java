@@ -46,7 +46,10 @@ public class RunningService {
      * @param userId 유저 외부 노출용 ID
      */
     public void pauseRun(String runningId, String userId) {
-        runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.PAUSE);
+        ParticipantStatus status = runningRedisRepository.getParticipantStatus(runningId, userId);
+        if(status != null && status.isRunning()) {
+            runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.PAUSE);
+        }
     }
 
     /***
@@ -55,7 +58,10 @@ public class RunningService {
      * @param userId 유저 외부 노출용 ID
      */
     public void resumeRun(String runningId, String userId) {
-        runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.RUN);
+        ParticipantStatus status = runningRedisRepository.getParticipantStatus(runningId, userId);
+        if(status != null && status.isPaused()) {
+            runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.RUN);
+        }
     }
 
     /***
@@ -64,7 +70,10 @@ public class RunningService {
      * @param userId 유저 외부 노출용 ID
      */
     public void endRun(String runningId, String userId) {
-        runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.END);
+        ParticipantStatus status = runningRedisRepository.getParticipantStatus(runningId, userId);
+        if(status != null && status.isActive()) {
+            runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.END);
+        }
     }
 
     /***

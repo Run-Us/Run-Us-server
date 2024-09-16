@@ -10,6 +10,14 @@ public enum ParticipantStatus {
         return this == RUN || this == PAUSE;
     }
 
+    public boolean isRunning() {
+        return this == RUN;
+    }
+
+    public boolean isPaused() {
+        return this == PAUSE;
+    }
+
     public boolean isFinished() {
         return this == END;
     }
