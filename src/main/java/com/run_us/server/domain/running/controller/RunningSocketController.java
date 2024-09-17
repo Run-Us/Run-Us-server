@@ -29,4 +29,14 @@ public class RunningSocketController {
     }
 
 
+    /**
+     * 위치 전송
+     * @param requestDto 요청 body
+     */
+    @MessageMapping("/users/runnings/location")
+    public void updateLocation(RunningRequest.LocationData requestDto) {
+        simpMessagingTemplate.convertAndSend(GlobalConsts.RUNNING_WS_SEND_PREFIX + requestDto.getRunningKey(),
+                SuccessResponse.of(SocketResponseCode.UPDATE_LOCATION, RunningResponse.LocationData.toDto(requestDto)));
+    }
+
 }

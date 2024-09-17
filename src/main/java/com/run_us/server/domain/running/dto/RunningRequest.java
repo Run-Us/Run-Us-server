@@ -22,4 +22,23 @@ public class RunningRequest {
     }
 
 
+    /**
+     * 러닝 위치 전송 request dto
+     */
+    @Getter
+    @ToString
+    public static class LocationData {
+        private String runningKey;
+        private String userKey; // TODO : 추후 User 쪽에 간단한 프로필 응답 response dto 만들어서 넣기
+        private Float x;
+        private Float y;
+
+        @Builder
+        public LocationData(String runningKey, String userKey, Float x, Float y) {
+            this.runningKey = runningKey;
+            this.userKey = userKey;
+            this.x = x;
+            this.y = y;
+        }
+    }
 }
