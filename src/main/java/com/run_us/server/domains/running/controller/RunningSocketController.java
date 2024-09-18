@@ -1,7 +1,7 @@
-package com.run_us.server.domain.running.controller;
+package com.run_us.server.domains.running.controller;
 
-import com.run_us.server.domain.running.dto.RunningRequest;
-import com.run_us.server.domain.running.dto.RunningResponse;
+import com.run_us.server.domains.running.dto.RunningRequest;
+import com.run_us.server.domains.running.dto.RunningResponse;
 import com.run_us.server.global.common.GlobalConsts;
 import com.run_us.server.global.common.SuccessResponse;
 import com.run_us.server.global.exceptions.enums.SocketResponseCode;

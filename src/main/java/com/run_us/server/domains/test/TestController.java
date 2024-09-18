@@ -1,4 +1,4 @@
-package com.run_us.server.domain.test;
+package com.run_us.server.domains.test;
 
 import com.run_us.server.global.common.SuccessResponse;
 import com.run_us.server.global.exceptions.enums.ExampleErrorCode;

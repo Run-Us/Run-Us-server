@@ -1,8 +1,8 @@
-package com.run_us.server.domain.running;
+package com.run_us.server.domains.running;
 
 import com.run_us.server.config.TestRedisConfiguration;
-import com.run_us.server.domain.running.model.ParticipantStatus;
-import com.run_us.server.domain.running.repository.RunningRedisRepository;
+import com.run_us.server.domains.running.domain.ParticipantStatus;
+import com.run_us.server.domains.running.repository.RunningRedisRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

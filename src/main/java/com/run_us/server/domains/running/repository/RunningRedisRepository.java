@@ -1,8 +1,8 @@
-package com.run_us.server.domain.running.repository;
+package com.run_us.server.domains.running.repository;
 
-import com.run_us.server.domain.running.model.ParticipantStatus;
-import com.run_us.server.domain.running.model.RunningConstants;
-import com.run_us.server.domain.running.model.LocationData;
+import com.run_us.server.domains.running.domain.ParticipantStatus;
+import com.run_us.server.domains.running.domain.RunningConstants;
+import com.run_us.server.domains.running.domain.LocationData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;

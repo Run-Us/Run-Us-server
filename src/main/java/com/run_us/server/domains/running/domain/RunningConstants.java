@@ -1,4 +1,4 @@
-package com.run_us.server.domain.running.model;
+package com.run_us.server.domains.running.domain;
 
 public class RunningConstants {
     public static final long UPDATE_INTERVAL = 1000; // 전체 참가자의 위치 업데이트 주기(1초)

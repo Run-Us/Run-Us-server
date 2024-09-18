@@ -1,11 +1,10 @@
-package com.run_us.server.domain.user.model;
+package com.run_us.server.domains.user.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.run_us.server.domain.user.repository.UserRepository;
-import java.time.LocalDate;
+import com.run_us.server.domains.user.repository.UserRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

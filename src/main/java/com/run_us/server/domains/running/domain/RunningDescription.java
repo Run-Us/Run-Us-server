@@ -1,10 +1,8 @@
-package com.run_us.server.domain.running.model;
+package com.run_us.server.domains.running.domain;
 
 import java.util.Objects;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class RunningDescription {

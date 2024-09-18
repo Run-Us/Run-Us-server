@@ -1,4 +1,4 @@
-package com.run_us.server.domain.running.dto;
+package com.run_us.server.domains.running.dto;
 
 import lombok.Builder;
 import lombok.Getter;

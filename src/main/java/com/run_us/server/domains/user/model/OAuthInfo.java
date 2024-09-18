@@ -1,4 +1,4 @@
-package com.run_us.server.domain.user.model;
+package com.run_us.server.domains.user.model;
 
 import com.run_us.server.global.common.DateAudit;
 import jakarta.persistence.Column;

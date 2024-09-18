@@ -1,7 +1,7 @@
-package com.run_us.server.domain.running.model;
+package com.run_us.server.domains.running.domain;
 
 import com.run_us.server.global.utils.JsonConverter;
-import com.run_us.server.domain.user.model.User;
+import com.run_us.server.domains.user.model.User;
 import com.run_us.server.global.common.DateAudit;
 import io.hypersistence.tsid.TSID;
 import jakarta.persistence.Column;

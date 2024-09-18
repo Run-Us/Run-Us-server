@@ -1,6 +1,6 @@
-package com.run_us.server.domain.running.repository;
+package com.run_us.server.domains.running.repository;
 
-import com.run_us.server.domain.running.model.Running;
+import com.run_us.server.domains.running.domain.Running;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

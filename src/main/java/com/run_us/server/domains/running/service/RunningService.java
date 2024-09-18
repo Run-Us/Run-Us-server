@@ -1,9 +1,9 @@
-package com.run_us.server.domain.running.service;
+package com.run_us.server.domains.running.service;
 
-import com.run_us.server.domain.running.repository.RunningRedisRepository;
-import com.run_us.server.domain.running.model.ParticipantStatus;
-import com.run_us.server.domain.running.model.RunningConstants;
-import com.run_us.server.domain.running.model.LocationData;
+import com.run_us.server.domains.running.repository.RunningRedisRepository;
+import com.run_us.server.domains.running.domain.ParticipantStatus;
+import com.run_us.server.domains.running.domain.RunningConstants;
+import com.run_us.server.domains.running.domain.LocationData;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

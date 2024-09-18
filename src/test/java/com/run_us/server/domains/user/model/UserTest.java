@@ -1,8 +1,7 @@
-package com.run_us.server.domain.user.model;
+package com.run_us.server.domains.user.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.MethodSource;

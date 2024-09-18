@@ -1,12 +1,12 @@
-package com.run_us.server.domain.running;
+package com.run_us.server.domains.running;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.run_us.server.domain.running.model.Running;
-import com.run_us.server.domain.running.model.RunningConstraints;
-import com.run_us.server.domain.running.model.RunningDescription;
-import com.run_us.server.domain.user.model.User;
-import com.run_us.server.domain.user.model.UserFixtures;
+import com.run_us.server.domains.running.domain.Running;
+import com.run_us.server.domains.running.domain.RunningConstraints;
+import com.run_us.server.domains.running.domain.RunningDescription;
+import com.run_us.server.domains.user.model.User;
+import com.run_us.server.domains.user.model.UserFixtures;
 import com.run_us.server.global.utils.PointGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
