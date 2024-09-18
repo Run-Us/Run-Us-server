@@ -29,6 +29,9 @@ jobs:
         run: |
           touch ./src/main/resources/application.yml
           echo "${{ secrets.APPLICATION_DEV }}" > ./src/main/resources/application.yml
+          mkdir -p ./src/test/resources
+          touch ./src/test/resources/application-test.yml
+          echo "${{ secrets.APPLICATION_TEST }}" > ./src/test/resources/application-test.yml
         shell: bash
 
       - name: Build and analyze
