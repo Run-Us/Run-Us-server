@@ -1,13 +1,15 @@
 package com.run_us.server.domains.running.repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.run_us.server.domains.running.domain.LocationData;
 import com.run_us.server.domains.running.domain.ParticipantStatus;
 import com.run_us.server.domains.running.domain.RunningConstants;
-import com.run_us.server.domains.running.domain.LocationData;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.util.*;
 
 @Repository
 public class RunningRedisRepository {
@@ -77,13 +79,13 @@ public class RunningRedisRepository {
      * @param userId 유저 외부 노출용 ID
      * @return 마지막(최신) 위치정보
      */
-    public LocationData.POINT getParticipantLocation(String runningId, String userId) {
+    public LocationData.Point getParticipantLocation(String runningId, String userId) {
         String key = createRedisKey(runningId, userId, RunningConstants.LOCATION_SUFFIX);
         String value = redisTemplate.opsForValue().get(key);
         try {
             if (value != null) {
                 LocationData locationData = objectMapper.readValue(value, LocationData.class);
-                return new LocationData.POINT(locationData.getLatitude(), locationData.getLongitude());
+                return new LocationData.Point(locationData.getLatitude(), locationData.getLongitude());
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to get location", e);
@@ -126,8 +128,8 @@ public class RunningRedisRepository {
      * @param runningId 러닝세션 외부 노출용 ID
      * @return 러닝세션 참가자 전체의 위치정보 목록
      */
-    private Map<String, LocationData.POINT> getAllParticipantsLocations(String runningId) {
-        Map<String, LocationData.POINT> participantsLocations = new HashMap<>();
+    private Map<String, LocationData.Point> getAllParticipantsLocations(String runningId) {
+        Map<String, LocationData.Point> participantsLocations = new HashMap<>();
         String pattern = createRedisKey(runningId, "*", RunningConstants.LOCATION_SUFFIX);
         Set<String> keys = redisTemplate.keys(pattern);
 
@@ -138,7 +140,7 @@ public class RunningRedisRepository {
                 try {
                     LocationData locationData = objectMapper.readValue(locationJson, LocationData.class);
                     participantsLocations.put(userId,
-                            new LocationData.POINT(locationData.getLatitude(), locationData.getLongitude()));
+                            new LocationData.Point(locationData.getLatitude(), locationData.getLongitude()));
                 } catch (Exception e) {
                     throw new RuntimeException("Failed to read location data", e);
                 }
@@ -157,8 +159,8 @@ public class RunningRedisRepository {
      */
     public void publishLocationUpdateSingle(String runningId, String userId, double latitude, double longitude) {
         String channel = "location_updates:" + runningId;
-        Map<String, LocationData.POINT> locationUpdate = new HashMap<>();
-        locationUpdate.put(userId, new LocationData.POINT(latitude, longitude));
+        Map<String, LocationData.Point> locationUpdate = new HashMap<>();
+        locationUpdate.put(userId, new LocationData.Point(latitude, longitude));
 
         try {
             String message = objectMapper.writeValueAsString(locationUpdate);
@@ -174,7 +176,7 @@ public class RunningRedisRepository {
      */
     public void publishLocationUpdatesAll(String runningId) {
         String channel = "location_updates:" + runningId;
-        Map<String, LocationData.POINT> participantsLocations = getAllParticipantsLocations(runningId);
+        Map<String, LocationData.Point> participantsLocations = getAllParticipantsLocations(runningId);
         try {
             String message = objectMapper.writeValueAsString(participantsLocations);
             redisTemplate.convertAndSend(channel, message);
