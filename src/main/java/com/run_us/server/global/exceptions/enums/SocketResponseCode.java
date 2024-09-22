@@ -11,7 +11,7 @@ public enum SocketResponseCode implements CustomResponseCode {
   UPDATE_LOCATION("RS002", "위치 전송", "위치 전송"),
   UPDATE_RECORD("RS003", "기록 전송", "기록 전송"),
   PAUSE_RUNNING("RS004", "러닝 일시정지", "러닝 일시정지"),
-  RESTART_RUNNING("RS005", "러닝 재시작", "러닝 재시작"),
+  RESUME_RUNNING("RS005", "러닝 재시작", "러닝 재시작"),
   ARRIVE_RUNNING("RS006", "러닝 도착", "러닝 도착"),
   END_RUNNING("RS007", "러닝 종료", "러닝 종료"),
   ;
