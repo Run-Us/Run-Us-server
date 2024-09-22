@@ -1,10 +1,14 @@
 package com.run_us.server.domains.running.domain;
 
+import com.run_us.server.global.utils.JsonConverter;
 import java.util.Objects;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RunningConstraints {
   private Integer maxParticipantCount;
   private Integer minPace;
@@ -34,5 +38,9 @@ public class RunningConstraints {
   @Override
   public int hashCode() {
     return Objects.hash(maxParticipantCount, minPace, ageGroup);
+  }
+
+  public static class RunningConstraintsConverter extends JsonConverter<RunningConstraints> {
+
   }
 }

@@ -1,8 +1,10 @@
 package com.run_us.server.domains.running.domain;
 
-import com.run_us.server.global.utils.JsonConverter;
+import com.run_us.server.domains.running.domain.RunningConstraints.RunningConstraintsConverter;
+import com.run_us.server.domains.running.domain.RunningDescription.RunningDescriptionConverter;
 import com.run_us.server.domains.user.model.User;
 import com.run_us.server.global.common.DateAudit;
+import com.run_us.server.global.utils.PassCodeGenerator;
 import io.hypersistence.tsid.TSID;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -34,11 +36,11 @@ public class Running extends DateAudit {
   private Point startLocation;
 
   @Column(name = "running_constraints", nullable = false)
-  @Convert(converter = JsonConverter.class)
+  @Convert(converter = RunningConstraintsConverter.class)
   private RunningConstraints constraints;
 
   @Column(name = "running_annotation", nullable = false)
-  @Convert(converter = JsonConverter.class)
+  @Convert(converter = RunningDescriptionConverter.class)
   private RunningDescription description;
 
   @Embedded
@@ -74,5 +76,4 @@ public class Running extends DateAudit {
     super.prePersist();
     this.publicKey = TSID.Factory.getTsid().toString();
   }
-
 }

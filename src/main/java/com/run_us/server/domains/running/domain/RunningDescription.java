@@ -1,10 +1,14 @@
 package com.run_us.server.domains.running.domain;
 
+import com.run_us.server.global.utils.JsonConverter;
 import java.util.Objects;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RunningDescription {
 
   private String title;
@@ -37,5 +41,8 @@ public class RunningDescription {
   @Override
   public int hashCode() {
     return Objects.hash(title, desc, distance, runningTime);
+  }
+
+  public static class RunningDescriptionConverter extends JsonConverter<RunningDescription> {
   }
 }
