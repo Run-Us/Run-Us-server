@@ -32,6 +32,9 @@ public class Running extends DateAudit {
   @Column(name = "public_key", nullable = false)
   private String publicKey;
 
+  @Column(name = "passcode", nullable = false)
+  private String passcode;
+
   @Column(name = "start_location", nullable = false)
   private Point startLocation;
 
@@ -42,6 +45,9 @@ public class Running extends DateAudit {
   @Column(name = "running_annotation", nullable = false)
   @Convert(converter = RunningDescriptionConverter.class)
   private RunningDescription description;
+
+  @Column(name = "is_verified", nullable = false)
+  private boolean isVerified = false;
 
   @Embedded
   private Participants participants = new Participants();
@@ -71,9 +77,14 @@ public class Running extends DateAudit {
     return this.participants.getAllParticipantsId();
   }
 
+  public void verify() {
+    this.isVerified = true;
+  }
+
   @Override
   public void prePersist() {
     super.prePersist();
     this.publicKey = TSID.Factory.getTsid().toString();
+    this.passcode = PassCodeGenerator.generatePassCode();
   }
 }
