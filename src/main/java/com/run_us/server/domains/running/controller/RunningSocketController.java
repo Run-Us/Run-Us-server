@@ -13,12 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
@@ -46,7 +44,7 @@ public class RunningSocketController {
     public String connectLiveRunning(@DestinationVariable String runningKey, Message<?> message) {
         log.info("User Requested running-session : {} info ", runningKey, getSubscriptionId(message));
         runningPreparationService.joinRunning(runningKey, getSubscriptionId(message));
-        runningLiveService.joinLiveRun(runningKey, getSubscriptionId(message));
+        runningLiveService.joinLiveRunning(runningKey, getSubscriptionId(message));
         return new StringFormattedMessage(
             "User %s is Connected to Running session %s",
             runningKey,
@@ -59,7 +57,7 @@ public class RunningSocketController {
      */
     @MessageMapping("/runnings/start")
     public void startRunning(RunningRequest.StartRunning requestDto) {
-        runningLiveService.startRun(requestDto.getRunningKey(), requestDto.getUserId());
+        runningLiveService.startRunning(requestDto.getRunningKey(), requestDto.getUserId());
         simpMessagingTemplate.convertAndSend(GlobalConsts.RUNNING_WS_SEND_PREFIX + requestDto.getRunningKey(),
                 SuccessResponse.messageOnly(SocketResponseCode.START_RUNNING));
     }
@@ -83,7 +81,7 @@ public class RunningSocketController {
     @MessageMapping("/users/runnings/pause")
     public void pauseRunning(RunningRequest.PauseRunning requestDto) {
         log.info("pauseRunning : {}", requestDto.getRunningId());
-        runningLiveService.pauseRun(requestDto.getRunningId(), requestDto.getUserId());
+        runningLiveService.pauseRunning(requestDto.getRunningId(), requestDto.getUserId());
         simpMessagingTemplate.convertAndSend(GlobalConsts.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
                 SuccessResponse.messageOnly(SocketResponseCode.PAUSE_RUNNING));
     }
@@ -95,7 +93,7 @@ public class RunningSocketController {
     @MessageMapping("/users/runnings/resume")
     public void resumeRunning(RunningRequest.ResumeRunning requestDto) {
         log.info("resumeRunning : {}", requestDto.getRunningId());
-        runningLiveService.resumeRun(requestDto.getRunningId(), requestDto.getUserId());
+        runningLiveService.resumeRunning(requestDto.getRunningId(), requestDto.getUserId());
         simpMessagingTemplate.convertAndSend(GlobalConsts.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
                 SuccessResponse.messageOnly(SocketResponseCode.RESUME_RUNNING));
     }
@@ -108,7 +106,7 @@ public class RunningSocketController {
     public void endRunning(RunningRequest.StopRunning requestDto) {
         //TODO:check if the user is the owner of the running session
         log.info("endRunning : {}", requestDto.getRunningId());
-        runningLiveService.endRun(requestDto.getRunningId(), requestDto.getUserId());
+        runningLiveService.endRunning(requestDto.getRunningId(), requestDto.getUserId());
         simpMessagingTemplate.convertAndSend(GlobalConsts.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
                 SuccessResponse.messageOnly(SocketResponseCode.END_RUNNING));
     }
@@ -122,7 +120,7 @@ public class RunningSocketController {
         log.info("aggregateRunning : {}", requestDto.getRunningId());
         runningResultService.saveRunningResult(requestDto.getRunningId(), requestDto.getUserId(), requestDto.getDataList());
         simpMessagingTemplate.convertAndSend(GlobalConsts.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
-                SuccessResponse.of(SocketResponseCode.ARRIVE_RUNNING, requestDto.getDataList()))    ;
+                SuccessResponse.of(SocketResponseCode.ARRIVE_RUNNING, requestDto.getDataList()));
     }
 
     /***

@@ -1,6 +1,6 @@
 package com.run_us.server.domains.running.service;
 
-import com.run_us.server.domains.running.domain.LocationData;
+import com.run_us.server.domains.running.domain.LocationData.RunnerPos;
 import com.run_us.server.domains.running.domain.ParticipantStatus;
 import com.run_us.server.domains.running.domain.RunningConstants;
 import com.run_us.server.domains.running.repository.RunningRedisRepository;
@@ -27,7 +27,7 @@ public class RunningLiveService {
      * @param runningId 러닝세션 외부 노출용 ID
      * @param userId 유저 외부 노출용 ID
      */
-    public void joinLiveRun(String runningId, String userId) {
+    public void joinLiveRunning(String runningId, String userId) {
         runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.READY);
     }
 
@@ -36,7 +36,7 @@ public class RunningLiveService {
      * @param runningId 러닝세션 외부 노출용 ID
      * @param userId 유저 외부 노출용 ID
      */
-    public void startRun(String runningId, String userId) {
+    public void startRunning(String runningId, String userId) {
         runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.RUN);
     }
 
@@ -45,7 +45,7 @@ public class RunningLiveService {
      * @param runningId 러닝세션 외부 노출용 ID
      * @param userId 유저 외부 노출용 ID
      */
-    public void pauseRun(String runningId, String userId) {
+    public void pauseRunning(String runningId, String userId) {
         ParticipantStatus status = runningRedisRepository.getParticipantStatus(runningId, userId);
         if(status != null && status.isRunning()) {
             runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.PAUSE);
@@ -57,7 +57,7 @@ public class RunningLiveService {
      * @param runningId 러닝세션 외부 노출용 ID
      * @param userId 유저 외부 노출용 ID
      */
-    public void resumeRun(String runningId, String userId) {
+    public void resumeRunning(String runningId, String userId) {
         ParticipantStatus status = runningRedisRepository.getParticipantStatus(runningId, userId);
         if(status != null && status.isPaused()) {
             runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.RUN);
@@ -69,7 +69,7 @@ public class RunningLiveService {
      * @param runningId 러닝세션 외부 노출용 ID
      * @param userId 유저 외부 노출용 ID
      */
-    public void endRun(String runningId, String userId) {
+    public void endRunning(String runningId, String userId) {
         ParticipantStatus status = runningRedisRepository.getParticipantStatus(runningId, userId);
         if(status != null && status.isActive()) {
             runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.END);
@@ -88,7 +88,7 @@ public class RunningLiveService {
 
         Set<String > participants = runningRedisRepository.getSessionParticipants(runningId);
         for (String userId : participants) {
-            startRun(runningId, userId);
+            startRunning(runningId, userId);
         }
     }
 
@@ -104,7 +104,7 @@ public class RunningLiveService {
 
         Set<String> participants = runningRedisRepository.getSessionParticipants(runningId);
         for (String userId : participants) {
-            endRun(runningId, userId);
+            endRunning(runningId, userId);
         }
     }
 
@@ -119,8 +119,8 @@ public class RunningLiveService {
     public void updateLocation(String runningId, String userId, double latitude, double longitude, long count) {
         runningRedisRepository.updateParticipantLocation(runningId, userId, latitude, longitude, count);
 
-        LocationData.Point lastLocation = runningRedisRepository.getParticipantLocation(runningId, userId);
-        LocationData.Point newLocation = new LocationData.Point(latitude, longitude);
+        RunnerPos lastLocation = runningRedisRepository.getParticipantLocation(runningId, userId);
+        RunnerPos newLocation = new RunnerPos(latitude, longitude);
 
         if (lastLocation != null && isSignificantMove(lastLocation, newLocation)) {
             runningRedisRepository.publishLocationUpdateSingle(runningId, userId, latitude, longitude);
@@ -133,7 +133,7 @@ public class RunningLiveService {
      * @param newLocation 신규 위치
      * @return 이동 거리가 일정 이상인지 여부
      */
-    private boolean isSignificantMove(LocationData.Point oldLocation, LocationData.Point newLocation) {
+    private boolean isSignificantMove(RunnerPos oldLocation, RunnerPos newLocation) {
         double distance = oldLocation.distanceTo(newLocation);
         return distance >= RunningConstants.SIGNIFICANT_DISTANCE;
     }
