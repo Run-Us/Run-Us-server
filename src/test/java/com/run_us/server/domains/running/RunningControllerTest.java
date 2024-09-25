@@ -9,6 +9,7 @@ import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.domains.user.model.User;
 import com.run_us.server.domains.user.model.UserFixtures;
 import com.run_us.server.domains.user.repository.UserRepository;
+import com.run_us.server.global.common.SuccessResponse;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,9 +29,6 @@ class RunningControllerTest {
 
   @Autowired
   private RunningController runningController;
-
-  @Autowired
-  private RunningPreparationService runningPreparationService;
 
   @Autowired
   private UserRepository userRepository;
@@ -63,10 +61,9 @@ class RunningControllerTest {
       // given
       String runningId = r1.getPublicKey();
       // when
-      List<JoinedParticipantsDto> joinedParticipants = runningPreparationService.getJoinedParticipants(
-          runningId);
-      // then
-      Assertions.assertFalse(joinedParticipants.isEmpty());
+      SuccessResponse successResponse = runningController.joinedParticipants(runningId);
+      List<JoinedParticipantsDto> joinedParticipants = (List<JoinedParticipantsDto>) successResponse.getPayload();
+      //then
       Assertions.assertEquals(2, joinedParticipants.size());
     }
   }
