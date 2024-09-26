@@ -1,11 +1,15 @@
 package com.run_us.server.domains.test;
 
+import com.run_us.server.domains.user.model.User;
 import com.run_us.server.global.common.SuccessResponse;
 import com.run_us.server.global.exceptions.enums.ExampleErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
+
+import static com.run_us.server.global.common.GlobalConsts.SESSION_ATTRIBUTE_USER;
 
 /**
  * 테스트용 api 컨트롤러
@@ -27,5 +31,19 @@ public class TestController {
         //TODO : 소켓 응답 코드에 대한 논의 필요. 임시로 EXAMPLE 응답
         log.info("initTest : /topic/test/hello");
         simpMessagingTemplate.convertAndSend("/topic/test/hello", SuccessResponse.messageOnly(ExampleErrorCode.EXAMPLE));
+    }
+
+    /**
+     * ws session 사용자 정보 저장 테스트
+     */
+    @MessageMapping("/test/user/session")
+    public void userSessionTest(StompHeaderAccessor accessor) {
+        log.info("userSessionTest : /topic/test/user/session");
+        
+        // 세션에 저장된 유저 정보 가져오기
+        User user = (User) accessor.getSessionAttributes().get(SESSION_ATTRIBUTE_USER);
+        log.info("userSessionTest : user : {}", user);
+        
+        simpMessagingTemplate.convertAndSend("/topic/test/user/session", SuccessResponse.of(ExampleErrorCode.SUCCESS, user));
     }
 }
