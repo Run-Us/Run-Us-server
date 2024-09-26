@@ -68,19 +68,12 @@ public class KakaoTokenVerifier implements TokenVerifier {
 
             Algorithm algorithm = Algorithm.RSA256(publicKey, null);
 
-            DecodedJWT verifiedJWT = JWT.require(algorithm)
+            return JWT.require(algorithm)
                     .withIssuer("https://kauth.kakao.com")
                     .withAudience(appKey)
                     .withClaim("nonce", expectedNonce)
                     .build()
                     .verify(token);
-
-            String tokenNonce = verifiedJWT.getClaim("nonce").asString();
-            if (!expectedNonce.equals(tokenNonce)) {
-                throw new JWTVerificationException("Nonce mismatch");
-            }
-
-            return verifiedJWT;
         } catch (JWTVerificationException exception) {
             throw new RuntimeException("ID token verification failed", exception);
         }
