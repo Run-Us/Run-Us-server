@@ -1,4 +1,4 @@
-package com.run_us.server.domains.user.model;
+package com.run_us.server.domains.user.domain;
 
 import static com.run_us.server.global.common.GlobalConsts.TIME_ZONE_ID;
 

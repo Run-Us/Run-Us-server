@@ -1,4 +1,4 @@
-package com.run_us.server.domains.user.model;
+package com.run_us.server.domains.user.domain;
 
 public enum Gender {
   FEMALE,

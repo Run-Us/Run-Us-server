@@ -2,7 +2,7 @@ package com.run_us.server.domains.running.domain;
 
 import com.run_us.server.domains.running.domain.RunningConstraints.RunningConstraintsConverter;
 import com.run_us.server.domains.running.domain.RunningDescription.RunningDescriptionConverter;
-import com.run_us.server.domains.user.model.User;
+import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.DateAudit;
 import com.run_us.server.global.utils.PassCodeGenerator;
 import io.hypersistence.tsid.TSID;

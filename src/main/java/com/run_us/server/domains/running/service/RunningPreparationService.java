@@ -7,7 +7,7 @@ import com.run_us.server.domains.running.domain.Running;
 import com.run_us.server.domains.running.exceptions.RunningErrorCode;
 import com.run_us.server.domains.running.exceptions.RunningException;
 import com.run_us.server.domains.running.repository.RunningRepository;
-import com.run_us.server.domains.user.model.User;
+import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.repository.UserRepository;
 import com.run_us.server.global.utils.PointGenerator;
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.run_us.server.domains.user.repository;
 
 import com.run_us.server.domains.running.controller.JoinedParticipantsDto;
-import com.run_us.server.domains.user.model.User;
+import com.run_us.server.domains.user.domain.User;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package com.run_us.server.domains.user.model;
+package com.run_us.server.domains.user.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

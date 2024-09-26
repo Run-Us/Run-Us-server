@@ -1,4 +1,4 @@
-package com.run_us.server.domains.user;
+package com.run_us.server.domains.user.controller.model.request;
 
 import lombok.Getter;
 
