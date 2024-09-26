@@ -1,6 +1,7 @@
 package com.run_us.server.global.config;
 
 import com.run_us.server.domains.running.controller.StompInterceptor;
+import com.run_us.server.global.exceptions.StompErrorHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -19,10 +20,13 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final StompInterceptor stompInterceptor;
+    private final StompErrorHandler stompErrorHandler;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-hello").setAllowedOriginPatterns("*"); // ws 연결 요청 - 모든 곳으로부터의 요청 허용
+
+        registry.setErrorHandler(stompErrorHandler);
     }
 
     @Override
