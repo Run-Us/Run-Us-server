@@ -1,9 +1,12 @@
 package com.run_us.server.domains.user.service;
 
 import com.run_us.server.domains.user.model.User;
+import com.run_us.server.domains.user.model.response.UserException;
 import com.run_us.server.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import static com.run_us.server.domains.user.model.response.UserErrorCode.PUBLIC_ID_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +20,6 @@ public class UserService {
      * @return
      */
     public User getUserByPublicId(String publicId) {
-        return userRepository.findByPublicId(publicId).orElseThrow(IllegalArgumentException::new); 
+        return userRepository.findByPublicId(publicId).orElseThrow(() -> UserException.of(PUBLIC_ID_NOT_FOUND));
     }
 }
