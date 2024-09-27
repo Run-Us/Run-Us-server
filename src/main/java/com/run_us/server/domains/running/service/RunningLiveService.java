@@ -8,7 +8,7 @@ import com.run_us.server.domains.running.domain.ParticipantStatus;
 import com.run_us.server.domains.running.domain.Running;
 import com.run_us.server.domains.running.domain.RunningConstants;
 import com.run_us.server.domains.running.exceptions.RunningErrorCode;
-import com.run_us.server.domains.running.exceptions.RunningNotFoundException;
+import com.run_us.server.domains.running.exceptions.RunningException;
 import com.run_us.server.domains.running.repository.RunningRedisRepository;
 import com.run_us.server.domains.running.repository.RunningRepository;
 import com.run_us.server.domains.running.repository.UpdateLocationRepository;
@@ -44,7 +44,7 @@ public class RunningLiveService {
     @Transactional
     public void joinLiveRunning(String runningId, String userId) {
         Running running = runningRepository.findByPublicKey(runningId)
-            .orElseThrow(() -> RunningNotFoundException.of(RunningErrorCode.RE001));
+            .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
         User user = userRepository.findByPublicId(userId).orElseThrow(IllegalArgumentException::new);
         running.addParticipant(user);
         runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.READY);

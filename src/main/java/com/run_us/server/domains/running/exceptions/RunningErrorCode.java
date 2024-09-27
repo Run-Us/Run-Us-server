@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public enum RunningErrorCode implements CustomResponseCode {
 
-  RE001("RE001", "Running not found", "Running not found", HttpStatus.NOT_FOUND);
+  RUNNING_NOT_FOUND("RE001", "Running not found", "Running not found", HttpStatus.NOT_FOUND);
 
 
   private final String code;
