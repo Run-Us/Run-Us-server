@@ -10,10 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Repository;
 
 /***
- * In-Memory Data Storage which maintains live location logs of runners.
- * Key-value pair is used to store the location logs.
- * Key: Running ID
- * Value: List of RunnerPos, list is append-only.
+ * 달리는 사용자의 실시간 위치 업데이트로그를 저장하는 저장소.
+ * key-value 구조로 저장되며, key는 러닝ID와 유저ID로 생성된다.
+ * value는 위치정보를 append-only로 저장하는 Deque이다.
  */
 @Repository
 public class InMemoryLocationLogs implements UpdateLocationRepository {
