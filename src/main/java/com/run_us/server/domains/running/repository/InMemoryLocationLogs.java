@@ -15,20 +15,28 @@ import org.springframework.stereotype.Repository;
  * Key: Running ID
  * Value: List of RunnerPos, list is append-only.
  */
-
-
 @Repository
 public class InMemoryLocationLogs implements UpdateLocationRepository {
 
   private static final int INIT_SIZE = 50;
   private final ConcurrentHashMap<String, Deque<RunnerPos>> locationLogs = new ConcurrentHashMap<>();
 
+  /***
+   * 유저정보와 러닝정보로 생성된 키에 위치정보를 저장. 위치정보는 append-only로 저장된다.
+   * @param key 러닝정보와 유저정보로 생성된 키
+   * @param runnerPos 위치정보
+   */
   @Override
   public void saveLocation(String key, RunnerPos runnerPos) {
     locationLogs.computeIfAbsent(key, k -> new ArrayDeque<>(INIT_SIZE));
     locationLogs.get(key).add(runnerPos);
   }
 
+  /***
+   * 키에 해당하는 위치정보 리스트를 반환한다. 일치하는 키가 없으면 Optional.empty()를 반환한다.
+   * @param key 러닝정보와 유저정보로 생성된 키
+   * @return Optional<List<RunnerPos>>
+   */
   @Override
   public Optional<List<RunnerPos>> getLocationLogs(String key) {
     if(locationLogs.containsKey(key)) {
@@ -37,6 +45,11 @@ public class InMemoryLocationLogs implements UpdateLocationRepository {
     return Optional.empty();
   }
 
+  /***
+   * 키에 해당하는 키-위치정보리스트 쌍을 삭제한다.
+   * @param key 러닝정보와 유저정보로 생성된 키
+   * @throws NoSuchElementException 일치하는 키가 없을 때
+   */
   @Override
   public void removeLocationLogs(String key) {
     if(!locationLogs.containsKey(key)) throw new NoSuchElementException();
