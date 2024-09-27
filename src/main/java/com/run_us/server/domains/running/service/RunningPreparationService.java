@@ -1,16 +1,20 @@
 package com.run_us.server.domains.running.service;
 
+import com.run_us.server.domains.running.controller.JoinedParticipantsDto;
 import com.run_us.server.domains.running.controller.model.request.RunningCreateRequest;
 import com.run_us.server.domains.running.controller.model.response.RunningCreateResponse;
 import com.run_us.server.domains.running.domain.Running;
+import com.run_us.server.domains.running.exceptions.RunningErrorCode;
+import com.run_us.server.domains.running.exceptions.RunningNotFoundException;
 import com.run_us.server.domains.running.repository.RunningRepository;
 import com.run_us.server.domains.user.model.User;
 import com.run_us.server.domains.user.repository.UserRepository;
 import com.run_us.server.global.utils.PointGenerator;
-import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -33,9 +37,19 @@ public class RunningPreparationService {
 
   @Transactional
   public void joinRunning(String runningId, String userId) {
-    log.info("joinRunning : {} +  {}" , runningId, userId);
-    Running running = runningRepository.findByPublicKey(runningId);
+    log.info("joinRunning : {} +  {}", runningId, userId);
+    Running running = runningRepository.findByPublicKey(runningId)
+        .orElseThrow(() -> RunningNotFoundException.of(RunningErrorCode.RE001));
     User user = userRepository.findByPublicId(userId).orElseThrow(IllegalArgumentException::new);
     running.addParticipant(user);
   }
+
+  @Transactional(readOnly = true)
+  public List<JoinedParticipantsDto> getJoinedParticipants(String runningId) {
+    Running running = runningRepository.findByPublicKey(runningId)
+        .orElseThrow(() -> RunningNotFoundException.of(RunningErrorCode.RE001));
+    List<Long> participantIds = running.getAllParticipantsId();
+    return userRepository.findSimpleParticipantsByRunningId(participantIds);
+  }
+
 }

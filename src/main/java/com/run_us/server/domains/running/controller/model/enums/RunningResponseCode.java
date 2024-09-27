@@ -1,11 +1,12 @@
-package com.run_us.server.global.exceptions.enums;
+package com.run_us.server.domains.running.controller.model.enums;
 
+import com.run_us.server.global.exceptions.enums.CustomResponseCode;
 import org.springframework.http.HttpStatus;
 
 /**
  * websocket 응답 타입 enum
  */
-public enum SocketResponseCode implements CustomResponseCode {
+public enum RunningResponseCode implements CustomResponseCode {
 
   START_RUNNING("RS001", "러닝 시작", "러닝 시작"),
   UPDATE_LOCATION("RS002", "위치 전송", "위치 전송"),
@@ -20,7 +21,7 @@ public enum SocketResponseCode implements CustomResponseCode {
   private final String clientMessage;
   private final String logMessage;
 
-  SocketResponseCode(String code, String clientMessage, String logMessage) {
+  RunningResponseCode(String code, String clientMessage, String logMessage) {
     this.code = code;
     this.clientMessage = clientMessage;
     this.logMessage = logMessage;

@@ -4,14 +4,17 @@ import com.run_us.server.domains.running.controller.model.request.RunningCreateR
 import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.global.common.SuccessResponse;
 import com.run_us.server.global.exceptions.enums.ExampleErrorCode;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/running")
+@RequestMapping("/runnings")
 @RequiredArgsConstructor
 public class RunningController {
 
@@ -19,6 +22,14 @@ public class RunningController {
 
   @PostMapping
   public SuccessResponse createRunning(@RequestBody RunningCreateRequest runningCreateDto) {
-    return SuccessResponse.of(ExampleErrorCode.SUCCESS, runningPreparationService.createRunning(runningCreateDto));
+    return SuccessResponse.of(ExampleErrorCode.SUCCESS,
+        runningPreparationService.createRunning(runningCreateDto));
+  }
+
+  @GetMapping("/{runningId}/participants")
+  public SuccessResponse joinedParticipants(@PathVariable String runningId) {
+    List<JoinedParticipantsDto> joinedParticipants = runningPreparationService.getJoinedParticipants(
+        runningId);
+    return SuccessResponse.of(ExampleErrorCode.SUCCESS, joinedParticipants);
   }
 }

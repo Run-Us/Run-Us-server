@@ -3,7 +3,9 @@ package com.run_us.server.domains.running;
 import com.run_us.server.domains.running.domain.Running;
 import com.run_us.server.domains.running.domain.RunningConstraints;
 import com.run_us.server.domains.running.domain.RunningDescription;
+import com.run_us.server.domains.user.model.User;
 import com.run_us.server.global.utils.PointGenerator;
+import java.util.List;
 import org.locationtech.jts.geom.Point;
 
 public final class RunningFixtures {
@@ -33,5 +35,11 @@ public final class RunningFixtures {
         .distance("10KM")
         .desc("test description")
         .build();
+  }
+
+  public static Running getDefaultRunningWithParticipants(List<User> users) {
+    Running running = getDefaultRunning();
+    users.forEach(running::addParticipant);
+    return running;
   }
 }
