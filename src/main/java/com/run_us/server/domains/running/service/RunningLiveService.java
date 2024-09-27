@@ -1,10 +1,22 @@
 package com.run_us.server.domains.running.service;
 
+import static com.run_us.server.domains.running.domain.RunningConstants.RUNNING_PREFIX;
+import static com.run_us.server.domains.running.service.utils.RunningServiceUtils.createLiveKey;
+
 import com.run_us.server.domains.running.domain.LocationData.RunnerPos;
 import com.run_us.server.domains.running.domain.ParticipantStatus;
+import com.run_us.server.domains.running.domain.Running;
 import com.run_us.server.domains.running.domain.RunningConstants;
+import com.run_us.server.domains.running.exceptions.RunningErrorCode;
+import com.run_us.server.domains.running.exceptions.RunningException;
 import com.run_us.server.domains.running.repository.RunningRedisRepository;
 import com.run_us.server.domains.running.repository.RunningRepository;
+import com.run_us.server.domains.running.repository.UpdateLocationRepository;
+import com.run_us.server.domains.user.model.User;
+import com.run_us.server.domains.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,6 +32,8 @@ public class RunningLiveService {
 
     private final RunningRedisRepository runningRedisRepository;
     private final RunningRepository runningRepository;
+    private final UpdateLocationRepository locationRepository;
+    private final UserRepository userRepository;
     private final Map<String, ScheduledExecutorService> sessionSchedulers = new ConcurrentHashMap<>();
 
     /***
@@ -27,7 +41,12 @@ public class RunningLiveService {
      * @param runningId 러닝세션 외부 노출용 ID
      * @param userId 유저 외부 노출용 ID
      */
+    @Transactional
     public void joinLiveRunning(String runningId, String userId) {
+        Running running = runningRepository.findByPublicKey(runningId)
+            .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
+        User user = userRepository.findByPublicId(userId).orElseThrow(IllegalArgumentException::new);
+        running.addParticipant(user);
         runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.READY);
     }
 
@@ -69,11 +88,13 @@ public class RunningLiveService {
      * @param runningId 러닝세션 외부 노출용 ID
      * @param userId 유저 외부 노출용 ID
      */
-    public void endRunning(String runningId, String userId) {
+    public List<RunnerPos> endRunning(String runningId, String userId) {
         ParticipantStatus status = runningRedisRepository.getParticipantStatus(runningId, userId);
         if(status != null && status.isActive()) {
             runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.END);
+            return locationRepository.getLocationLogs(String.format("%s:%s", runningId, userId)).orElse(null);
         }
+        return Collections.emptyList();
     }
 
     /***
@@ -121,10 +142,20 @@ public class RunningLiveService {
 
         RunnerPos lastLocation = runningRedisRepository.getParticipantLocation(runningId, userId);
         RunnerPos newLocation = new RunnerPos(latitude, longitude);
+        locationRepository.saveLocation(createLiveKey(runningId, userId, RUNNING_PREFIX), newLocation);
 
         if (lastLocation != null && isSignificantMove(lastLocation, newLocation)) {
             runningRedisRepository.publishLocationUpdateSingle(runningId, userId, latitude, longitude);
         }
+    }
+
+    /***
+     * 러닝 결과 조회 - 로컬 테스트용 메소드
+     * @param runningId 러닝 키
+     * @param userId 유저 아이디
+     */
+    public List<RunnerPos> getRunningLogs(String runningId, String userId) {
+        return locationRepository.getLocationLogs(createLiveKey(runningId, userId, RUNNING_PREFIX)).orElse(null);
     }
 
     /***
