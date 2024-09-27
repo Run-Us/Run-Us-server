@@ -8,17 +8,20 @@ import org.springframework.http.HttpStatus;
 public class BusinessException extends RuntimeException {
 
   private final String logMessage;
+  private final CustomResponseCode errorCode;
   private final HttpStatus httpStatusCode;
 
   protected BusinessException(CustomResponseCode errorCode) {
     super(errorCode.getClientMessage());
     this.logMessage = errorCode.getLogMessage();
+    this.errorCode = errorCode;
     this.httpStatusCode = errorCode.getHttpStatusCode();
   }
 
   protected BusinessException(CustomResponseCode errorCode, String logMessage) {
     super(errorCode.getClientMessage());
     this.logMessage = logMessage;
+    this.errorCode = errorCode;
     this.httpStatusCode = errorCode.getHttpStatusCode();
   }
 

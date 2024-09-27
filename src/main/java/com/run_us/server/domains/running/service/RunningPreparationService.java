@@ -5,7 +5,7 @@ import com.run_us.server.domains.running.controller.model.request.RunningCreateR
 import com.run_us.server.domains.running.controller.model.response.RunningCreateResponse;
 import com.run_us.server.domains.running.domain.Running;
 import com.run_us.server.domains.running.exceptions.RunningErrorCode;
-import com.run_us.server.domains.running.exceptions.RunningNotFoundException;
+import com.run_us.server.domains.running.exceptions.RunningException;
 import com.run_us.server.domains.running.repository.RunningRepository;
 import com.run_us.server.domains.user.model.User;
 import com.run_us.server.domains.user.repository.UserRepository;
@@ -39,7 +39,7 @@ public class RunningPreparationService {
   public void joinRunning(String runningId, String userId) {
     log.info("joinRunning : {} +  {}", runningId, userId);
     Running running = runningRepository.findByPublicKey(runningId)
-        .orElseThrow(() -> RunningNotFoundException.of(RunningErrorCode.RE001));
+        .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
     User user = userRepository.findByPublicId(userId).orElseThrow(IllegalArgumentException::new);
     running.addParticipant(user);
   }
@@ -47,7 +47,7 @@ public class RunningPreparationService {
   @Transactional(readOnly = true)
   public List<JoinedParticipantsDto> getJoinedParticipants(String runningId) {
     Running running = runningRepository.findByPublicKey(runningId)
-        .orElseThrow(() -> RunningNotFoundException.of(RunningErrorCode.RE001));
+        .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
     List<Long> participantIds = running.getAllParticipantsId();
     return userRepository.findSimpleParticipantsByRunningId(participantIds);
   }

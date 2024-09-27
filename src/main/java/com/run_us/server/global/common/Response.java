@@ -1,7 +1,9 @@
 package com.run_us.server.global.common;
 
 import com.run_us.server.global.exceptions.enums.CustomResponseCode;
+import lombok.Getter;
 
+@Getter
 public class Response {
 
   private final boolean success;
