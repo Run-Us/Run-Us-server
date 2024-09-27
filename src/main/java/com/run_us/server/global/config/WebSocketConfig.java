@@ -11,6 +11,8 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+import static com.run_us.server.global.common.GlobalConsts.*;
+
 /**
  * websocket config 클래스
  */
@@ -24,15 +26,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-hello").setAllowedOriginPatterns("*"); // ws 연결 요청 - 모든 곳으로부터의 요청 허용
+        registry.addEndpoint(WS_CONNECT_ENDPOINT).setAllowedOriginPatterns("*"); // ws 연결 요청 - 모든 곳으로부터의 요청 허용
 
         registry.setErrorHandler(stompErrorHandler);
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic", "/queue"); // 구독, 전송(sub)
-        registry.setApplicationDestinationPrefixes("/app"); // 발행(pub)
+        registry.enableSimpleBroker(WS_SUB_DESTINATION_PREFIX, WS_SUB_QUEUE_DESTINATION_PREFIX); // 구독, 전송(sub)
+        registry.setApplicationDestinationPrefixes(WS_PUB_DESTINATION_PREFIX); // 발행(pub)
     }
 
     @Override

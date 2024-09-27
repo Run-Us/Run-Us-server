@@ -46,4 +46,9 @@ public class TestController {
         
         simpMessagingTemplate.convertAndSend("/topic/test/user/session", SuccessResponse.of(ExampleErrorCode.SUCCESS, user));
     }
+
+
+    /**
+     * SendToUser 테스트 요청 만들기
+     */
 }
