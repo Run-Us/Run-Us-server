@@ -1,6 +1,6 @@
 package com.run_us.server.domains.user.service;
 
-import com.run_us.server.domains.user.model.User;
+import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.model.response.UserException;
 import com.run_us.server.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

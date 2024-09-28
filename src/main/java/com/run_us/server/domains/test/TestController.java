@@ -1,6 +1,6 @@
 package com.run_us.server.domains.test;
 
-import com.run_us.server.domains.user.model.User;
+import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.SuccessResponse;
 import com.run_us.server.global.exceptions.enums.ExampleErrorCode;
 import lombok.extern.slf4j.Slf4j;
