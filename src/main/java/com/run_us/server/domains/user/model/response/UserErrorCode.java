@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public enum UserErrorCode implements CustomResponseCode {
 
-  PUBLIC_ID_NOT_FOUND("U41001", HttpStatus.UNAUTHORIZED, "public id 에 해당하는 사용자 없음", "public id 에 해당하는 사용자 없음"),
+  PUBLIC_ID_NOT_FOUND("UE001", HttpStatus.UNAUTHORIZED, "public id 에 해당하는 사용자 없음", "public id 에 해당하는 사용자 없음"),
   ;
 
   private final String code;
