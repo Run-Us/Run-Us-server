@@ -13,9 +13,9 @@ import static com.run_us.server.domains.user.model.response.UserErrorCode.PUBLIC
 public class UserService {
     private final UserRepository userRepository;
 
-    // TODO : publicId 로 유저 찾는 로직을 이거 하나로 몰아두는 게 어떤지 (예외처리 등을 한곳에서 관리하도록)
     /**
      * publicId 로 유저 정보를 가져오는 메서드
+     * - 이후 여러 도메인에서 쓰임이 많아지면 helper 등으로 분리 예정
      * @param publicId
      * @return
      */
