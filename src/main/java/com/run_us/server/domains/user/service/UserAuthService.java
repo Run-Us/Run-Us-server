@@ -9,18 +9,14 @@ import com.run_us.server.domains.user.domain.AuthResultType;
 import com.run_us.server.domains.user.domain.SocialProvider;
 import com.run_us.server.domains.user.repository.OAuthInfoRepository;
 import com.run_us.server.domains.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 public class UserAuthService {
     private final UserRepository userRepository;
     private final OAuthInfoRepository oAuthInfoRepository;
     private final JwtService jwtService;
-
-    public UserAuthService(UserRepository userRepository, OAuthInfoRepository oAuthInfoRepository, JwtService jwtService) {
-        this.userRepository = userRepository;
-        this.oAuthInfoRepository = oAuthInfoRepository;
-        this.jwtService = jwtService;
-    }
 
     @Transactional(readOnly = true)
     public AuthResult authenticateOAuth(String oAuthToken, SocialProvider provider, String expectedNonce) {
