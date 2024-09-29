@@ -11,8 +11,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.HashMap;
@@ -42,17 +44,27 @@ public class KakaoTokenVerifier implements TokenVerifier {
             for (JsonNode key : jwks.get("keys")) {
                 String kid = key.get("kid").asText();
                 String n = key.get("n").asText();
+                String e = key.get("e").asText();
 
-                byte[] modulusBytes = Base64.getUrlDecoder().decode(n);
-
-                RSAPublicKey publicKey = (RSAPublicKey) KeyFactory.getInstance("RSA")
-                        .generatePublic(new X509EncodedKeySpec(modulusBytes));
+                RSAPublicKey publicKey = createPublicKey(n, e);
 
                 publicKeys.put(kid, publicKey);
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to refresh public keys", e);
         }
+    }
+
+    private RSAPublicKey createPublicKey(String modulusBase64, String exponentBase64) throws Exception {
+        byte[] modulusBytes = Base64.getUrlDecoder().decode(modulusBase64);
+        byte[] exponentBytes = Base64.getUrlDecoder().decode(exponentBase64);
+
+        BigInteger modulus = new BigInteger(1, modulusBytes);
+        BigInteger exponent = new BigInteger(1, exponentBytes);
+
+        RSAPublicKeySpec spec = new RSAPublicKeySpec(modulus, exponent);
+        KeyFactory factory = KeyFactory.getInstance("RSA");
+        return (RSAPublicKey) factory.generatePublic(spec);
     }
 
     @Override
