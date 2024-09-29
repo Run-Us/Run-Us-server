@@ -1,6 +1,6 @@
 package com.run_us.server.domains.running.controller;
 
-import com.run_us.server.domains.user.model.User;
+import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

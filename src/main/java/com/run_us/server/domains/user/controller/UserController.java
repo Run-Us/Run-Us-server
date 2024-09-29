@@ -1,6 +1,7 @@
-package com.run_us.server.domains.user;
+package com.run_us.server.domains.user.controller;
 
-import com.run_us.server.domains.user.model.User;
+import com.run_us.server.domains.user.controller.model.request.UserSignUpRequest;
+import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
