@@ -1,7 +1,13 @@
 package com.run_us.server.domains.running.controller;
 
+import static com.run_us.server.global.common.GlobalConsts.SESSION_ATTRIBUTE_USER;
+import static com.run_us.server.global.common.GlobalConsts.WS_USER_AUTH_HEADER;
+
+import com.run_us.server.domains.running.service.SubscriptionService;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.service.UserService;
+import java.util.Map;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -9,11 +15,6 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-
-import static com.run_us.server.global.common.GlobalConsts.SESSION_ATTRIBUTE_USER;
-import static com.run_us.server.global.common.GlobalConsts.WS_USER_AUTH_HEADER;
 
 
 /**
@@ -26,20 +27,21 @@ import static com.run_us.server.global.common.GlobalConsts.WS_USER_AUTH_HEADER;
 @RequiredArgsConstructor
 public class StompInterceptor implements ChannelInterceptor {
   private final UserService userService;
+  private final SubscriptionService subscriptionService;
 
   @Override
   public Message<?> preSend(Message<?> message, MessageChannel channel) {
 
     StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
-    switch (accessor.getCommand()) { // TODO: 인증, 인가, 권한 체크
+    switch (Objects.requireNonNull(accessor.getCommand())) { // TODO: 인증, 인가, 권한 체크
       case CONNECT -> {
         log.info("CONNECT");
         setUserInfoInSession(accessor);
       }
       case SUBSCRIBE -> {
         log.info("SUBSCRIBE : {} by {}", accessor.getDestination(), accessor.getSubscriptionId());
-        validateSubscription(accessor);
+        subscriptionService.process(Objects.requireNonNull(accessor.getDestination()), accessor.getSubscriptionId());
       }
     }
     return message;
@@ -56,13 +58,5 @@ public class StompInterceptor implements ChannelInterceptor {
     sessionAttributes.put(SESSION_ATTRIBUTE_USER, user);
     accessor.setSessionAttributes(sessionAttributes);
 //    log.info("CONNECT setUserInfoInSession : {}", accessor.getSessionAttributes().get(SESSION_ATTRIBUTE_USER));
-  }
-
-  private void validateSubscription(StompHeaderAccessor accessor) {
-    if (accessor.getDestination().startsWith("/topic")) {
-      log.info("Validated subscription to topic {}", accessor.getDestination());
-    } else {
-      log.warn("Invalid subscription to topic {}", accessor.getDestination());
-    }
   }
 }
