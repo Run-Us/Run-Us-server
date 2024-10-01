@@ -1,5 +1,7 @@
 package com.run_us.server.domains.running.controller.model.enums;
 
+import static com.run_us.server.global.common.GlobalConsts.RUNNING_WS_SUBSCRIBE_TOKEN;
+import static com.run_us.server.global.common.GlobalConsts.USER_WS_SUBSCRIBE_TOKEN;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +22,8 @@ class SubscriptionTopicTest {
       @DisplayName("해당 topic을 반환한다")
       @Test
       void it_returns_the_topic() {
-        assertEquals(SubscriptionTopic.RUNNING, SubscriptionTopic.from("running"));
-        assertEquals(SubscriptionTopic.QUEUE, SubscriptionTopic.from("queue"));
+        assertEquals(SubscriptionTopic.RUNNING, SubscriptionTopic.from(RUNNING_WS_SUBSCRIBE_TOKEN));
+        assertEquals(SubscriptionTopic.QUEUE, SubscriptionTopic.from(USER_WS_SUBSCRIBE_TOKEN));
         assertEquals(SubscriptionTopic.ERROR, SubscriptionTopic.from("error"));
       }
     }
@@ -49,8 +51,8 @@ class SubscriptionTopicTest {
       @DisplayName("true를 반환한다")
       @Test
       void it_returns_true() {
-        assertTrue(SubscriptionTopic.contains("running"));
-        assertTrue(SubscriptionTopic.contains("queue"));
+        assertTrue(SubscriptionTopic.contains(RUNNING_WS_SUBSCRIBE_TOKEN));
+        assertTrue(SubscriptionTopic.contains(USER_WS_SUBSCRIBE_TOKEN));
         assertTrue(SubscriptionTopic.contains("error"));
       }
     }
