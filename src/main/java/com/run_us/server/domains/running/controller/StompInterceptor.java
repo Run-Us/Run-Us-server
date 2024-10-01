@@ -3,6 +3,7 @@ package com.run_us.server.domains.running.controller;
 import static com.run_us.server.global.common.GlobalConsts.SESSION_ATTRIBUTE_USER;
 import static com.run_us.server.global.common.GlobalConsts.WS_USER_AUTH_HEADER;
 
+import com.run_us.server.domains.running.service.SubscriptionService;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.service.UserService;
 import java.util.Map;
