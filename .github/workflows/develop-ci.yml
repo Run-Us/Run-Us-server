@@ -25,10 +25,12 @@ jobs:
       - name: grant permission to gradle
         run: chmod +x gradlew
 
-      - name: touch application.yml
+      - name: touch .env family
         run: |
           touch .env.dev
           echo "${{ secrets.ENV_DEV }}" > .env.dev
+          touch .env.test
+          echo "${{ secrets.ENV_DEV }}" > .env.test
         shell: bash
 
       - name: Build and analyze
