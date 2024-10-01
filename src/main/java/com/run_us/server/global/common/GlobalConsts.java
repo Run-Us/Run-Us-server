@@ -14,8 +14,8 @@ public final class GlobalConsts {
   public static final String WS_DESTINATION_PREFIX_QUEUE = "/queue";
 
   public static final String RUNNING_WS_SEND_PREFIX = "/topic/runnings/";
-  public static final String RUNNING_WS_SUBSCRIBE_TOKEN = "runnings";
-  public static final String USER_WS_SUBSCRIBE_TOKEN = "queue";
+  public static final String RUNNING_WS_SUBSCRIBE_PATH = "runnings";
+  public static final String USER_WS_SUBSCRIBE_PATH = "queue";
 
   public static final String WS_USER_AUTH_HEADER = "user-id";
   public static final String SESSION_ATTRIBUTE_USER = "user-info";
