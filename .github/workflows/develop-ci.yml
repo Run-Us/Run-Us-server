@@ -27,11 +27,8 @@ jobs:
 
       - name: touch application.yml
         run: |
-          touch ./src/main/resources/application.yml
-          echo "${{ secrets.APPLICATION_DEV }}" > ./src/main/resources/application.yml
-          mkdir -p ./src/test/resources
-          touch ./src/test/resources/application-test.yml
-          echo "${{ secrets.APPLICATION_TEST }}" > ./src/test/resources/application-test.yml
+          touch .env.dev
+          echo "${{ secrets.ENV_DEV }}" > .env.dev
         shell: bash
 
       - name: Build and analyze
