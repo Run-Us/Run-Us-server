@@ -10,6 +10,7 @@ public enum SubscriptionTopic {
 
   RUNNING(RUNNING_WS_SUBSCRIBE_PATH),
   QUEUE(USER_WS_SUBSCRIBE_PATH),
+  LOG("logs"),
   ERROR("error");
 
   private final String topic;

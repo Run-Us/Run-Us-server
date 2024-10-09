@@ -4,23 +4,26 @@ import com.run_us.server.domains.running.controller.model.enums.RunningResponseC
 import com.run_us.server.domains.running.controller.model.request.RunningRequest;
 import com.run_us.server.domains.running.controller.model.request.RunningRequest.LocationUpdate;
 import com.run_us.server.domains.running.controller.model.response.RunningResponse;
+import com.run_us.server.domains.running.exceptions.RunningErrorCode;
 import com.run_us.server.domains.running.service.RunningLiveService;
 import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.domains.running.service.RunningResultService;
+import com.run_us.server.global.common.ErrorResponse;
 import com.run_us.server.global.common.GlobalConsts;
 import com.run_us.server.global.common.SuccessResponse;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-/**
- * 러닝 websocket 컨트롤러
- */
+/** 러닝 websocket 컨트롤러 */
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -32,7 +35,7 @@ public class RunningSocketController {
   private final RunningLiveService runningLiveService;
   private final RunningPreparationService runningPreparationService;
   private final RunningResultService runningResultService;
-  
+
   /**
    * 러닝 시작
    *
@@ -53,13 +56,16 @@ public class RunningSocketController {
    */
   @MessageMapping("/users/runnings/location")
   public void updateLocation(LocationUpdate requestDto) {
-    runningLiveService.updateLocation(requestDto.getRunningId(), requestDto.getUserId(),
-        requestDto.getLatitude(), requestDto.getLongitude(),
+    runningLiveService.updateLocation(
+        requestDto.getRunningId(),
+        requestDto.getUserId(),
+        requestDto.getLatitude(),
+        requestDto.getLongitude(),
         requestDto.getCount());
     simpMessagingTemplate.convertAndSend(
         GlobalConsts.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
-        SuccessResponse.of(RunningResponseCode.UPDATE_LOCATION,
-            RunningResponse.LocationData.toDto(requestDto)));
+        SuccessResponse.of(
+            RunningResponseCode.UPDATE_LOCATION, RunningResponse.LocationData.toDto(requestDto)));
   }
 
   /***
@@ -94,7 +100,7 @@ public class RunningSocketController {
    */
   @MessageMapping("/users/runnings/end")
   public void endRunning(RunningRequest.StopRunning requestDto) {
-    //TODO:check if the user is the owner of the running session
+    // TODO:check if the user is the owner of the running session
     log.info("endRunning : {}", requestDto.getRunningId());
     runningLiveService.endRunning(requestDto.getRunningId(), requestDto.getUserId());
     simpMessagingTemplate.convertAndSend(
@@ -107,13 +113,17 @@ public class RunningSocketController {
    * @param requestDto
    */
   @MessageMapping("/users/runnings/aggregate")
-  public void aggregateRunning(RunningRequest.AggregateRunning requestDto) {
-    log.info("aggregateRunning : {}", requestDto.getRunningId());
-    runningResultService.saveRunningResult(requestDto.getRunningId(), requestDto.getUserId(),
-        requestDto.getDataList());
-    simpMessagingTemplate.convertAndSend(
-        GlobalConsts.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
-        SuccessResponse.of(RunningResponseCode.ARRIVE_RUNNING, requestDto.getDataList()));
+  public void aggregateRunning(
+          @Header("simpSessionId") String sessionId, RunningRequest.AggregateRunning requestDto) {
+    try {
+      runningResultService.saveRunningResult(
+              requestDto.getRunningId(), requestDto.getUserId(), requestDto.getDataList());
+    } catch (Exception e) {
+      sendToUser(sessionId, "/queue/logs", ErrorResponse.of(RunningErrorCode.AGGREGATE_FAILED));
+      return;
+    }
+    sendToUser(
+            sessionId, "/queue/logs", SuccessResponse.messageOnly(RunningResponseCode.END_RUNNING));
   }
 
   /***
@@ -124,5 +134,14 @@ public class RunningSocketController {
   private String getSubscriptionId(Message<?> message) {
     SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.wrap(message);
     return headerAccessor.getSubscriptionId();
+  }
+
+  private void sendToUser(@NotNull String sessionId, @NotNull String destination, Object payload) {
+    SimpMessageHeaderAccessor headerAccessor =
+        SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
+    headerAccessor.setSessionId(sessionId);
+    headerAccessor.setLeaveMutable(true);
+    simpMessageSendingOperations.convertAndSendToUser(
+        sessionId, destination, payload, headerAccessor.getMessageHeaders());
   }
 }
