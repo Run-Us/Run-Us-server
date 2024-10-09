@@ -1,6 +1,6 @@
 package com.run_us.server.global.common;
 
-import static com.run_us.server.global.common.GlobalConsts.TIME_ZONE_ID;
+import static com.run_us.server.global.common.GlobalConst.TIME_ZONE_ID;
 
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;

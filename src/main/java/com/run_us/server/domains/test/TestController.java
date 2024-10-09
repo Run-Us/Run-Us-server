@@ -9,7 +9,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
-import static com.run_us.server.global.common.GlobalConsts.SESSION_ATTRIBUTE_USER;
+import static com.run_us.server.global.common.GlobalConst.SESSION_ATTRIBUTE_USER;
 
 /**
  * 테스트용 api 컨트롤러

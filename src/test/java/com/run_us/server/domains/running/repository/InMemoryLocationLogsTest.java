@@ -4,7 +4,7 @@ import static com.run_us.server.domains.running.service.util.RunningKeyUtil.crea
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.run_us.server.domains.running.domain.LocationData.RunnerPos;
-import com.run_us.server.domains.running.domain.RunningConstants;
+import com.run_us.server.domains.running.domain.RunningConst;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ class InMemoryLocationLogsTest {
     class Context_with_a_new_key_and_RunnerPos {
 
       //given
-      private String key = createLiveKey("runningId", "userId", RunningConstants.LOCATION_SUFFIX);
+      private String key = createLiveKey("runningId", "userId", RunningConst.LOCATION_SUFFIX);
       private RunnerPos runnerPos = RunnerPos.of(1.0, 1.0);
 
       @AfterEach
@@ -51,7 +51,7 @@ class InMemoryLocationLogsTest {
     class Context_with_an_existing_key_and_RunnerPos {
 
       //given
-      private String key = createLiveKey("runningId", "userId", RunningConstants.LOCATION_SUFFIX);
+      private String key = createLiveKey("runningId", "userId", RunningConst.LOCATION_SUFFIX);
       private RunnerPos runnerPos = RunnerPos.of(1.0, 1.0);
 
       @BeforeEach()
@@ -87,7 +87,7 @@ class InMemoryLocationLogsTest {
     @DisplayName("저장된 key를 받았을 때")
     class Context_with_an_existing_key {
       //given
-      private String key = createLiveKey("runningId", "userId", RunningConstants.LOCATION_SUFFIX);
+      private String key = createLiveKey("runningId", "userId", RunningConst.LOCATION_SUFFIX);
       private RunnerPos runnerPos = RunnerPos.of(1.0, 1.0);
 
       @BeforeEach

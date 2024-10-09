@@ -1,7 +1,7 @@
 package com.run_us.server.domains.running.controller.model.enums;
 
-import static com.run_us.server.global.common.GlobalConsts.RUNNING_WS_SUBSCRIBE_PATH;
-import static com.run_us.server.global.common.GlobalConsts.USER_WS_SUBSCRIBE_PATH;
+import static com.run_us.server.global.common.GlobalConst.RUNNING_WS_SUBSCRIBE_PATH;
+import static com.run_us.server.global.common.GlobalConst.USER_WS_SUBSCRIBE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;

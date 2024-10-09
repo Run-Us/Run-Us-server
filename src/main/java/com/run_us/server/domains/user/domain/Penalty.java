@@ -1,6 +1,6 @@
 package com.run_us.server.domains.user.domain;
 
-import static com.run_us.server.global.common.GlobalConsts.TIME_ZONE_ID;
+import static com.run_us.server.global.common.GlobalConst.TIME_ZONE_ID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
