@@ -7,7 +7,7 @@ import com.run_us.server.domains.running.domain.RunningConstraints;
 import com.run_us.server.domains.running.domain.RunningDescription;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.domain.UserFixtures;
-import com.run_us.server.global.utils.PointGenerator;
+import com.run_us.server.global.util.PointGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

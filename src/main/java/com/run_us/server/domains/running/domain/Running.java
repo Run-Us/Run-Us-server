@@ -4,7 +4,7 @@ import com.run_us.server.domains.running.domain.RunningConstraints.RunningConstr
 import com.run_us.server.domains.running.domain.RunningDescription.RunningDescriptionConverter;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.DateAudit;
-import com.run_us.server.global.utils.PassCodeGenerator;
+import com.run_us.server.global.util.PassCodeGenerator;
 import io.hypersistence.tsid.TSID;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

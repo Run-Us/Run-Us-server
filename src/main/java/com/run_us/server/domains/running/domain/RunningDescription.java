@@ -1,6 +1,6 @@
 package com.run_us.server.domains.running.domain;
 
-import com.run_us.server.global.utils.JsonConverter;
+import com.run_us.server.global.util.JsonConverter;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;

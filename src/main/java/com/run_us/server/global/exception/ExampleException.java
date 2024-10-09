@@ -1,6 +1,6 @@
-package com.run_us.server.global.exceptions;
+package com.run_us.server.global.exception;
 
-import com.run_us.server.global.exceptions.enums.CustomResponseCode;
+import com.run_us.server.global.exception.enums.CustomResponseCode;
 
 public class ExampleException extends BusinessException {
 

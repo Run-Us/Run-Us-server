@@ -1,7 +1,7 @@
 package com.run_us.server.global.config;
 
 import com.run_us.server.domains.running.controller.StompInterceptor;
-import com.run_us.server.global.exceptions.StompErrorHandler;
+import com.run_us.server.global.exception.StompErrorHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;

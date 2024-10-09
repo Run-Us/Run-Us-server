@@ -2,7 +2,7 @@ package com.run_us.server.domains.test;
 
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.SuccessResponse;
-import com.run_us.server.global.exceptions.enums.ExampleErrorCode;
+import com.run_us.server.global.exception.enums.ExampleErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

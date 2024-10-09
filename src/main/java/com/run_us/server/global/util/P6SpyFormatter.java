@@ -1,4 +1,4 @@
-package com.run_us.server.global.utils;
+package com.run_us.server.global.util;
 
 import com.p6spy.engine.logging.Category;
 import com.p6spy.engine.spy.P6SpyOptions;

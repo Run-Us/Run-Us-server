@@ -1,6 +1,6 @@
 package com.run_us.server.domains.user.exception;
 
-import com.run_us.server.global.exceptions.enums.CustomResponseCode;
+import com.run_us.server.global.exception.enums.CustomResponseCode;
 import org.springframework.http.HttpStatus;
 
 public enum UserErrorCode implements CustomResponseCode {

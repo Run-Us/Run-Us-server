@@ -4,7 +4,7 @@ import com.run_us.server.domains.running.domain.Running;
 import com.run_us.server.domains.running.domain.RunningConstraints;
 import com.run_us.server.domains.running.domain.RunningDescription;
 import com.run_us.server.domains.user.domain.User;
-import com.run_us.server.global.utils.PointGenerator;
+import com.run_us.server.global.util.PointGenerator;
 import java.util.List;
 import org.locationtech.jts.geom.Point;
 
