@@ -1,6 +1,6 @@
 package com.run_us.server.domains.running.controller;
 
-import com.run_us.server.domains.running.controller.model.enums.RunningResponseCode;
+import com.run_us.server.domains.running.controller.model.enums.RunningSocketResponseCode;
 import com.run_us.server.domains.running.controller.model.request.RunningRequest;
 import com.run_us.server.domains.running.controller.model.request.RunningRequest.LocationUpdate;
 import com.run_us.server.domains.running.controller.model.response.RunningResponse;
@@ -46,7 +46,7 @@ public class RunningSocketController {
     runningLiveService.startRunning(requestDto.getRunningKey(), requestDto.getUserId());
     simpMessagingTemplate.convertAndSend(
         GlobalConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningKey(),
-        SuccessResponse.messageOnly(RunningResponseCode.START_RUNNING));
+        SuccessResponse.messageOnly(RunningSocketResponseCode.START_RUNNING));
   }
 
   /**
@@ -65,7 +65,7 @@ public class RunningSocketController {
     simpMessagingTemplate.convertAndSend(
         GlobalConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
         SuccessResponse.of(
-            RunningResponseCode.UPDATE_LOCATION, RunningResponse.LocationData.toDto(requestDto)));
+            RunningSocketResponseCode.UPDATE_LOCATION, RunningResponse.LocationData.toDto(requestDto)));
   }
 
   /***
@@ -78,7 +78,7 @@ public class RunningSocketController {
     runningLiveService.pauseRunning(requestDto.getRunningId(), requestDto.getUserId());
     simpMessagingTemplate.convertAndSend(
         GlobalConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
-        SuccessResponse.messageOnly(RunningResponseCode.PAUSE_RUNNING));
+        SuccessResponse.messageOnly(RunningSocketResponseCode.PAUSE_RUNNING));
   }
 
   /***
@@ -91,7 +91,7 @@ public class RunningSocketController {
     runningLiveService.resumeRunning(requestDto.getRunningId(), requestDto.getUserId());
     simpMessagingTemplate.convertAndSend(
         GlobalConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
-        SuccessResponse.messageOnly(RunningResponseCode.RESUME_RUNNING));
+        SuccessResponse.messageOnly(RunningSocketResponseCode.RESUME_RUNNING));
   }
 
   /***
@@ -105,7 +105,7 @@ public class RunningSocketController {
     runningLiveService.endRunning(requestDto.getRunningId(), requestDto.getUserId());
     simpMessagingTemplate.convertAndSend(
         GlobalConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
-        SuccessResponse.messageOnly(RunningResponseCode.END_RUNNING));
+        SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
   }
 
   /***
@@ -123,7 +123,7 @@ public class RunningSocketController {
       return;
     }
     sendToUser(
-            sessionId, "/queue/logs", SuccessResponse.messageOnly(RunningResponseCode.END_RUNNING));
+            sessionId, "/queue/logs", SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
   }
 
   /***
