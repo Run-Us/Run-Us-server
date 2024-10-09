@@ -1,7 +1,7 @@
 package com.run_us.server.domains.running;
 
 import com.run_us.server.config.TestRedisConfiguration;
-import com.run_us.server.domains.running.controller.JoinedParticipantsDto;
+import com.run_us.server.domains.running.service.model.JoinedParticipantsDto;
 import com.run_us.server.domains.running.controller.RunningController;
 import com.run_us.server.domains.running.domain.Running;
 import com.run_us.server.domains.running.repository.RunningRepository;

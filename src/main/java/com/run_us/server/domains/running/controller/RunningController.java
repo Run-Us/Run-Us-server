@@ -2,6 +2,7 @@ package com.run_us.server.domains.running.controller;
 
 import com.run_us.server.domains.running.controller.model.request.RunningCreateRequest;
 import com.run_us.server.domains.running.service.RunningPreparationService;
+import com.run_us.server.domains.running.service.model.JoinedParticipantsDto;
 import com.run_us.server.global.common.SuccessResponse;
 import com.run_us.server.global.exceptions.enums.ExampleErrorCode;
 import java.util.List;

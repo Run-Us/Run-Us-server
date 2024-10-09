@@ -1,4 +1,4 @@
-package com.run_us.server.domains.running.controller;
+package com.run_us.server.domains.running.service.model;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class JoinedParticipantsDto {
+public class JoinedParticipant {
 
   private String name;
   private String imgUrl;
 
   @Builder
-  public JoinedParticipantsDto(String name, String imgUrl) {
+  public JoinedParticipant(String name, String imgUrl) {
     this.name = name;
     this.imgUrl = imgUrl;
   }

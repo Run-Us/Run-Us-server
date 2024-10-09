@@ -1,6 +1,6 @@
 package com.run_us.server.domains.running.service;
 
-import com.run_us.server.domains.running.controller.JoinedParticipantsDto;
+import com.run_us.server.domains.running.service.model.JoinedParticipantsDto;
 import com.run_us.server.domains.running.controller.model.request.RunningCreateRequest;
 import com.run_us.server.domains.running.controller.model.response.RunningCreateResponse;
 import com.run_us.server.domains.running.domain.Running;

@@ -1,6 +1,6 @@
 package com.run_us.server.domains.user.repository;
 
-import com.run_us.server.domains.running.controller.JoinedParticipantsDto;
+import com.run_us.server.domains.running.service.model.JoinedParticipantsDto;
 import com.run_us.server.domains.user.domain.User;
 import java.util.List;
 import java.util.Optional;
