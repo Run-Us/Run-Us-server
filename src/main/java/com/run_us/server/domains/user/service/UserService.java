@@ -1,12 +1,12 @@
 package com.run_us.server.domains.user.service;
 
 import com.run_us.server.domains.user.domain.User;
-import com.run_us.server.domains.user.model.response.UserException;
+import com.run_us.server.domains.user.exception.UserException;
 import com.run_us.server.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.run_us.server.domains.user.model.response.UserErrorCode.PUBLIC_ID_NOT_FOUND;
+import static com.run_us.server.domains.user.exception.UserErrorCode.PUBLIC_ID_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor

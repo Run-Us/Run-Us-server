@@ -1,4 +1,4 @@
-package com.run_us.server.domains.user.model.response;
+package com.run_us.server.domains.user.exception;
 
 import com.run_us.server.global.exceptions.enums.CustomResponseCode;
 import org.springframework.http.HttpStatus;
