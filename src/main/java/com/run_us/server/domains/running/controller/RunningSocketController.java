@@ -113,13 +113,17 @@ public class RunningSocketController {
    * @param requestDto
    */
   @MessageMapping("/users/runnings/aggregate")
-  public void aggregateRunning(RunningRequest.AggregateRunning requestDto) {
-    log.info("aggregateRunning : {}", requestDto.getRunningId());
-    runningResultService.saveRunningResult(requestDto.getRunningId(), requestDto.getUserId(),
-        requestDto.getDataList());
-    simpMessagingTemplate.convertAndSend(
-        GlobalConsts.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
-        SuccessResponse.of(RunningResponseCode.ARRIVE_RUNNING, requestDto.getDataList()));
+  public void aggregateRunning(
+          @Header("simpSessionId") String sessionId, RunningRequest.AggregateRunning requestDto) {
+    try {
+      runningResultService.saveRunningResult(
+              requestDto.getRunningId(), requestDto.getUserId(), requestDto.getDataList());
+    } catch (Exception e) {
+      sendToUser(sessionId, "/queue/logs", ErrorResponse.of(RunningErrorCode.AGGREGATE_FAILED));
+      return;
+    }
+    sendToUser(
+            sessionId, "/queue/logs", SuccessResponse.messageOnly(RunningResponseCode.END_RUNNING));
   }
 
   /***
