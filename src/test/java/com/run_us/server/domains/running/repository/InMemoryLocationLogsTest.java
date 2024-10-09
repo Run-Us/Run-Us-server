@@ -1,6 +1,6 @@
 package com.run_us.server.domains.running.repository;
 
-import static com.run_us.server.domains.running.service.utils.RunningServiceUtils.createLiveKey;
+import static com.run_us.server.domains.running.service.util.RunningKeyUtil.createLiveKey;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.run_us.server.domains.running.domain.LocationData.RunnerPos;

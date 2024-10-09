@@ -1,4 +1,4 @@
-package com.run_us.server.domains.running.exceptions;
+package com.run_us.server.domains.running.exception;
 
 import com.run_us.server.global.exceptions.BusinessException;
 import com.run_us.server.global.exceptions.enums.CustomResponseCode;

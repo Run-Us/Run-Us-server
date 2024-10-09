@@ -1,7 +1,7 @@
 package com.run_us.server.domains.running.repository;
 
-import static com.run_us.server.domains.running.service.utils.RunningServiceUtils.createLiveKey;
-import static com.run_us.server.domains.running.service.utils.RunningServiceUtils.extractUserIdFromKey;
+import static com.run_us.server.domains.running.service.util.RunningKeyUtil.createLiveKey;
+import static com.run_us.server.domains.running.service.util.RunningKeyUtil.extractUserIdFromKey;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.run_us.server.domains.running.domain.LocationData;

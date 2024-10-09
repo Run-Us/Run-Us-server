@@ -4,7 +4,7 @@ import com.run_us.server.domains.running.controller.model.enums.RunningResponseC
 import com.run_us.server.domains.running.controller.model.request.RunningRequest;
 import com.run_us.server.domains.running.controller.model.request.RunningRequest.LocationUpdate;
 import com.run_us.server.domains.running.controller.model.response.RunningResponse;
-import com.run_us.server.domains.running.exceptions.RunningErrorCode;
+import com.run_us.server.domains.running.exception.RunningErrorCode;
 import com.run_us.server.domains.running.service.RunningLiveService;
 import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.domains.running.service.RunningResultService;

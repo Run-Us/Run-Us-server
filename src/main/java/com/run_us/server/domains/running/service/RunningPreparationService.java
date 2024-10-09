@@ -1,11 +1,11 @@
 package com.run_us.server.domains.running.service;
 
-import com.run_us.server.domains.running.service.model.JoinedParticipantsDto;
+import com.run_us.server.domains.running.service.model.JoinedParticipant;
 import com.run_us.server.domains.running.controller.model.request.RunningCreateRequest;
 import com.run_us.server.domains.running.controller.model.response.RunningCreateResponse;
 import com.run_us.server.domains.running.domain.Running;
-import com.run_us.server.domains.running.exceptions.RunningErrorCode;
-import com.run_us.server.domains.running.exceptions.RunningException;
+import com.run_us.server.domains.running.exception.RunningErrorCode;
+import com.run_us.server.domains.running.exception.RunningException;
 import com.run_us.server.domains.running.repository.RunningRepository;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.repository.UserRepository;
@@ -45,7 +45,7 @@ public class RunningPreparationService {
   }
 
   @Transactional(readOnly = true)
-  public List<JoinedParticipantsDto> getJoinedParticipants(String runningId) {
+  public List<JoinedParticipant> getJoinedParticipants(String runningId) {
     Running running = runningRepository.findByPublicKey(runningId)
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
     List<Long> participantIds = running.getAllParticipantsId();

@@ -1,11 +1,11 @@
-package com.run_us.server.domains.running.service.utils;
+package com.run_us.server.domains.running.service.util;
 
 import com.run_us.server.domains.running.domain.RunningConstants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class RunningServiceUtils {
+public final class RunningKeyUtil {
   public static String createLiveKey(String runningId, String userId, String suffix) {
     return RunningConstants.RUNNING_PREFIX + runningId + ":" + userId + suffix;
   }

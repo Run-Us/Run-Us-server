@@ -1,6 +1,6 @@
 package com.run_us.server.domains.user.repository;
 
-import com.run_us.server.domains.running.service.model.JoinedParticipantsDto;
+import com.run_us.server.domains.running.service.model.JoinedParticipant;
 import com.run_us.server.domains.user.domain.User;
 import java.util.List;
 import java.util.Optional;
@@ -18,5 +18,5 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
   @Query("SELECT new com.run_us.server.domains.running.controller.JoinedParticipantsDto(u.nickname, u.imgUrl)"
       + " FROM User u WHERE u.id IN :participantIds")
-  List<JoinedParticipantsDto> findSimpleParticipantsByRunningId(List<Long> participantIds);
+  List<JoinedParticipant> findSimpleParticipantsByRunningId(List<Long> participantIds);
 }

@@ -1,14 +1,14 @@
 package com.run_us.server.domains.running.service;
 
 import static com.run_us.server.domains.running.domain.RunningConstants.RUNNING_PREFIX;
-import static com.run_us.server.domains.running.service.utils.RunningServiceUtils.createLiveKey;
+import static com.run_us.server.domains.running.service.util.RunningKeyUtil.createLiveKey;
 
 import com.run_us.server.domains.running.domain.LocationData.RunnerPos;
 import com.run_us.server.domains.running.domain.ParticipantStatus;
 import com.run_us.server.domains.running.domain.Running;
 import com.run_us.server.domains.running.domain.RunningConstants;
-import com.run_us.server.domains.running.exceptions.RunningErrorCode;
-import com.run_us.server.domains.running.exceptions.RunningException;
+import com.run_us.server.domains.running.exception.RunningErrorCode;
+import com.run_us.server.domains.running.exception.RunningException;
 import com.run_us.server.domains.running.repository.RunningRedisRepository;
 import com.run_us.server.domains.running.repository.RunningRepository;
 import com.run_us.server.domains.running.repository.UpdateLocationRepository;
