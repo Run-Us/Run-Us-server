@@ -20,6 +20,7 @@ public class SubscriptionService {
         case RUNNING -> handleRunningTopic(destinationTokens[SESSION_ID_INDEX], userId);
         //TODO: unicast를 위한 queue 구현
         case QUEUE -> {}
+        default -> log.error("extra: {}", destination);
       }
     }
     private void handleRunningTopic(String runningId, String userId) {
