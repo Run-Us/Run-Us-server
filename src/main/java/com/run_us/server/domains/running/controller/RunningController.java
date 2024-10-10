@@ -2,8 +2,9 @@ package com.run_us.server.domains.running.controller;
 
 import com.run_us.server.domains.running.controller.model.request.RunningCreateRequest;
 import com.run_us.server.domains.running.service.RunningPreparationService;
+import com.run_us.server.domains.running.service.model.JoinedParticipant;
 import com.run_us.server.global.common.SuccessResponse;
-import com.run_us.server.global.exceptions.enums.ExampleErrorCode;
+import com.run_us.server.global.exception.code.ExampleErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class RunningController {
 
   @GetMapping("/{runningId}/participants")
   public SuccessResponse joinedParticipants(@PathVariable String runningId) {
-    List<JoinedParticipantsDto> joinedParticipants = runningPreparationService.getJoinedParticipants(
+    List<JoinedParticipant> joinedParticipants = runningPreparationService.getJoinedParticipants(
         runningId);
     return SuccessResponse.of(ExampleErrorCode.SUCCESS, joinedParticipants);
   }

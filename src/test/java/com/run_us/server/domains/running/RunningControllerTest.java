@@ -1,7 +1,7 @@
 package com.run_us.server.domains.running;
 
 import com.run_us.server.config.TestRedisConfiguration;
-import com.run_us.server.domains.running.controller.JoinedParticipantsDto;
+import com.run_us.server.domains.running.service.model.JoinedParticipant;
 import com.run_us.server.domains.running.controller.RunningController;
 import com.run_us.server.domains.running.domain.Running;
 import com.run_us.server.domains.running.repository.RunningRepository;
@@ -61,7 +61,7 @@ class RunningControllerTest {
       String runningId = r1.getPublicKey();
       // when
       SuccessResponse successResponse = runningController.joinedParticipants(runningId);
-      List<JoinedParticipantsDto> joinedParticipants = (List<JoinedParticipantsDto>) successResponse.getPayload();
+      List<JoinedParticipant> joinedParticipants = (List<JoinedParticipant>) successResponse.getPayload();
       //then
       Assertions.assertEquals(2, joinedParticipants.size());
     }

@@ -1,4 +1,4 @@
-package com.run_us.server.global.exceptions;
+package com.run_us.server.global.exception;
 
 import com.run_us.server.global.common.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;

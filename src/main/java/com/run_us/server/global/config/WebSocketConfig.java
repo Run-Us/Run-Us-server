@@ -1,7 +1,7 @@
 package com.run_us.server.global.config;
 
 import com.run_us.server.domains.running.controller.StompInterceptor;
-import com.run_us.server.global.exceptions.StompErrorHandler;
+import com.run_us.server.global.exception.StompErrorHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -10,7 +10,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import static com.run_us.server.global.common.GlobalConsts.*;
+import static com.run_us.server.global.common.SocketConst.*;
 
 /**
  * websocket config 클래스

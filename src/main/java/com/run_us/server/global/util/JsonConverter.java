@@ -1,4 +1,4 @@
-package com.run_us.server.global.utils;
+package com.run_us.server.global.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;

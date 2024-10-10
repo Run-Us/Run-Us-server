@@ -1,13 +1,13 @@
 package com.run_us.server.domains.running.repository;
 
-import static com.run_us.server.domains.running.service.utils.RunningServiceUtils.createLiveKey;
-import static com.run_us.server.domains.running.service.utils.RunningServiceUtils.extractUserIdFromKey;
+import static com.run_us.server.domains.running.service.util.RunningKeyUtil.createLiveKey;
+import static com.run_us.server.domains.running.service.util.RunningKeyUtil.extractUserIdFromKey;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.run_us.server.domains.running.domain.LocationData;
 import com.run_us.server.domains.running.domain.LocationData.RunnerPos;
 import com.run_us.server.domains.running.domain.ParticipantStatus;
-import com.run_us.server.domains.running.domain.RunningConstants;
+import com.run_us.server.domains.running.domain.RunningConst;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class RunningRedisRepository {
      * @param status 참가자의 상태(enum: RUN, PAUSE, END)
      */
     public void updateParticipantStatus(String runningId, String userId, ParticipantStatus status) {
-        String key = createLiveKey(runningId, userId, RunningConstants.STATUS_SUFFIX);
+        String key = createLiveKey(runningId, userId, RunningConst.STATUS_SUFFIX);
         redisTemplate.opsForValue().set(key, status.name());
     }
 
@@ -44,7 +44,7 @@ public class RunningRedisRepository {
      * @return 질의한 유저의 상태(enum: RUN, PAUSE, END)
      */
     public ParticipantStatus getParticipantStatus(String runningId, String userId) {
-        String key = createLiveKey(runningId, userId, RunningConstants.STATUS_SUFFIX);
+        String key = createLiveKey(runningId, userId, RunningConst.STATUS_SUFFIX);
         String status = redisTemplate.opsForValue().get(key);
         return status != null ? ParticipantStatus.valueOf(status) : null;
     }
@@ -58,7 +58,7 @@ public class RunningRedisRepository {
      * @param count 송신 횟수
      */
     public void updateParticipantLocation(String runningId, String userId, double latitude, double longitude, long count) {
-        String key = createLiveKey(runningId, userId, RunningConstants.LOCATION_SUFFIX);
+        String key = createLiveKey(runningId, userId, RunningConst.LOCATION_SUFFIX);
         String currentValue = redisTemplate.opsForValue().get(key);
 
         try {
@@ -84,7 +84,7 @@ public class RunningRedisRepository {
      * @return 마지막(최신) 위치정보
      */
     public RunnerPos getParticipantLocation(String runningId, String userId) {
-        String key = createLiveKey(runningId, userId, RunningConstants.LOCATION_SUFFIX);
+        String key = createLiveKey(runningId, userId, RunningConst.LOCATION_SUFFIX);
         String value = redisTemplate.opsForValue().get(key);
         try {
             if (value != null) {
@@ -115,7 +115,7 @@ public class RunningRedisRepository {
      * @return 러닝세션 참가자의 외부 노출용 ID 목록
      */
     public Set<String> getSessionParticipants(String runningId) {
-        String pattern = createLiveKey(runningId, "*", RunningConstants.STATUS_SUFFIX);
+        String pattern = createLiveKey(runningId, "*", RunningConst.STATUS_SUFFIX);
         Set<String> keys = redisTemplate.keys(pattern);
         Set<String> participants = new HashSet<>();
         if (keys != null) {
@@ -134,7 +134,7 @@ public class RunningRedisRepository {
      */
     private Map<String, RunnerPos> getAllParticipantsLocations(String runningId) {
         Map<String, RunnerPos> participantsLocations = new HashMap<>();
-        String pattern = createLiveKey(runningId, "*", RunningConstants.LOCATION_SUFFIX);
+        String pattern = createLiveKey(runningId, "*", RunningConst.LOCATION_SUFFIX);
         Set<String> keys = redisTemplate.keys(pattern);
 
         if (keys != null) {

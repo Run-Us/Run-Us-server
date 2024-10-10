@@ -1,7 +1,7 @@
-package com.run_us.server.domains.user.model.response;
+package com.run_us.server.domains.user.exception;
 
-import com.run_us.server.global.exceptions.BusinessException;
-import com.run_us.server.global.exceptions.enums.CustomResponseCode;
+import com.run_us.server.global.exception.BusinessException;
+import com.run_us.server.global.exception.code.CustomResponseCode;
 
 public class UserException extends BusinessException {
 

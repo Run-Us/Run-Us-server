@@ -1,4 +1,4 @@
-package com.run_us.server.global.utils;
+package com.run_us.server.global.util;
 
 import com.run_us.server.domains.running.domain.LocationData.RunnerPos;
 import lombok.RequiredArgsConstructor;

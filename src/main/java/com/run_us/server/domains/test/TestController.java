@@ -2,14 +2,14 @@ package com.run_us.server.domains.test;
 
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.SuccessResponse;
-import com.run_us.server.global.exceptions.enums.ExampleErrorCode;
+import com.run_us.server.global.exception.code.ExampleErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
-import static com.run_us.server.global.common.GlobalConsts.SESSION_ATTRIBUTE_USER;
+import static com.run_us.server.global.common.GlobalConst.SESSION_ATTRIBUTE_USER;
 
 /**
  * 테스트용 api 컨트롤러

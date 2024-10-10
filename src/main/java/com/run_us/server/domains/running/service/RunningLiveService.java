@@ -1,14 +1,14 @@
 package com.run_us.server.domains.running.service;
 
-import static com.run_us.server.domains.running.domain.RunningConstants.RUNNING_PREFIX;
-import static com.run_us.server.domains.running.service.utils.RunningServiceUtils.createLiveKey;
+import static com.run_us.server.domains.running.domain.RunningConst.RUNNING_PREFIX;
+import static com.run_us.server.domains.running.service.util.RunningKeyUtil.createLiveKey;
 
 import com.run_us.server.domains.running.domain.LocationData.RunnerPos;
 import com.run_us.server.domains.running.domain.ParticipantStatus;
 import com.run_us.server.domains.running.domain.Running;
-import com.run_us.server.domains.running.domain.RunningConstants;
-import com.run_us.server.domains.running.exceptions.RunningErrorCode;
-import com.run_us.server.domains.running.exceptions.RunningException;
+import com.run_us.server.domains.running.domain.RunningConst;
+import com.run_us.server.domains.running.exception.RunningErrorCode;
+import com.run_us.server.domains.running.exception.RunningException;
 import com.run_us.server.domains.running.repository.RunningRedisRepository;
 import com.run_us.server.domains.running.repository.RunningRepository;
 import com.run_us.server.domains.running.repository.UpdateLocationRepository;
@@ -104,7 +104,7 @@ public class RunningLiveService {
     public void startRunningSession(String runningId) {
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(() -> runningRedisRepository.publishLocationUpdatesAll(runningId),
-                0, RunningConstants.UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
+                0, RunningConst.UPDATE_INTERVAL, TimeUnit.MILLISECONDS);
         sessionSchedulers.put(runningId, scheduler);
 
         Set<String > participants = runningRedisRepository.getSessionParticipants(runningId);
@@ -166,6 +166,6 @@ public class RunningLiveService {
      */
     private boolean isSignificantMove(RunnerPos oldLocation, RunnerPos newLocation) {
         double distance = oldLocation.distanceTo(newLocation);
-        return distance >= RunningConstants.SIGNIFICANT_DISTANCE;
+        return distance >= RunningConst.SIGNIFICANT_DISTANCE;
     }
 }

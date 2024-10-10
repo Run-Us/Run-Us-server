@@ -1,9 +1,10 @@
-package com.run_us.server.domains.running.controller.model.enums;
+package com.run_us.server.domains.running.controller.model;
 
-import static com.run_us.server.global.common.GlobalConsts.RUNNING_WS_SUBSCRIBE_PATH;
-import static com.run_us.server.global.common.GlobalConsts.USER_WS_SUBSCRIBE_PATH;
 
 import lombok.Getter;
+
+import static com.run_us.server.domains.running.RunningConst.RUNNING_WS_SUBSCRIBE_PATH;
+import static com.run_us.server.global.common.SocketConst.USER_WS_SUBSCRIBE_PATH;
 
 @Getter
 public enum SubscriptionTopic {

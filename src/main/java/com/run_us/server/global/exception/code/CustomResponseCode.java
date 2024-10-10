@@ -1,4 +1,4 @@
-package com.run_us.server.global.exceptions.enums;
+package com.run_us.server.global.exception.code;
 
 import org.springframework.http.HttpStatus;
 
