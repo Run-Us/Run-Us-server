@@ -1,4 +1,4 @@
-package com.run_us.server.domains.running.controller.model.enums;
+package com.run_us.server.domains.running.controller.model;
 
 
 import lombok.Getter;

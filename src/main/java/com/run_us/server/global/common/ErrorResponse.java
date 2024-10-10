@@ -1,6 +1,6 @@
 package com.run_us.server.global.common;
 
-import com.run_us.server.global.exception.enums.CustomResponseCode;
+import com.run_us.server.global.exception.code.CustomResponseCode;
 
 public class ErrorResponse extends Response {
 

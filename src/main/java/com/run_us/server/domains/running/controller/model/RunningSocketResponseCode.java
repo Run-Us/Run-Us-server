@@ -1,6 +1,6 @@
-package com.run_us.server.domains.running.controller.model.enums;
+package com.run_us.server.domains.running.controller.model;
 
-import com.run_us.server.global.exception.enums.CustomResponseCode;
+import com.run_us.server.global.exception.code.CustomResponseCode;
 import org.springframework.http.HttpStatus;
 
 /**

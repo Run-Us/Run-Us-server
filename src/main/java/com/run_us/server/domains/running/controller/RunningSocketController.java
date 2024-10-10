@@ -1,7 +1,7 @@
 package com.run_us.server.domains.running.controller;
 
 import com.run_us.server.domains.running.RunningConst;
-import com.run_us.server.domains.running.controller.model.enums.RunningSocketResponseCode;
+import com.run_us.server.domains.running.controller.model.RunningSocketResponseCode;
 import com.run_us.server.domains.running.controller.model.request.RunningRequest;
 import com.run_us.server.domains.running.controller.model.request.RunningRequest.LocationUpdate;
 import com.run_us.server.domains.running.controller.model.response.RunningResponse;

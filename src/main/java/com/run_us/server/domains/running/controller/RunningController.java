@@ -4,7 +4,7 @@ import com.run_us.server.domains.running.controller.model.request.RunningCreateR
 import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.domains.running.service.model.JoinedParticipant;
 import com.run_us.server.global.common.SuccessResponse;
-import com.run_us.server.global.exception.enums.ExampleErrorCode;
+import com.run_us.server.global.exception.code.ExampleErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,6 +1,6 @@
 package com.run_us.server.global.exception;
 
-import com.run_us.server.global.exception.enums.CustomResponseCode;
+import com.run_us.server.global.exception.code.CustomResponseCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 

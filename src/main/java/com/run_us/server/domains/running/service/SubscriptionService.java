@@ -1,6 +1,6 @@
 package com.run_us.server.domains.running.service;
 
-import com.run_us.server.domains.running.controller.model.enums.SubscriptionTopic;
+import com.run_us.server.domains.running.controller.model.SubscriptionTopic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

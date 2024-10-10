@@ -4,6 +4,7 @@ import static com.run_us.server.domains.running.RunningConst.RUNNING_WS_SUBSCRIB
 import static com.run_us.server.global.common.SocketConst.USER_WS_SUBSCRIBE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.run_us.server.domains.running.controller.model.SubscriptionTopic;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
