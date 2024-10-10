@@ -1,8 +1,8 @@
 package com.run_us.server.global.config;
 
+import com.run_us.server.global.common.SocketConst;
 import com.run_us.server.global.security.JwtAuthenticationFilter;
 import com.run_us.server.domains.user.service.JwtService;
-import com.run_us.server.global.common.GlobalConst;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,7 +36,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(GlobalConst.WS_CONNECT_ENDPOINT).permitAll()
+                        .requestMatchers(SocketConst.WS_CONNECT_ENDPOINT).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
