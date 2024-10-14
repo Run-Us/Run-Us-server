@@ -19,13 +19,16 @@ public final class RunningMapper {
   }
 
   /***
-   * 개인기록 도메일 객체로 매핑하는 메서드
+   * 개인기록 도메인 객체로 매핑하는 메서드
    *
    * @param userId 유저 id
    * @param runningId 러닝 id
    * @param aggregateRunning 러닝결과 집계
    */
-  public static PersonalRecord toPersonalRecord(Long userId, Long runningId, RunningAggregation aggregateRunning) {
+  public static PersonalRecord toPersonalRecord(
+          final Long userId,
+          final Long runningId,
+          final RunningAggregation aggregateRunning) {
     return PersonalRecord.builder()
         .runningId(runningId)
         .userId(userId)

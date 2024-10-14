@@ -17,7 +17,14 @@ public class RunningAggregation {
     private final int averagePaceInMilliSecond;
 
     @Builder
-    public RunningAggregation(String runningId, String userId, List<LocationData> dataList, int count, int runningDistanceInMeter, int runningDurationInMilliSecond, int averagePaceInMilliSecond) {
+    public RunningAggregation(
+            final String runningId,
+            final String userId,
+            final List<LocationData> dataList,
+            final int count,
+            final int runningDistanceInMeter,
+            final int runningDurationInMilliSecond,
+            final int averagePaceInMilliSecond) {
         this.runningId = runningId;
         this.userId = userId;
         this.dataList = dataList;
