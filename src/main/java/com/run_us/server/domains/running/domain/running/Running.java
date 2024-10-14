@@ -1,7 +1,7 @@
-package com.run_us.server.domains.running.domain;
+package com.run_us.server.domains.running.domain.running;
 
-import com.run_us.server.domains.running.domain.RunningConstraints.RunningConstraintsConverter;
-import com.run_us.server.domains.running.domain.RunningDescription.RunningDescriptionConverter;
+import com.run_us.server.domains.running.domain.running.RunningConstraints.RunningConstraintsConverter;
+import com.run_us.server.domains.running.domain.running.RunningDescription.RunningDescriptionConverter;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.DateAudit;
 import com.run_us.server.global.util.PassCodeGenerator;
