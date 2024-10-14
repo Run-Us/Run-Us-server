@@ -1,6 +1,8 @@
 package com.run_us.server.domains.running;
 
 import com.run_us.server.config.TestRedisConfiguration;
+import com.run_us.server.domains.running.domain.record.PersonalRecord;
+import com.run_us.server.domains.running.repository.PersonalRecordRepository;
 import com.run_us.server.domains.running.service.model.JoinedParticipant;
 import com.run_us.server.domains.running.controller.RunningController;
 import com.run_us.server.domains.running.domain.running.Running;
@@ -35,6 +37,9 @@ class RunningControllerTest {
   @Autowired
   private RunningRepository runningRepository;
 
+  @Autowired
+    private PersonalRecordRepository personalRecordRepository;
+
   @Nested
   @DisplayName("fetchRunningParticipants 메소드는")
   class Describe_fetchRunningParticipants {
@@ -67,4 +72,40 @@ class RunningControllerTest {
     }
   }
 
+  @Nested
+  @DisplayName("getPersonalRecord 메소드는")
+    class Describe_getPersonalRecord {
+
+        private Running r1;
+        private User u1;
+
+        @BeforeEach
+        void setUp() {
+          // save users
+          u1 = UserFixtures.getDefaultUserWithNickname("us1");
+          userRepository.saveAndFlush(u1);
+          // create running
+          r1 = RunningFixtures.getDefaultRunningWithParticipants(List.of(u1));
+          runningRepository.saveAndFlush(r1);
+
+          PersonalRecord personalRecord = PersonalRecordFixtures.getPersonalRecordWithUserIdAndRunningId(u1.getId(), r1.getId());
+          personalRecordRepository.saveAndFlush(personalRecord);
+        }
+
+        @DisplayName("개인 기록을 반환한다")
+        @Test
+        void it_returns_personal_record() {
+          // given
+          String runningId = r1.getPublicKey();
+          Long userId = u1.getId();
+          // when
+          SuccessResponse successResponse = runningController.getPersonalRecord(runningId, userId);
+          PersonalRecord personalRecord = (PersonalRecord) successResponse.getPayload();
+          //then
+          Assertions.assertNotNull(successResponse.getPayload());
+          Assertions.assertEquals(personalRecord.getAveragePaceInMilliseconds(), 1000);
+          Assertions.assertEquals(personalRecord.getRunningDistanceInMeters(), 1000);
+          Assertions.assertEquals(personalRecord.getRunningDurationInMilliseconds(), 1000);
+        }
+    }
 }
