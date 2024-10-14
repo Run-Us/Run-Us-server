@@ -3,7 +3,7 @@ package com.run_us.server.domains.running;
 import com.run_us.server.config.TestRedisConfiguration;
 import com.run_us.server.domains.running.service.model.JoinedParticipant;
 import com.run_us.server.domains.running.controller.RunningController;
-import com.run_us.server.domains.running.domain.Running;
+import com.run_us.server.domains.running.domain.running.Running;
 import com.run_us.server.domains.running.repository.RunningRepository;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.domain.UserFixtures;

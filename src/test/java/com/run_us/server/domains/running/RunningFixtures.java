@@ -1,8 +1,8 @@
 package com.run_us.server.domains.running;
 
-import com.run_us.server.domains.running.domain.Running;
-import com.run_us.server.domains.running.domain.RunningConstraints;
-import com.run_us.server.domains.running.domain.RunningDescription;
+import com.run_us.server.domains.running.domain.running.Running;
+import com.run_us.server.domains.running.domain.running.RunningConstraints;
+import com.run_us.server.domains.running.domain.running.RunningDescription;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.util.PointGenerator;
 import java.util.List;
