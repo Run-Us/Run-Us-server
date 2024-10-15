@@ -13,4 +13,6 @@ public final class SocketConst {
   public static final String USER_WS_SUBSCRIBE_PATH = "queue";
 
   public static final String USER_WS_ERROR_SUBSCRIBE_PATH = "/queue/errors";
+
+  public static final String WS_SESSION_ID_HEADER = "simpSessionId";
 }
