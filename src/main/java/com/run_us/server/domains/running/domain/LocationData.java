@@ -55,5 +55,10 @@ public class LocationData {
 
             return R * c;
         }
+
+        @Override
+        public String toString() {
+            return String.format("{%s, %s}", latitude, longitude);
+        }
     }
 }

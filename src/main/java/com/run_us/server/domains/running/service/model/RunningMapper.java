@@ -5,6 +5,8 @@ import com.run_us.server.domains.running.domain.record.PersonalRecord;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.stream.Collectors;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RunningMapper {
 
@@ -32,7 +34,7 @@ public final class RunningMapper {
     return PersonalRecord.builder()
         .runningId(runningId)
         .userId(userId)
-        .recordData(aggregateRunning.getDataList().stream().toString())
+        .recordData(aggregateRunning.getDataList().stream().map(e->e.getRunnerPos().toString()).collect(Collectors.joining(",")))
         .runningDistanceInMeters(aggregateRunning.getRunningDistanceInMeter())
         .runningDurationInMilliseconds(aggregateRunning.getRunningDurationInMilliSecond())
         .averagePaceInMilliseconds(aggregateRunning.getAveragePaceInMilliSecond())
