@@ -1,7 +1,10 @@
 package com.run_us.server.domains.test;
 
+import com.run_us.server.domains.running.exception.RunningErrorCode;
+import com.run_us.server.domains.running.exception.RunningException;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.SuccessResponse;
+import com.run_us.server.global.exception.BusinessException;
 import com.run_us.server.global.exception.code.ExampleErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -49,6 +52,18 @@ public class TestController {
 
 
     /**
-     * SendToUser 테스트 요청 만들기
+     * BusinessException 에러 소켓에서 내는 요청
      */
+    @MessageMapping("/test/errors/0")
+    public void occurBusinessException() {
+        throw BusinessException.of(ExampleErrorCode.EXAMPLE);
+    }
+
+    /**
+     * 소켓 RunningException 에러 소켓에서 내는 요청
+     */
+    @MessageMapping("/test/errors/1")
+    public void occurRunningException() {
+        throw RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND);
+    }
 }
