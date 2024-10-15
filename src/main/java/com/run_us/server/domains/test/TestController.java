@@ -56,6 +56,7 @@ public class TestController {
      */
     @MessageMapping("/test/errors/0")
     public void occurBusinessException() {
+        log.info("occurBusinessException : /test/errors/0");
         throw BusinessException.of(ExampleErrorCode.EXAMPLE);
     }
 
@@ -64,6 +65,7 @@ public class TestController {
      */
     @MessageMapping("/test/errors/1")
     public void occurRunningException() {
+        log.info("occurRunningException : /test/errors/1");
         throw RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND);
     }
 }
