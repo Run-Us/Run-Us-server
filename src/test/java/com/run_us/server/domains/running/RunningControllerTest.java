@@ -97,7 +97,7 @@ class RunningControllerTest {
         void it_returns_personal_record() {
           // given
           String runningId = r1.getPublicKey();
-          Long userId = u1.getId();
+          String userId = u1.getPublicId();
           // when
           SuccessResponse successResponse = runningController.getPersonalRecord(runningId, userId);
           PersonalRecord personalRecord = (PersonalRecord) successResponse.getPayload();

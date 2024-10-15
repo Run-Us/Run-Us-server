@@ -49,10 +49,14 @@ public class RunningResultService {
      * @param runningId 러닝 고유번호
      * @return 러닝 결과
      */
-    public PersonalRecord getPersonalRecord(String runningId, Long userId) {
+    public PersonalRecord getPersonalRecord(String runningId, String userId) {
       Running running = runningRepository.findByPublicKey(runningId)
               .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
-      return personalRecordRepository.findByUserIdAndRunningId(userId, running.getId())
+
+      User user = userRepository.findByPublicId(userId)
+              .orElseThrow(IllegalArgumentException::new);
+
+      return personalRecordRepository.findByUserIdAndRunningId(user.getId(), running.getId())
                 .orElseThrow(() -> RunningException.of(RunningErrorCode.PERSONAL_RECORD_NOT_FOUND));
     }
 

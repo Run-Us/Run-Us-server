@@ -42,7 +42,7 @@ public class RunningController {
    * @param userId 사용자 고유번호
    * */
   @GetMapping("/{runningId}/records/{userId}")
-  public SuccessResponse getPersonalRecord(@PathVariable String runningId, @PathVariable Long userId) {
+  public SuccessResponse getPersonalRecord(@PathVariable String runningId, @PathVariable String userId) {
     return SuccessResponse.of(ExampleErrorCode.SUCCESS,
         runningResultService.getPersonalRecord(runningId, userId));
   }
