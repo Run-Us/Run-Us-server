@@ -6,6 +6,7 @@ import com.run_us.server.domains.running.exception.RunningErrorCode;
 import com.run_us.server.domains.running.exception.RunningException;
 import com.run_us.server.domains.running.repository.PersonalRecordRepository;
 import com.run_us.server.domains.running.repository.RunningRepository;
+import com.run_us.server.domains.running.service.model.PersonalRecordQueryResult;
 import com.run_us.server.domains.running.service.model.RunningAggregation;
 import com.run_us.server.domains.running.service.model.RunningMapper;
 import com.run_us.server.domains.user.domain.User;
@@ -49,7 +50,7 @@ public class RunningResultService {
      * @param runningId 러닝 고유번호
      * @return 러닝 결과
      */
-    public PersonalRecord getPersonalRecord(String runningId, String userId) {
+    public PersonalRecordQueryResult getPersonalRecord(String runningId, String userId) {
       Running running = runningRepository.findByPublicKey(runningId)
               .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
 
@@ -65,7 +66,7 @@ public class RunningResultService {
      * @param userId 유저 고유번호
      * @return 개인 기록 리스트
      */
-    public List<PersonalRecord> getAllPersonalRecords(Long userId) {
+    public List<PersonalRecordQueryResult> getAllPersonalRecords(Long userId) {
       return personalRecordRepository.findAllByUserId(userId);
     }
 }
