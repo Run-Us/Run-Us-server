@@ -7,6 +7,7 @@ import com.run_us.server.domains.running.service.model.JoinedParticipant;
 import com.run_us.server.domains.running.controller.RunningController;
 import com.run_us.server.domains.running.domain.running.Running;
 import com.run_us.server.domains.running.repository.RunningRepository;
+import com.run_us.server.domains.running.service.model.PersonalRecordQueryResult;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.domain.UserFixtures;
 import com.run_us.server.domains.user.repository.UserRepository;
@@ -100,7 +101,7 @@ class RunningControllerTest {
           String userId = u1.getPublicId();
           // when
           SuccessResponse successResponse = runningController.getPersonalRecord(runningId, userId);
-          PersonalRecord personalRecord = (PersonalRecord) successResponse.getPayload();
+          PersonalRecordQueryResult personalRecord = (PersonalRecordQueryResult) successResponse.getPayload();
           //then
           Assertions.assertNotNull(successResponse.getPayload());
           Assertions.assertEquals(personalRecord.getAveragePaceInMilliseconds(), 1000);
