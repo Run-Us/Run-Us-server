@@ -1,4 +1,4 @@
-package com.run_us.server.domains.running.domain;
+package com.run_us.server.domains.running.domain.running;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;

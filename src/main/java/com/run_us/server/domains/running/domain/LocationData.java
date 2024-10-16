@@ -20,7 +20,6 @@ public class LocationData {
         return runnerPos.longitude;
     }
 
-    //TODO: sql에 사용되는 Point클래스와 이름이 겹친다. 추후 수정 필요
     @Getter
     public static class RunnerPos {
         private final double latitude;
@@ -55,6 +54,11 @@ public class LocationData {
             double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
             return R * c;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("{%s, %s}", latitude, longitude);
         }
     }
 }

@@ -9,6 +9,7 @@ import com.run_us.server.domains.running.exception.RunningErrorCode;
 import com.run_us.server.domains.running.service.RunningLiveService;
 import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.domains.running.service.RunningResultService;
+import com.run_us.server.domains.running.service.model.RunningMapper;
 import com.run_us.server.global.common.ErrorResponse;
 import com.run_us.server.global.common.SuccessResponse;
 import jakarta.validation.constraints.NotNull;
@@ -116,14 +117,12 @@ public class RunningSocketController {
   public void aggregateRunning(
           @Header("simpSessionId") String sessionId, RunningRequest.AggregateRunning requestDto) {
     try {
-      runningResultService.saveRunningResult(
-              requestDto.getRunningId(), requestDto.getUserId(), requestDto.getDataList());
+      runningResultService.savePersonalRecord(requestDto.getRunningId(), requestDto.getUserId(), RunningMapper.toRunningAggregation(requestDto));
     } catch (Exception e) {
       sendToUser(sessionId, "/queue/logs", ErrorResponse.of(RunningErrorCode.AGGREGATE_FAILED));
       return;
     }
-    sendToUser(
-            sessionId, "/queue/logs", SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
+    sendToUser(sessionId, "/queue/logs", SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
   }
 
   /***

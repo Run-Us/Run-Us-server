@@ -1,7 +1,7 @@
 package com.run_us.server.domains.running;
 
 import com.run_us.server.config.TestRedisConfiguration;
-import com.run_us.server.domains.running.domain.ParticipantStatus;
+import com.run_us.server.domains.running.domain.running.ParticipantStatus;
 import com.run_us.server.domains.running.repository.RunningRedisRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
