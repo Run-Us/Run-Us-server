@@ -4,7 +4,7 @@ server:
 spring:
   config:
     import:
-      - optional:file:.env.${SPRING_PROFILES_ACTIVE:dev}[.properties]
+      - optional:file:${ENV_PATH:.}/.env.${SPRING_PROFILES_ACTIVE:dev}[.properties]
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   datasource:
