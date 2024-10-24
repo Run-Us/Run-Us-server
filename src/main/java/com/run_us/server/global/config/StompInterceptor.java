@@ -1,13 +1,17 @@
-package com.run_us.server.domains.running.controller;
+package com.run_us.server.global.config;
 
 import static com.run_us.server.global.common.GlobalConst.SESSION_ATTRIBUTE_USER;
 import static com.run_us.server.global.common.GlobalConst.WS_USER_AUTH_HEADER;
 
+import com.run_us.server.domains.running.controller.model.UserSocketResponseCode;
 import com.run_us.server.domains.running.service.SubscriptionService;
 import com.run_us.server.domains.user.domain.User;
+import com.run_us.server.domains.user.exception.UserException;
 import com.run_us.server.domains.user.service.UserService;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -41,7 +45,17 @@ public class StompInterceptor implements ChannelInterceptor {
       }
       case SUBSCRIBE -> {
         log.info("SUBSCRIBE : {} by {}", accessor.getDestination(), accessor.getSubscriptionId());
-        subscriptionService.process(Objects.requireNonNull(accessor.getDestination()), accessor.getSubscriptionId());
+
+        // TODO : SessionAttributes 얻어오는 코드 하나로 빼기?
+        Optional<User> userOp = Optional.ofNullable(accessor.getSessionAttributes())
+                .map(attr -> (User) attr.get(SESSION_ATTRIBUTE_USER));
+        if(userOp.isPresent()) {
+          subscriptionService.process(Objects.requireNonNull(accessor.getDestination()), userOp.get());
+        }
+        else {
+          throw new UserException(UserSocketResponseCode.USER_INFO_NOT_EXIST);
+        }
+//        User user = (User) accessor.getSessionAttributes().get(SESSION_ATTRIBUTE_USER);
       }
     }
     return message;
