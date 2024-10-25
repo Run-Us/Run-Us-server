@@ -1,4 +1,4 @@
-package com.run_us.server.domains.running.domain;
+package com.run_us.server.domains.running.domain.running;
 
 import com.run_us.server.global.util.JsonConverter;
 import java.util.Objects;

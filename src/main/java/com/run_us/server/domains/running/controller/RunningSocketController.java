@@ -10,6 +10,7 @@ import com.run_us.server.domains.running.exception.RunningErrorCode;
 import com.run_us.server.domains.running.service.RunningLiveService;
 import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.domains.running.service.RunningResultService;
+import com.run_us.server.domains.running.service.model.RunningMapper;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.ErrorResponse;
 import com.run_us.server.global.common.SuccessResponse;
@@ -137,10 +138,10 @@ public class RunningSocketController {
     }
 
     try {
-      runningResultService.saveRunningResult(
-              requestDto.getRunningId(), userOp.get(), requestDto.getDataList());
+      runningResultService.savePersonalRecord(requestDto.getRunningId(), userOp.get(), RunningMapper.toRunningAggregation(requestDto));
     } catch (Exception e) {
       // TODO : 개선필요 - 모든 예외를 잡아서 RunningErrorCode.AGGREGATE_FAILED 로 바꿔 보내고 있어서, 원래 에러 원인을 파악할 수 없음
+      log.info("aggregateRunning savePersonalRecord error : {}, {}", e.getCause(), e.getMessage());
       sendToUser(sessionId, USER_WS_LOGS_SUBSCRIBE_PATH, ErrorResponse.of(RunningErrorCode.AGGREGATE_FAILED));
       return;
     }

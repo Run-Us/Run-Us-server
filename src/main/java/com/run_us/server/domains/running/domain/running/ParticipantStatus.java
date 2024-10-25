@@ -1,4 +1,4 @@
-package com.run_us.server.domains.running.domain;
+package com.run_us.server.domains.running.domain.running;
 
 public enum ParticipantStatus {
     READY,

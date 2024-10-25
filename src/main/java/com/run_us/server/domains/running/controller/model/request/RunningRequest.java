@@ -18,9 +18,6 @@ public class RunningRequest {
         private String runningId;
         private String runningKey;
 
-        // Websocket - start
-        // inner class의 효능
-        // 난잡한 디렉구조 해결
         @Builder
         public StartRunning(String userId, String runningId, String runningKey) {
             this.userId = userId;
@@ -105,14 +102,26 @@ public class RunningRequest {
         private final String userId;
         private final List<LocationData> dataList;
         private final int count;
+        private final int runningDistanceInMeter;
+        private final int runningDurationInMilliSecond;
+        private final int averagePaceInMilliSecond;
 
         @Builder
-        public AggregateRunning(final String runningId, final String userId, final int count, final List<LocationData> dataList) {
+        public AggregateRunning(
+                final String runningId,
+                final String userId,
+                final int count,
+                final List<LocationData> dataList,
+                final int runningDistanceInMeter,
+                final int runningDurationInMilliSecond,
+                final int averagePaceInMilliSecond) {
             this.runningId = runningId;
             this.userId = userId;
             this.count = count;
             this.dataList = dataList;
+            this.runningDistanceInMeter = runningDistanceInMeter;
+            this.runningDurationInMilliSecond = runningDurationInMilliSecond;
+            this.averagePaceInMilliSecond = averagePaceInMilliSecond;
         }
-
     }
 }

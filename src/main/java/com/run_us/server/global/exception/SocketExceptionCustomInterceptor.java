@@ -7,7 +7,7 @@ public interface SocketExceptionCustomInterceptor {
     /**
      * 해당 핸들러가 처리할 수 있는 예외인지 반환
      * @param e : 확인할 예외
-     * @return 해당 ㅇ외 처리 가능여부
+     * @return 해당 예외 처리 가능여부
      */
     boolean canHandle(Throwable e);
 

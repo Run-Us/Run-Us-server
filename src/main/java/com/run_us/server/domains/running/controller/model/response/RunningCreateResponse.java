@@ -1,6 +1,6 @@
 package com.run_us.server.domains.running.controller.model.response;
 
-import com.run_us.server.domains.running.domain.Running;
+import com.run_us.server.domains.running.domain.running.Running;
 import lombok.Getter;
 
 @Getter

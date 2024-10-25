@@ -1,8 +1,8 @@
 package com.run_us.server.domains.running.controller.model.request;
 
 import com.run_us.server.domains.running.domain.LocationData.RunnerPos;
-import com.run_us.server.domains.running.domain.RunningConstraints;
-import com.run_us.server.domains.running.domain.RunningDescription;
+import com.run_us.server.domains.running.domain.running.RunningConstraints;
+import com.run_us.server.domains.running.domain.running.RunningDescription;
 import lombok.Getter;
 
 @Getter

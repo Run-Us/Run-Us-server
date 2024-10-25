@@ -3,7 +3,7 @@ package com.run_us.server.domains.running.service;
 import com.run_us.server.domains.running.service.model.JoinedParticipant;
 import com.run_us.server.domains.running.controller.model.request.RunningCreateRequest;
 import com.run_us.server.domains.running.controller.model.response.RunningCreateResponse;
-import com.run_us.server.domains.running.domain.Running;
+import com.run_us.server.domains.running.domain.running.Running;
 import com.run_us.server.domains.running.exception.RunningErrorCode;
 import com.run_us.server.domains.running.exception.RunningException;
 import com.run_us.server.domains.running.repository.RunningRepository;

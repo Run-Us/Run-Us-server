@@ -1,4 +1,4 @@
-package com.run_us.server.domains.running.domain;
+package com.run_us.server.domains.running.domain.record;
 
 import com.run_us.server.global.common.DateAudit;
 import jakarta.persistence.Column;
@@ -39,7 +39,6 @@ public class RunningRecord extends DateAudit {
 
   @Column(name = "total_distance", nullable = false)
   private Double totalDistance;
-
 
   /***
    * Constructor for RunningRecord
