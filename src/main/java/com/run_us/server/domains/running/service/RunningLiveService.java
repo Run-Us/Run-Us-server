@@ -33,7 +33,6 @@ public class RunningLiveService {
     private final RunningRedisRepository runningRedisRepository;
     private final RunningRepository runningRepository;
     private final UpdateLocationRepository locationRepository;
-    private final UserRepository userRepository;
     private final Map<String, ScheduledExecutorService> sessionSchedulers = new ConcurrentHashMap<>();
 
     /***
