@@ -1,9 +1,11 @@
 package com.run_us.server.domains.running.controller;
 
 import com.run_us.server.domains.running.controller.model.request.RunningCreateRequest;
+import com.run_us.server.domains.running.controller.model.response.RunningCreateResponse;
 import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.domains.running.service.RunningResultService;
 import com.run_us.server.domains.running.service.model.JoinedParticipant;
+import com.run_us.server.domains.running.service.model.PersonalRecordQueryResult;
 import com.run_us.server.global.common.SuccessResponse;
 import com.run_us.server.global.exception.code.ExampleErrorCode;
 import java.util.List;
@@ -24,13 +26,13 @@ public class RunningController {
   private final RunningResultService runningResultService;
 
   @PostMapping
-  public SuccessResponse createRunning(@RequestBody RunningCreateRequest runningCreateDto) {
+  public SuccessResponse<RunningCreateResponse> createRunning(@RequestBody RunningCreateRequest runningCreateDto) {
     return SuccessResponse.of(ExampleErrorCode.SUCCESS,
         runningPreparationService.createRunning(runningCreateDto));
   }
 
   @GetMapping("/{runningId}/participants")
-  public SuccessResponse joinedParticipants(@PathVariable String runningId) {
+  public SuccessResponse<List<JoinedParticipant>> joinedParticipants(@PathVariable String runningId) {
     List<JoinedParticipant> joinedParticipants = runningPreparationService.getJoinedParticipants(
         runningId);
     return SuccessResponse.of(ExampleErrorCode.SUCCESS, joinedParticipants);
@@ -42,7 +44,7 @@ public class RunningController {
    * @param userId 사용자 고유번호
    * */
   @GetMapping("/{runningId}/records/{userId}")
-  public SuccessResponse getPersonalRecord(@PathVariable String runningId, @PathVariable String userId) {
+  public SuccessResponse<PersonalRecordQueryResult> getPersonalRecord(@PathVariable String runningId, @PathVariable String userId) {
     return SuccessResponse.of(ExampleErrorCode.SUCCESS,
         runningResultService.getPersonalRecord(runningId, userId));
   }

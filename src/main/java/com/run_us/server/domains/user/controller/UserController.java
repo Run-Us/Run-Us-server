@@ -1,6 +1,7 @@
 package com.run_us.server.domains.user.controller;
 
 import com.run_us.server.domains.user.controller.model.request.UserSignUpRequest;
+import com.run_us.server.domains.user.domain.Profile;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -20,10 +21,15 @@ public class UserController {
   @PostMapping("/auth/users")
   @Transactional
   public User createUser(@RequestBody UserSignUpRequest userSignUpRequest) {
+
+    Profile profile = Profile.builder()
+            .nickname(userSignUpRequest.getNickName())
+            .build();
+
     // create user
     User user = User.builder()
-        .nickname(userSignUpRequest.getNickName())
-        .build();
+            .profile(profile)
+            .build();
     return userRepository.save(user);
   }
 }

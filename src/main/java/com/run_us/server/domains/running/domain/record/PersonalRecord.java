@@ -1,15 +1,14 @@
 package com.run_us.server.domains.running.domain.record;
 
-import com.run_us.server.global.common.DateAudit;
+import com.run_us.server.global.common.CreationTimeAudit;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import jakarta.persistence.AttributeOverride;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,21 +18,22 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PersonalRecord extends DateAudit {
+@AttributeOverride(name = "createdAt", column = @Column(name = "uploaded_at"))
+public class PersonalRecord extends CreationTimeAudit {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "personal_record_id")
-  private Long id;
+  @Column(name = "id", columnDefinition = "INT")
+  private Integer id;
 
-  @Column(name = "running_id", nullable = false)
-  private Long runningId;
+  @Column(name = "running_id", nullable = false, columnDefinition = "INT")
+  private Integer runningId;
 
-  @Column(name = "user_id", nullable = false)
-  private Long userId;
+  @Column(name = "user_id", nullable = false, columnDefinition = "INT")
+  private Integer userId;
 
   @Lob
-  @Column(name = "record_data", nullable = false)
+  @Column(name = "record_data", nullable = false, columnDefinition = "MEDIUMBLOB")
   private String recordData;
 
   @Column(name = "distance")
@@ -56,8 +56,8 @@ public class PersonalRecord extends DateAudit {
    */
   @Builder
   public PersonalRecord(
-      Long runningId,
-      Long userId,
+      Integer runningId,
+      Integer userId,
       String recordData,
       Integer runningDistanceInMeters,
       Integer runningDurationInMilliseconds,

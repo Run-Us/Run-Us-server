@@ -4,20 +4,20 @@ import com.run_us.server.global.exception.code.CustomResponseCode;
 import lombok.Getter;
 
 @Getter
-public class SuccessResponse extends Response {
+public class SuccessResponse<T> extends Response {
 
-  private final Object payload;
+  private final T payload;
 
-  private SuccessResponse(final CustomResponseCode code, final Object payload) {
+  private SuccessResponse(final CustomResponseCode code, final T payload) {
     super(true, code);
     this.payload = payload;
   }
 
-  public static SuccessResponse messageOnly(final CustomResponseCode code) {
-    return new SuccessResponse(code, null);
+  public static SuccessResponse<Void> messageOnly(final CustomResponseCode code) {
+    return new SuccessResponse<>(code, null);
   }
 
-  public static SuccessResponse of(final CustomResponseCode code, final Object payload) {
-    return new SuccessResponse(code, payload);
+  public static <T> SuccessResponse<T> of(final CustomResponseCode code, final T payload) {
+    return new SuccessResponse<>(code, payload);
   }
 }

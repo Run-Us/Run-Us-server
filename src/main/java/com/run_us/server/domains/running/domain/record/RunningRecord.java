@@ -16,14 +16,14 @@ import lombok.NoArgsConstructor;
 @Table(name = "running_records")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RunningRecord extends DateAudit {
+public class RunningRecord {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @Column(name = "running_id", nullable = false)
-  private Long runningId;
+  private Integer runningId;
 
   @Column(name = "start_time", nullable = false)
   private ZonedDateTime startTime;
@@ -38,7 +38,7 @@ public class RunningRecord extends DateAudit {
   private int finishCount;
 
   @Column(name = "total_distance", nullable = false)
-  private Double totalDistance;
+  private Integer totalDistance;
 
   /***
    * Constructor for RunningRecord
@@ -51,12 +51,12 @@ public class RunningRecord extends DateAudit {
    */
   @Builder
   public RunningRecord(
-      @NotNull Long runningId,
+      @NotNull Integer runningId,
       @NotNull ZonedDateTime startTime,
       @NotNull ZonedDateTime endTime,
       int participantCount,
       int finishCount,
-      @NotNull Double totalDistance) {
+      @NotNull Integer totalDistance) {
     validateEndTime(startTime, endTime);
     validateTotalDistance(totalDistance);
     validateParticipantCount(participantCount);
@@ -90,7 +90,7 @@ public class RunningRecord extends DateAudit {
     }
   }
 
-  private void validateTotalDistance(Double totalDistance) {
+  private void validateTotalDistance(Integer totalDistance) {
     if (totalDistance < 0) {
       throw new IllegalArgumentException("총 거리는 0 이상이어야 합니다.");
     }

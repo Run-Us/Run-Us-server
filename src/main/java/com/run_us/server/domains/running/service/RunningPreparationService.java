@@ -48,7 +48,7 @@ public class RunningPreparationService {
   public List<JoinedParticipant> getJoinedParticipants(String runningId) {
     Running running = runningRepository.findByPublicKey(runningId)
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
-    List<Long> participantIds = running.getAllParticipantsId();
+    List<Integer> participantIds = running.getAllParticipantsId();
     return userRepository.findSimpleParticipantsByRunningId(participantIds);
   }
 
