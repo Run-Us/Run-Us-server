@@ -4,7 +4,7 @@ import com.run_us.server.domains.running.domain.record.PersonalRecord;
 
 public final class PersonalRecordFixtures {
 
-    public static PersonalRecord getPersonalRecordWithUserIdAndRunningId(Long userId, Long runningId) {
+    public static PersonalRecord getPersonalRecordWithUserIdAndRunningId(Integer userId, Integer runningId) {
         return PersonalRecord.builder()
             .runningId(userId)
             .userId(runningId)

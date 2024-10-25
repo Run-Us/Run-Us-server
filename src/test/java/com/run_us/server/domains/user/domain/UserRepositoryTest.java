@@ -25,11 +25,13 @@ class UserRepositoryTest {
 
     //when
     userRepository.save(user);
-    Optional<User> createdUser = userRepository.findByNickname("NICKNAME");
+    Optional<Profile> createdUser = userRepository.findByNickname("NICKNAME");
 
     //then
-    assertEquals(user, createdUser.get());
-    assertNotNull(createdUser.get().getPublicId());
+    assertTrue(createdUser.isPresent());
+    assertEquals("NICKNAME", createdUser.get().getNickname());
+    assertNotNull(createdUser.get().getUser().getPublicId());
+    assertEquals(user.getId(), createdUser.get().getId());
   }
 
   @Transactional
@@ -41,11 +43,11 @@ class UserRepositoryTest {
 
     //when
     user.remove();
-    Optional<User> savedUser = userRepository.findByNickname("NICKNAME");
+    Optional<Profile> removedUser = userRepository.findByNickname("NICKNAME");
 
     //then
     assertNotNull(user.getDeletedAt());
-    assertTrue(savedUser.isEmpty());
+    assertTrue(removedUser.isEmpty());
   }
 
 }

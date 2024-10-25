@@ -38,11 +38,11 @@ class PenaltyRepositoryTest {
         .expiresAt(ZonedDateTime.of(LocalDateTime.now(), ZoneId.of(TIME_ZONE_ID)))
         .build();
     //when
-    User savedUser = userRepository.findByNickname("NICKNAME").get();
-    penalty.applyPenaltyToUser(savedUser);
+    Profile savedUser = userRepository.findByNickname("NICKNAME").get();
+    penalty.applyPenaltyToUser(savedUser.getUser());
     penaltyRepository.save(penalty);
 
-    List<Penalty> createdPenalty = penaltyRepository.findByUserId(savedUser.getId());
+    List<Penalty> createdPenalty = penaltyRepository.findByUserId(savedUser.getUser().getId());
 
     //then
     assertFalse(createdPenalty.isEmpty());

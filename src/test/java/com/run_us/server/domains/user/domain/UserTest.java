@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.security.core.parameters.P;
 
 class UserTest {
 
@@ -15,8 +16,8 @@ class UserTest {
   @DisplayName("User 객체 생성 테스트")
   void create_user() {
     User user = UserFixtures.getDefaultUserWithNickname("nickname");
-    assertEquals(user.getNickname(), "nickname");
-    assertEquals(user.getBirthDate(), UserFixtures.DEFAULT_BIRTH_DATE);
+    assertEquals(user.getProfile().getNickname(), "nickname");
+    assertEquals(user.getProfile().getBirthDate(), UserFixtures.DEFAULT_BIRTH_DATE);
   }
 
   @MethodSource("provideChangeUserProfileImgUrl")
@@ -24,12 +25,13 @@ class UserTest {
   void change_user_profile_img_url() {
     //given
     User user = UserFixtures.getDefaultUser();
+    Profile profile = new Profile().builder().imgUrl(URL_FIXTURE).build();
     String expectedImgUrl = URL_FIXTURE;
     //when
-    user.changeProfileImgUrl(expectedImgUrl);
+    user.setProfile(profile);
 
     //then
-    assertEquals(user.getImgUrl(), expectedImgUrl);
+    assertEquals(user.getProfile().getImgUrl(), expectedImgUrl);
   }
 
   @Test
