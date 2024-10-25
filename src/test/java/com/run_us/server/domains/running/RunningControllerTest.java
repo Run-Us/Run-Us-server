@@ -100,7 +100,7 @@ class RunningControllerTest {
           String runningId = r1.getPublicKey();
           String userId = u1.getPublicId();
           // when
-          SuccessResponse successResponse = runningController.getPersonalRecord(runningId, userId);
+          SuccessResponse<PersonalRecordQueryResult> successResponse = runningController.getPersonalRecord(runningId, userId);
           PersonalRecordQueryResult personalRecord = (PersonalRecordQueryResult) successResponse.getPayload();
           //then
           Assertions.assertNotNull(successResponse.getPayload());
