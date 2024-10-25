@@ -3,7 +3,7 @@ package com.run_us.server.global.exception;
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.Message;
 
-public interface SocketExceptionCustomHandler {
+public interface SocketExceptionCustomInterceptor {
     /**
      * 해당 핸들러가 처리할 수 있는 예외인지 반환
      * @param e : 확인할 예외

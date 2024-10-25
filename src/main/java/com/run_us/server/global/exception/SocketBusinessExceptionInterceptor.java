@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class SocketBusinessExceptionHandler implements SocketExceptionCustomHandler {
+public class SocketBusinessExceptionInterceptor implements SocketExceptionCustomInterceptor {
     private final ObjectMapper objectMapper;
 
     @Override
