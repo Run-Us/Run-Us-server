@@ -58,9 +58,6 @@ public class Profile {
     @Column(name = "longest_time", nullable = false)
     private Integer longestTime = 0;
 
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
     @Builder
     public Profile(User user, String nickname, String imgUrl, LocalDate birthDate,
                    Gender gender, Integer pace) {

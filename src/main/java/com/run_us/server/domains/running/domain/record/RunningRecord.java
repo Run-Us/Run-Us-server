@@ -38,7 +38,7 @@ public class RunningRecord {
   private int finishCount;
 
   @Column(name = "total_distance", nullable = false)
-  private Integer totalDistance;
+  private Integer totalDistanceInMeter;
 
   /***
    * Constructor for RunningRecord
@@ -47,7 +47,7 @@ public class RunningRecord {
    * @param endTime 기록 종료 시간
    * @param participantCount 참가자 수
    * @param finishCount 완주자 수
-   * @param totalDistance 총 거리
+   * @param totalDistanceInMeter 총 거리
    */
   @Builder
   public RunningRecord(
@@ -56,9 +56,9 @@ public class RunningRecord {
       @NotNull ZonedDateTime endTime,
       int participantCount,
       int finishCount,
-      @NotNull Integer totalDistance) {
+      @NotNull Integer totalDistanceInMeter) {
     validateEndTime(startTime, endTime);
-    validateTotalDistance(totalDistance);
+    validateTotalDistance(totalDistanceInMeter);
     validateParticipantCount(participantCount);
     validateFinishCount(finishCount, participantCount);
     this.runningId = runningId;
@@ -66,7 +66,7 @@ public class RunningRecord {
     this.endTime = endTime;
     this.participantCount = participantCount;
     this.finishCount = finishCount;
-    this.totalDistance = totalDistance;
+    this.totalDistanceInMeter = totalDistanceInMeter;
   }
 
   private void validateFinishCount(int finishCount, int participantCount) {
@@ -90,8 +90,8 @@ public class RunningRecord {
     }
   }
 
-  private void validateTotalDistance(Integer totalDistance) {
-    if (totalDistance < 0) {
+  private void validateTotalDistance(Integer totalDistanceInMeter) {
+    if (totalDistanceInMeter < 0) {
       throw new IllegalArgumentException("총 거리는 0 이상이어야 합니다.");
     }
   }
