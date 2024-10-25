@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.run_us.server.global.exception.UserSocketException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -46,17 +47,16 @@ public class StompInterceptor implements ChannelInterceptor {
       case SUBSCRIBE -> {
         log.info("SUBSCRIBE : {} by {}", accessor.getDestination(), accessor.getSubscriptionId());
 
-        // TODO : SessionAttributes 얻어오는 코드 하나로 빼기?
         Optional<User> userOp = Optional.ofNullable(accessor.getSessionAttributes())
                 .map(attr -> (User) attr.get(SESSION_ATTRIBUTE_USER));
         if(userOp.isPresent()) {
           subscriptionService.process(Objects.requireNonNull(accessor.getDestination()), userOp.get());
         }
         else {
-          throw new UserException(UserSocketResponseCode.USER_INFO_NOT_EXIST);
+          throw UserSocketException.of(UserSocketResponseCode.USER_INFO_NOT_EXIST);
         }
-//        User user = (User) accessor.getSessionAttributes().get(SESSION_ATTRIBUTE_USER);
       }
+
     }
     return message;
   }

@@ -36,11 +36,10 @@ public class RunningPreparationService {
   }
 
   @Transactional
-  public void joinRunning(String runningId, String userId) {
-    log.info("joinRunning : {} +  {}", runningId, userId);
+  public void joinRunning(String runningId, User user) {
+    log.info("joinRunning : {} + {}", runningId, user.getId());
     Running running = runningRepository.findByPublicKey(runningId)
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
-    User user = userRepository.findByPublicId(userId).orElseThrow(IllegalArgumentException::new);
     running.addParticipant(user);
   }
 
