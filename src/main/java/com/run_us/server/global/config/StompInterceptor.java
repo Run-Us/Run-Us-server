@@ -51,8 +51,11 @@ public class StompInterceptor implements ChannelInterceptor {
         Optional<User> userOp = Optional.ofNullable(accessor.getSessionAttributes())
                 .map(attr -> (User) attr.get(SESSION_ATTRIBUTE_USER));
         if(userOp.isEmpty()) {
+          log.info("SUBSCRIBE error : user is not exist in session");
           throw UserSocketException.of(UserSocketResponseCode.USER_INFO_NOT_EXIST);
         }
+        log.info("SUBSCRIBE user {}", userOp.get().getPublicId());
+
         subscriptionService.process(Objects.requireNonNull(accessor.getDestination()), userOp.get());
 
       }
