@@ -30,6 +30,7 @@ import org.springframework.stereotype.Controller;
 import java.util.Optional;
 
 import static com.run_us.server.global.common.GlobalConst.SESSION_ATTRIBUTE_USER;
+import static com.run_us.server.global.common.SocketConst.USER_WS_LOGS_SUBSCRIBE_PATH;
 
 /** 러닝 websocket 컨트롤러 */
 @Slf4j
@@ -140,11 +141,11 @@ public class RunningSocketController {
               requestDto.getRunningId(), userOp.get(), requestDto.getDataList());
     } catch (Exception e) {
       // TODO : 개선필요 - 모든 예외를 잡아서 RunningErrorCode.AGGREGATE_FAILED 로 바꿔 보내고 있어서, 원래 에러 원인을 파악할 수 없음
-      sendToUser(sessionId, "/queue/logs", ErrorResponse.of(RunningErrorCode.AGGREGATE_FAILED));
+      sendToUser(sessionId, USER_WS_LOGS_SUBSCRIBE_PATH, ErrorResponse.of(RunningErrorCode.AGGREGATE_FAILED));
       return;
     }
     sendToUser(
-            sessionId, "/queue/logs", SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
+            sessionId, USER_WS_LOGS_SUBSCRIBE_PATH, SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
   }
 
   /***
