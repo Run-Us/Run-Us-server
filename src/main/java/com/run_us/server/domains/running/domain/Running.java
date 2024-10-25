@@ -14,12 +14,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.locationtech.jts.geom.Point;
 
+@ToString
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter

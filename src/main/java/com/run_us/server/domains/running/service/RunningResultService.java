@@ -28,14 +28,14 @@ public class RunningResultService {
   /***
    * 러닝 결과 저장
    * @param runningId 러닝 키
-   * @param userId 유저 아이디
+   * @param user 요청한 사용자
    * @param locationUpdates locationUpdates 위치 정보 리스트
    */
   @Transactional
-  public void saveRunningResult(String runningId, String userId, List<LocationData> locationUpdates) {
+  public void saveRunningResult(String runningId, User user, List<LocationData> locationUpdates) {
+    log.info("saveRunningResult : runningId : {}, user : {}", runningId, user);
     Running running = runningRepository.findByPublicKey(runningId)
-        .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
-    User user = userRepository.findByPublicId(userId).orElseThrow(IllegalArgumentException::new);
+        .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND)); // TODO : 호출하는 쪽 try-catch 문에 잡혀서 해당 에러 파악이 안됨
     PersonalRecord personalRecord = PersonalRecord.builder()
         .runningId(running.getId())
         .userId(user.getId())
