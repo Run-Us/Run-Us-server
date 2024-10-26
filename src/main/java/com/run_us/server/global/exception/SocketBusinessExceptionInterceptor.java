@@ -26,11 +26,12 @@ public class SocketBusinessExceptionInterceptor implements SocketExceptionCustom
 
     @Override
     public Message<byte[]> handle(Message<byte[]> clientMessage, Throwable e) {
-        log.info("[StompErrorHandler] BusinessException");
         return createErrorMessage((BusinessException) e);
     }
 
     private Message<byte[]> createErrorMessage(BusinessException e) {
+        log.error("[SocketBusinessExceptionInterceptor] BusinessException occurred. code : {}, message : {}", e.getErrorCode().getCode(), e.getLogMessage());
+
         StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.MESSAGE);
         String errorBody = "";
         try {
