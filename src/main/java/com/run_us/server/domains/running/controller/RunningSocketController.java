@@ -137,14 +137,8 @@ public class RunningSocketController {
       throw UserSocketException.of(UserSocketResponseCode.USER_INFO_NOT_EXIST);
     }
 
-    try {
-      runningResultService.savePersonalRecord(requestDto.getRunningId(), userOp.get(), RunningMapper.toRunningAggregation(requestDto));
-    } catch (Exception e) {
-      // TODO : 개선필요 - 모든 예외를 잡아서 RunningErrorCode.AGGREGATE_FAILED 로 바꿔 보내고 있어서, 원래 에러 원인을 파악할 수 없음
-      log.info("aggregateRunning savePersonalRecord error : {}, {}", e.getCause(), e.getMessage());
-      sendToUser(sessionId, USER_WS_LOGS_SUBSCRIBE_PATH, ErrorResponse.of(RunningErrorCode.AGGREGATE_FAILED));
-      return;
-    }
+    runningResultService.savePersonalRecord(requestDto.getRunningId(), userOp.get(), RunningMapper.toRunningAggregation(requestDto));
+
     sendToUser(
             sessionId, USER_WS_LOGS_SUBSCRIBE_PATH, SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
   }
