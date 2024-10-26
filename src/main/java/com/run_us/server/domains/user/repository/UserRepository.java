@@ -20,7 +20,6 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
   @Query("SELECT new com.run_us.server.domains.running.service.model.JoinedParticipant(p.nickname, p.imgUrl)"
           + " FROM Profile p"
-          + " WHERE p.userId IN :participantIds"
-          + " AND p.userId IN (SELECT u.id FROM User u WHERE u.deletedAt IS NULL)")
+          + " WHERE p.userId IN :participantIds")
   List<JoinedParticipant> findSimpleParticipantsByRunningId(List<Integer> participantIds);
 }

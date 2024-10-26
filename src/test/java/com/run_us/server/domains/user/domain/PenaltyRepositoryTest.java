@@ -13,11 +13,10 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
-@Import(UserFixtures.class)
 class PenaltyRepositoryTest {
 
   @Autowired
@@ -26,14 +25,13 @@ class PenaltyRepositoryTest {
   @Autowired
   private UserRepository userRepository;
 
-  @Autowired
-  private UserFixtures userFixtures;
-
   @Transactional
   @Test
   void create_penalty() {
     //given
-    User user = userFixtures.getDefaultUser();
+    User user = UserFixtures.getDefaultUser();
+    ReflectionTestUtils.setField(user, "id", 1);
+    ReflectionTestUtils.setField(user.getProfile(), "userId", 1);
     userRepository.saveAndFlush(user);
 
 

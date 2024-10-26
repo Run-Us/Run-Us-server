@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @SpringBootTest
 @Import(TestRedisConfiguration.class)
@@ -41,9 +42,6 @@ class RunningControllerTest {
   @Autowired
     private PersonalRecordRepository personalRecordRepository;
 
-  @Autowired
-  private UserFixtures userFixtures;
-
   @Nested
   @DisplayName("fetchRunningParticipants 메소드는")
   class Describe_fetchRunningParticipants {
@@ -53,8 +51,14 @@ class RunningControllerTest {
     @BeforeEach
     void setUp() {
       // save users
-      User u1 = userFixtures.getDefaultUserWithNickname("us1");
-      User u2 = userFixtures.getDefaultUserWithNickname("us2");
+      User u1 = UserFixtures.getDefaultUserWithNickname("us1");
+      ReflectionTestUtils.setField(u1, "id", 100);
+      ReflectionTestUtils.setField(u1.getProfile(), "userId", 100);
+
+      User u2 = UserFixtures.getDefaultUserWithNickname("us2");
+      ReflectionTestUtils.setField(u2, "id", 200);
+      ReflectionTestUtils.setField(u2.getProfile(), "userId", 200);
+
       userRepository.saveAndFlush(u1);
       userRepository.saveAndFlush(u2);
 
@@ -86,8 +90,11 @@ class RunningControllerTest {
         @BeforeEach
         void setUp() {
           // save users
-          u1 = userFixtures.getDefaultUserWithNickname("us1");
+          u1 = UserFixtures.getDefaultUserWithNickname("us1");
+          ReflectionTestUtils.setField(u1, "id", 11);
+          ReflectionTestUtils.setField(u1.getProfile(), "userId", 11);
           userRepository.saveAndFlush(u1);
+          u1 = userRepository.findByNickname("us1").get();
           // create running
           r1 = RunningFixtures.getDefaultRunningWithParticipants(List.of(u1));
           runningRepository.saveAndFlush(r1);
