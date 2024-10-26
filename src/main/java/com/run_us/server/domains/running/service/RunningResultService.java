@@ -34,7 +34,6 @@ public class RunningResultService {
    */
   @Transactional
   public void savePersonalRecord(String runningId, User user, RunningAggregation aggregation) {
-    log.info("saveRunningResult : runningId : {}, user : {}", runningId, user);
     Running running = runningRepository.findByPublicKey(runningId)
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
     PersonalRecord personalRecord = RunningMapper.toPersonalRecord(running.getId(), user.getId(), aggregation);

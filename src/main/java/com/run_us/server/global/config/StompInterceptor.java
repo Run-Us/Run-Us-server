@@ -6,7 +6,6 @@ import static com.run_us.server.global.common.GlobalConst.WS_USER_AUTH_HEADER;
 import com.run_us.server.domains.running.controller.model.UserSocketResponseCode;
 import com.run_us.server.domains.running.service.SubscriptionService;
 import com.run_us.server.domains.user.domain.User;
-import com.run_us.server.domains.user.exception.UserException;
 import com.run_us.server.domains.user.service.UserService;
 import java.util.Map;
 import java.util.Objects;
@@ -51,7 +50,6 @@ public class StompInterceptor implements ChannelInterceptor {
         Optional<User> userOp = Optional.ofNullable(accessor.getSessionAttributes())
                 .map(attr -> (User) attr.get(SESSION_ATTRIBUTE_USER));
         if(userOp.isEmpty()) {
-          log.info("SUBSCRIBE error : user is not exist in session");
           throw UserSocketException.of(UserSocketResponseCode.USER_INFO_NOT_EXIST);
         }
         log.info("SUBSCRIBE user {}", userOp.get().getPublicId());
@@ -74,6 +72,5 @@ public class StompInterceptor implements ChannelInterceptor {
     Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
     sessionAttributes.put(SESSION_ATTRIBUTE_USER, user);
     accessor.setSessionAttributes(sessionAttributes);
-//    log.info("CONNECT setUserInfoInSession : {}", accessor.getSessionAttributes().get(SESSION_ATTRIBUTE_USER));
   }
 }

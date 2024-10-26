@@ -6,13 +6,11 @@ import com.run_us.server.domains.running.controller.model.UserSocketResponseCode
 import com.run_us.server.domains.running.controller.model.request.RunningRequest;
 import com.run_us.server.domains.running.controller.model.request.RunningRequest.LocationUpdate;
 import com.run_us.server.domains.running.controller.model.response.RunningResponse;
-import com.run_us.server.domains.running.exception.RunningErrorCode;
 import com.run_us.server.domains.running.service.RunningLiveService;
 import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.domains.running.service.RunningResultService;
 import com.run_us.server.domains.running.service.model.RunningMapper;
 import com.run_us.server.domains.user.domain.User;
-import com.run_us.server.global.common.ErrorResponse;
 import com.run_us.server.global.common.SuccessResponse;
 import com.run_us.server.global.exception.UserSocketException;
 import jakarta.validation.constraints.NotNull;
@@ -133,7 +131,6 @@ public class RunningSocketController {
     Optional<User> userOp = Optional.ofNullable(accessor.getSessionAttributes())
             .map(attr -> (User) attr.get(SESSION_ATTRIBUTE_USER));
     if(userOp.isEmpty()) {
-      log.info("aggregateRunning error : user is not exist in session");
       throw UserSocketException.of(UserSocketResponseCode.USER_INFO_NOT_EXIST);
     }
 
