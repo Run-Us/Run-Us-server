@@ -41,6 +41,9 @@ class RunningControllerTest {
   @Autowired
     private PersonalRecordRepository personalRecordRepository;
 
+  @Autowired
+  private UserFixtures userFixtures;
+
   @Nested
   @DisplayName("fetchRunningParticipants 메소드는")
   class Describe_fetchRunningParticipants {
@@ -50,8 +53,8 @@ class RunningControllerTest {
     @BeforeEach
     void setUp() {
       // save users
-      User u1 = UserFixtures.getDefaultUserWithNickname("us1");
-      User u2 = UserFixtures.getDefaultUserWithNickname("us2");
+      User u1 = userFixtures.getDefaultUserWithNickname("us1");
+      User u2 = userFixtures.getDefaultUserWithNickname("us2");
       userRepository.saveAndFlush(u1);
       userRepository.saveAndFlush(u2);
 
@@ -66,8 +69,8 @@ class RunningControllerTest {
       // given
       String runningId = r1.getPublicKey();
       // when
-      SuccessResponse successResponse = runningController.joinedParticipants(runningId);
-      List<JoinedParticipant> joinedParticipants = (List<JoinedParticipant>) successResponse.getPayload();
+      SuccessResponse<List<JoinedParticipant>> successResponse = runningController.joinedParticipants(runningId);
+      List<JoinedParticipant> joinedParticipants = successResponse.getPayload();
       //then
       Assertions.assertEquals(2, joinedParticipants.size());
     }
@@ -83,7 +86,7 @@ class RunningControllerTest {
         @BeforeEach
         void setUp() {
           // save users
-          u1 = UserFixtures.getDefaultUserWithNickname("us1");
+          u1 = userFixtures.getDefaultUserWithNickname("us1");
           userRepository.saveAndFlush(u1);
           // create running
           r1 = RunningFixtures.getDefaultRunningWithParticipants(List.of(u1));

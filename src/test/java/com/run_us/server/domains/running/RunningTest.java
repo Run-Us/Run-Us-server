@@ -12,10 +12,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Point;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 
+@SpringBootTest
 @DisplayName("Running 클래스의")
 class RunningTest {
+
+  @Autowired
+  private UserFixtures userFixtures;
+
   @Nested
   @DisplayName("생성자는")
   class Describe_constructor {
@@ -43,7 +50,7 @@ class RunningTest {
     @Nested
     @DisplayName("유저를 입력으로 받았을 때")
     class Context_with_valid_arguments {
-      User participant = UserFixtures.getDefaultUser();
+      User participant = userFixtures.getDefaultUser();
 
       @Test
       @DisplayName("참가자목록에 유저 ID를 추가한다")
@@ -63,7 +70,7 @@ class RunningTest {
     @Nested
     @DisplayName("유저를 입력으로 받았을때")
     class Context_with_participant {
-      User participant = UserFixtures.getDefaultUser();
+      User participant = userFixtures.getDefaultUser();
       @Test
       @DisplayName("유저가 있는지 확인하고 유저가 있다면 true를 반환한다")
       void it_checks_participant_exists() {
@@ -89,7 +96,7 @@ class RunningTest {
     @Nested
     @DisplayName("유저를 입력으로 받았을때")
     class Context_with_participant {
-      User participant = UserFixtures.getDefaultUser();
+      User participant = userFixtures.getDefaultUser();
       @Test
       @DisplayName("참가자목록에서 해당 유저 ID를 제거한다")
       void it_removes_a_participant() {
@@ -109,8 +116,8 @@ class RunningTest {
     @Nested
     @DisplayName("참가자가 있는 경우")
     class Context_with_participants {
-      User participant1 = UserFixtures.getDefaultUser();
-      User participant2 = UserFixtures.getDefaultUserWithNickname("participant2");
+      User participant1 = userFixtures.getDefaultUser();
+      User participant2 = userFixtures.getDefaultUserWithNickname("participant2");
 
       @Test
       @DisplayName("참가자 목록을 반환한다")

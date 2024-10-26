@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
 import java.time.LocalDateTime;
@@ -33,7 +34,8 @@ public class User extends DateAudit{
   @Column(name = "public_id", nullable = false, columnDefinition = "CHAR(13)")
   private String publicId;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinColumn(name = "id", referencedColumnName = "user_id")
   private Profile profile;
 
   @Column(name = "deleted_at")

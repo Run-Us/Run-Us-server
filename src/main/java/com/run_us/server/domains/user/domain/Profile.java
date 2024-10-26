@@ -26,9 +26,8 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id")
+    private Integer userId;
 
     @Column(name = "nickname", nullable = false)
     private String nickname;
@@ -59,9 +58,9 @@ public class Profile {
     private Integer longestTime = 0;
 
     @Builder
-    public Profile(User user, String nickname, String imgUrl, LocalDate birthDate,
+    public Profile(Integer userId, String nickname, String imgUrl, LocalDate birthDate,
                    Gender gender, Integer pace) {
-        this.user = user;
+        this.userId = userId;
         this.nickname = nickname;
         this.imgUrl = imgUrl;
         this.birthDate = birthDate;

@@ -13,9 +13,11 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
+@Import(UserFixtures.class)
 class PenaltyRepositoryTest {
 
   @Autowired
@@ -24,11 +26,14 @@ class PenaltyRepositoryTest {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private UserFixtures userFixtures;
+
   @Transactional
   @Test
   void create_penalty() {
     //given
-    User user = UserFixtures.getDefaultUser();
+    User user = userFixtures.getDefaultUser();
     userRepository.saveAndFlush(user);
 
 
@@ -38,11 +43,11 @@ class PenaltyRepositoryTest {
         .expiresAt(ZonedDateTime.of(LocalDateTime.now(), ZoneId.of(TIME_ZONE_ID)))
         .build();
     //when
-    Profile savedUser = userRepository.findByNickname("NICKNAME").get();
-    penalty.applyPenaltyToUser(savedUser.getUser());
+    User savedUser = userRepository.findByNickname("NICKNAME").get();
+    penalty.applyPenaltyToUser(savedUser);
     penaltyRepository.save(penalty);
 
-    List<Penalty> createdPenalty = penaltyRepository.findByUserId(savedUser.getUser().getId());
+    List<Penalty> createdPenalty = penaltyRepository.findByUserId(savedUser.getId());
 
     //then
     assertFalse(createdPenalty.isEmpty());
