@@ -1,13 +1,17 @@
-package com.run_us.server.domains.running.controller;
+package com.run_us.server.global.config;
 
 import static com.run_us.server.global.common.GlobalConst.SESSION_ATTRIBUTE_USER;
 import static com.run_us.server.global.common.GlobalConst.WS_USER_AUTH_HEADER;
 
+import com.run_us.server.domains.running.controller.model.UserSocketResponseCode;
 import com.run_us.server.domains.running.service.SubscriptionService;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.service.UserService;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+
+import com.run_us.server.global.exception.UserSocketException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -41,8 +45,13 @@ public class StompInterceptor implements ChannelInterceptor {
       }
       case SUBSCRIBE -> {
         log.info("SUBSCRIBE : {} by {}", accessor.getDestination(), accessor.getSubscriptionId());
-        subscriptionService.process(Objects.requireNonNull(accessor.getDestination()), accessor.getSubscriptionId());
+
+        User user = (User) Objects.requireNonNull(accessor.getSessionAttributes()).get(SESSION_ATTRIBUTE_USER);
+        log.info("SUBSCRIBE user {}", user.getPublicId());
+
+        subscriptionService.process(Objects.requireNonNull(accessor.getDestination()), user);
       }
+
     }
     return message;
   }
@@ -57,6 +66,5 @@ public class StompInterceptor implements ChannelInterceptor {
     Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
     sessionAttributes.put(SESSION_ATTRIBUTE_USER, user);
     accessor.setSessionAttributes(sessionAttributes);
-//    log.info("CONNECT setUserInfoInSession : {}", accessor.getSessionAttributes().get(SESSION_ATTRIBUTE_USER));
   }
 }

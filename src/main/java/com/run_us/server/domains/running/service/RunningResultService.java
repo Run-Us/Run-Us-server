@@ -12,11 +12,10 @@ import com.run_us.server.domains.running.service.model.RunningMapper;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -30,17 +29,13 @@ public class RunningResultService {
   /***
    * 러닝 개인 기록 저장
    * @param runningId 러닝 고유번호(public)
-   * @param userId 유저 고유번호(public)
+   * @param user 요청 유저
    * @param aggregation 러닝 데이터 결과
    */
   @Transactional
-  public void savePersonalRecord(String runningId, String userId, RunningAggregation aggregation) {
+  public void savePersonalRecord(String runningId, User user, RunningAggregation aggregation) {
     Running running = runningRepository.findByPublicKey(runningId)
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
-
-    User user = userRepository.findByPublicId(userId)
-            .orElseThrow(IllegalArgumentException::new);
-
     PersonalRecord personalRecord = RunningMapper.toPersonalRecord(running.getId(), user.getId(), aggregation);
     personalRecordRepository.save(personalRecord);
   }

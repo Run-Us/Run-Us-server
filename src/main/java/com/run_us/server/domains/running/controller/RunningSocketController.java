@@ -2,16 +2,17 @@ package com.run_us.server.domains.running.controller;
 
 import com.run_us.server.domains.running.RunningConst;
 import com.run_us.server.domains.running.controller.model.RunningSocketResponseCode;
+import com.run_us.server.domains.running.controller.model.UserSocketResponseCode;
 import com.run_us.server.domains.running.controller.model.request.RunningRequest;
 import com.run_us.server.domains.running.controller.model.request.RunningRequest.LocationUpdate;
 import com.run_us.server.domains.running.controller.model.response.RunningResponse;
-import com.run_us.server.domains.running.exception.RunningErrorCode;
 import com.run_us.server.domains.running.service.RunningLiveService;
 import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.domains.running.service.RunningResultService;
 import com.run_us.server.domains.running.service.model.RunningMapper;
-import com.run_us.server.global.common.ErrorResponse;
+import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.SuccessResponse;
+import com.run_us.server.global.exception.UserSocketException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,14 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
+
+import java.util.Objects;
+import java.util.Optional;
+
+import static com.run_us.server.global.common.GlobalConst.SESSION_ATTRIBUTE_USER;
+import static com.run_us.server.global.common.SocketConst.USER_WS_LOGS_SUBSCRIBE_PATH;
 
 /** 러닝 websocket 컨트롤러 */
 @Slf4j
@@ -115,14 +123,16 @@ public class RunningSocketController {
    */
   @MessageMapping("/users/runnings/aggregate")
   public void aggregateRunning(
-          @Header("simpSessionId") String sessionId, RunningRequest.AggregateRunning requestDto) {
-    try {
-      runningResultService.savePersonalRecord(requestDto.getRunningId(), requestDto.getUserId(), RunningMapper.toRunningAggregation(requestDto));
-    } catch (Exception e) {
-      sendToUser(sessionId, "/queue/logs", ErrorResponse.of(RunningErrorCode.AGGREGATE_FAILED));
-      return;
-    }
-    sendToUser(sessionId, "/queue/logs", SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
+          @Header("simpSessionId") String sessionId, RunningRequest.AggregateRunning requestDto, StompHeaderAccessor accessor) {
+    // TODO : requestDto 수정 - 세션에 저장된 유저 정보를 사용하기 때문에 DTO 에 userId 를 받을 필요 없음
+
+    log.info("aggregateRunning : {}", requestDto.getRunningId());
+    User user = (User) Objects.requireNonNull(accessor.getSessionAttributes()).get(SESSION_ATTRIBUTE_USER);
+
+    runningResultService.savePersonalRecord(requestDto.getRunningId(), user, RunningMapper.toRunningAggregation(requestDto));
+
+    sendToUser(
+            sessionId, USER_WS_LOGS_SUBSCRIBE_PATH, SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
   }
 
   /***

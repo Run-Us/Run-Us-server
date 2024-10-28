@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class SocketBusinessExceptionHandler implements SocketExceptionCustomHandler {
+public class SocketBusinessExceptionInterceptor implements SocketExceptionCustomInterceptor {
     private final ObjectMapper objectMapper;
 
     @Override
@@ -26,11 +26,12 @@ public class SocketBusinessExceptionHandler implements SocketExceptionCustomHand
 
     @Override
     public Message<byte[]> handle(Message<byte[]> clientMessage, Throwable e) {
-        log.info("[StompErrorHandler] BusinessException");
         return createErrorMessage((BusinessException) e);
     }
 
     private Message<byte[]> createErrorMessage(BusinessException e) {
+        log.error("[SocketBusinessExceptionInterceptor] BusinessException occurred. code : {}, message : {}", e.getErrorCode().getCode(), e.getLogMessage());
+
         StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.MESSAGE);
         String errorBody = "";
         try {

@@ -33,21 +33,19 @@ public class RunningLiveService {
     private final RunningRedisRepository runningRedisRepository;
     private final RunningRepository runningRepository;
     private final UpdateLocationRepository locationRepository;
-    private final UserRepository userRepository;
     private final Map<String, ScheduledExecutorService> sessionSchedulers = new ConcurrentHashMap<>();
 
     /***
      * 러닝세션 참가: 참가자 상태를 READY로 변경
      * @param runningId 러닝세션 외부 노출용 ID
-     * @param userId 유저 외부 노출용 ID
+     * @param user 참가 사용자
      */
     @Transactional
-    public void joinLiveRunning(String runningId, String userId) {
+    public void joinLiveRunning(String runningId, User user) {
         Running running = runningRepository.findByPublicKey(runningId)
             .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
-        User user = userRepository.findByPublicId(userId).orElseThrow(IllegalArgumentException::new);
         running.addParticipant(user);
-        runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.READY);
+        runningRedisRepository.updateParticipantStatus(runningId, user.getPublicId(), ParticipantStatus.READY);
     }
 
     /***
