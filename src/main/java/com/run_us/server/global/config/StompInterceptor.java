@@ -46,16 +46,10 @@ public class StompInterceptor implements ChannelInterceptor {
       case SUBSCRIBE -> {
         log.info("SUBSCRIBE : {} by {}", accessor.getDestination(), accessor.getSubscriptionId());
 
-        // TODO : 중복 로직 - 세션 유저 정보 가져와서 null 이면 예외날리기
-        Optional<User> userOp = Optional.ofNullable(accessor.getSessionAttributes())
-                .map(attr -> (User) attr.get(SESSION_ATTRIBUTE_USER));
-        if(userOp.isEmpty()) {
-          throw UserSocketException.of(UserSocketResponseCode.USER_INFO_NOT_EXIST);
-        }
-        log.info("SUBSCRIBE user {}", userOp.get().getPublicId());
+        User user = (User) Objects.requireNonNull(accessor.getSessionAttributes()).get(SESSION_ATTRIBUTE_USER);
+        log.info("SUBSCRIBE user {}", user.getPublicId());
 
-        subscriptionService.process(Objects.requireNonNull(accessor.getDestination()), userOp.get());
-
+        subscriptionService.process(Objects.requireNonNull(accessor.getDestination()), user);
       }
 
     }

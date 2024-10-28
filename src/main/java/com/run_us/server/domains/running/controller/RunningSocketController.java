@@ -26,6 +26,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.run_us.server.global.common.GlobalConst.SESSION_ATTRIBUTE_USER;
@@ -123,18 +124,12 @@ public class RunningSocketController {
   @MessageMapping("/users/runnings/aggregate")
   public void aggregateRunning(
           @Header("simpSessionId") String sessionId, RunningRequest.AggregateRunning requestDto, StompHeaderAccessor accessor) {
+    // TODO : requestDto 수정 - 세션에 저장된 유저 정보를 사용하기 때문에 DTO 에 userId 를 받을 필요 없음
 
     log.info("aggregateRunning : {}", requestDto.getRunningId());
+    User user = (User) Objects.requireNonNull(accessor.getSessionAttributes()).get(SESSION_ATTRIBUTE_USER);
 
-    // TODO : requestDto 수정 - 세션에 저장된 유저 정보를 사용하기 때문에 DTO 에 userId 를 받을 필요 없음
-    // TODO : 중복 로직 - 세션 유저 정보 가져와서 null 이면 예외날리기
-    Optional<User> userOp = Optional.ofNullable(accessor.getSessionAttributes())
-            .map(attr -> (User) attr.get(SESSION_ATTRIBUTE_USER));
-    if(userOp.isEmpty()) {
-      throw UserSocketException.of(UserSocketResponseCode.USER_INFO_NOT_EXIST);
-    }
-
-    runningResultService.savePersonalRecord(requestDto.getRunningId(), userOp.get(), RunningMapper.toRunningAggregation(requestDto));
+    runningResultService.savePersonalRecord(requestDto.getRunningId(), user, RunningMapper.toRunningAggregation(requestDto));
 
     sendToUser(
             sessionId, USER_WS_LOGS_SUBSCRIBE_PATH, SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
