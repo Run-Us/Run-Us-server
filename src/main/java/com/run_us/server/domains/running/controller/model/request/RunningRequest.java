@@ -9,20 +9,16 @@ import lombok.ToString;
 public class RunningRequest {
 
     /**
-     * 러닝 시작 dto (프로토타입용 임시 dto)
+     * 러닝 시작 dto
      */
     @Getter
     @ToString
     public static class StartRunning {
-        private String userId;
-        private String runningId;
-        private String runningKey;
+        private final String runningId;
 
         @Builder
-        public StartRunning(String userId, String runningId, String runningKey) {
-            this.userId = userId;
+        public StartRunning(String runningId) {
             this.runningId = runningId;
-            this.runningKey = runningKey;
         }
     }
     // DTO e다 분리 / inner class
@@ -34,15 +30,13 @@ public class RunningRequest {
     @ToString
     public static class LocationUpdate {
         private final String runningId;
-        private final String userId; // TODO : 추후 User 쪽에 간단한 프로필 응답 response dto 만들어서 넣기
         private final Float latitude;
         private final Float longitude;
         private final int count;
 
         @Builder
-        public LocationUpdate(final String runningId, final String userId, final Float latitude, final Float longitude, final int count) {
+        public LocationUpdate(final String runningId, final Float latitude, final Float longitude, final int count) {
             this.runningId = runningId;
-            this.userId = userId;
             this.latitude = latitude;
             this.longitude = longitude;
             this.count = count;
@@ -53,13 +47,11 @@ public class RunningRequest {
     @ToString
     public static class PauseRunning {
        private final String runningId;
-       private final String userId;
        private final int count;
 
        @Builder
-        public PauseRunning(final String runningKey, final String userKey, final int count) {
+        public PauseRunning(final String runningKey, final int count) {
             this.runningId = runningKey;
-            this.userId = userKey;
             this.count = count;
         }
     }
@@ -69,13 +61,11 @@ public class RunningRequest {
     public static final class ResumeRunning {
 
         private final String runningId;
-        private final String userId;
         private final int count;
 
         @Builder
-        public ResumeRunning(final String runningId, final String userId, final int count) {
+        public ResumeRunning(final String runningId, final int count) {
             this.runningId = runningId;
-            this.userId = userId;
             this.count = count;
         }
     }
@@ -84,13 +74,11 @@ public class RunningRequest {
     public static class StopRunning {
 
         private final String runningId;
-        private final String userId;
         private final int count;
 
         @Builder
-        public StopRunning(final String runningId, final String userId, final int count) {
+        public StopRunning(final String runningId, final int count) {
             this.runningId = runningId;
-            this.userId = userId;
             this.count = count;
         }
     }
@@ -99,7 +87,6 @@ public class RunningRequest {
     public static class AggregateRunning {
 
         private final String runningId;
-        private final String userId;
         private final List<LocationData> dataList;
         private final int count;
         private final int runningDistanceInMeter;
@@ -109,14 +96,12 @@ public class RunningRequest {
         @Builder
         public AggregateRunning(
                 final String runningId,
-                final String userId,
                 final int count,
                 final List<LocationData> dataList,
                 final int runningDistanceInMeter,
                 final int runningDurationInMilliSecond,
                 final int averagePaceInMilliSecond) {
             this.runningId = runningId;
-            this.userId = userId;
             this.count = count;
             this.dataList = dataList;
             this.runningDistanceInMeter = runningDistanceInMeter;
