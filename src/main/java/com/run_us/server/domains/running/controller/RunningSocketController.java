@@ -129,16 +129,6 @@ public class RunningSocketController {
             sessionId, USER_WS_LOGS_SUBSCRIBE_PATH, SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
   }
 
-  /***
-   * 사용자의 요청메세지에서 subscribeId를 추출
-   * @param message
-   * @return
-   */
-  private String getSubscriptionId(Message<?> message) {
-    SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.wrap(message);
-    return headerAccessor.getSubscriptionId();
-  }
-
   private void sendToUser(@NotNull String sessionId, @NotNull String destination, Object payload) {
     SimpMessageHeaderAccessor headerAccessor =
         SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
