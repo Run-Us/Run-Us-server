@@ -7,14 +7,12 @@ import com.run_us.server.domains.running.controller.model.request.RunningRequest
 import com.run_us.server.domains.running.controller.model.request.RunningRequest.LocationUpdate;
 import com.run_us.server.domains.running.controller.model.response.RunningResponse;
 import com.run_us.server.domains.running.service.RunningLiveService;
-import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.domains.running.service.RunningResultService;
 import com.run_us.server.domains.running.service.model.RunningMapper;
 import com.run_us.server.global.common.SuccessResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -36,7 +34,6 @@ public class RunningSocketController {
   private final SimpMessageSendingOperations simpMessageSendingOperations;
 
   private final RunningLiveService runningLiveService;
-  private final RunningPreparationService runningPreparationService;
   private final RunningResultService runningResultService;
 
   /**
@@ -46,6 +43,7 @@ public class RunningSocketController {
    */
   @MessageMapping("/runnings/start")
   public void startRunning(@UserId String userId, RunningRequest.StartRunning requestDto) {
+    log.info("action=start_running user_id={} running_id={}", userId, requestDto.getRunningId());
     runningLiveService.startRunning(requestDto.getRunningId(), userId);
     simpMessagingTemplate.convertAndSend(
         RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
@@ -59,6 +57,7 @@ public class RunningSocketController {
    */
   @MessageMapping("/users/runnings/location")
   public void updateLocation(@UserId String userId,  LocationUpdate requestDto) {
+    log.info("action=update_running user_id={} running_id={}", userId, requestDto.getRunningId());
     runningLiveService.updateLocation(
         requestDto.getRunningId(),
         userId,
@@ -78,7 +77,7 @@ public class RunningSocketController {
    */
   @MessageMapping("/users/runnings/pause")
   public void pauseRunning(@UserId String userId, RunningRequest.PauseRunning requestDto) {
-    log.info("pauseRunning : {}", requestDto.getRunningId());
+    log.info("action=pause_running user_id={} running_id={}", userId, requestDto.getRunningId());
     runningLiveService.pauseRunning(requestDto.getRunningId(), userId);
     simpMessagingTemplate.convertAndSend(
         RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
@@ -92,7 +91,7 @@ public class RunningSocketController {
    */
   @MessageMapping("/users/runnings/resume")
   public void resumeRunning(@UserId String userId, RunningRequest.ResumeRunning requestDto) {
-    log.info("resumeRunning : {}", requestDto.getRunningId());
+    log.info("action=resume_running user_id={} running_id={}", userId, requestDto.getRunningId());
     runningLiveService.resumeRunning(requestDto.getRunningId(), userId);
     simpMessagingTemplate.convertAndSend(
         RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
@@ -107,7 +106,7 @@ public class RunningSocketController {
   @MessageMapping("/users/runnings/end")
   public void endRunning(@UserId String userId,  RunningRequest.StopRunning requestDto) {
     // TODO:check if the user is the owner of the running session
-    log.info("endRunning : {}", requestDto.getRunningId());
+    log.info("action=end_running user_id={} running_id={}", userId, requestDto.getRunningId());
     runningLiveService.endRunning(requestDto.getRunningId(), userId);
     simpMessagingTemplate.convertAndSend(
         RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
@@ -125,9 +124,8 @@ public class RunningSocketController {
           @Header("simpSessionId") String sessionId,
           @UserId String userId,
           RunningRequest.AggregateRunning requestDto) {
-    log.info("aggregateRunning : {}", requestDto.getRunningId());
+    log.info("action=aggregate_running user_id={} running_id={}", userId, requestDto.getRunningId());
     runningResultService.savePersonalRecord(requestDto.getRunningId(), userId, RunningMapper.toRunningAggregation(requestDto));
-
     sendToUser(
             sessionId, USER_WS_LOGS_SUBSCRIBE_PATH, SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
   }
@@ -137,6 +135,7 @@ public class RunningSocketController {
         SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
     headerAccessor.setSessionId(sessionId);
     headerAccessor.setLeaveMutable(true);
+    log.info("sendToUser : {}", sessionId);
     simpMessageSendingOperations.convertAndSendToUser(
         sessionId, destination, payload, headerAccessor.getMessageHeaders());
   }
