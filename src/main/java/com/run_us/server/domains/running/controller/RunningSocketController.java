@@ -1,8 +1,8 @@
 package com.run_us.server.domains.running.controller;
 
 import com.run_us.server.domains.running.RunningConst;
+import com.run_us.server.domains.running.controller.aop.UserId;
 import com.run_us.server.domains.running.controller.model.RunningSocketResponseCode;
-import com.run_us.server.domains.running.controller.model.UserSocketResponseCode;
 import com.run_us.server.domains.running.controller.model.request.RunningRequest;
 import com.run_us.server.domains.running.controller.model.request.RunningRequest.LocationUpdate;
 import com.run_us.server.domains.running.controller.model.response.RunningResponse;
@@ -10,9 +10,7 @@ import com.run_us.server.domains.running.service.RunningLiveService;
 import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.domains.running.service.RunningResultService;
 import com.run_us.server.domains.running.service.model.RunningMapper;
-import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.SuccessResponse;
-import com.run_us.server.global.exception.UserSocketException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +21,9 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
-import java.util.Objects;
-import java.util.Optional;
 
-import static com.run_us.server.global.common.GlobalConst.SESSION_ATTRIBUTE_USER;
 import static com.run_us.server.global.common.SocketConst.USER_WS_LOGS_SUBSCRIBE_PATH;
 
 /** 러닝 websocket 컨트롤러 */
@@ -51,10 +45,10 @@ public class RunningSocketController {
    * @param requestDto 요청 body
    */
   @MessageMapping("/runnings/start")
-  public void startRunning(RunningRequest.StartRunning requestDto) {
-    runningLiveService.startRunning(requestDto.getRunningKey(), requestDto.getUserId());
+  public void startRunning(@UserId String userId, RunningRequest.StartRunning requestDto) {
+    runningLiveService.startRunning(requestDto.getRunningId(), userId);
     simpMessagingTemplate.convertAndSend(
-        RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningKey(),
+        RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
         SuccessResponse.messageOnly(RunningSocketResponseCode.START_RUNNING));
   }
 
@@ -64,17 +58,17 @@ public class RunningSocketController {
    * @param requestDto 요청 body
    */
   @MessageMapping("/users/runnings/location")
-  public void updateLocation(LocationUpdate requestDto) {
+  public void updateLocation(@UserId String userId,  LocationUpdate requestDto) {
     runningLiveService.updateLocation(
         requestDto.getRunningId(),
-        requestDto.getUserId(),
+        userId,
         requestDto.getLatitude(),
         requestDto.getLongitude(),
         requestDto.getCount());
     simpMessagingTemplate.convertAndSend(
         RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
         SuccessResponse.of(
-            RunningSocketResponseCode.UPDATE_LOCATION, RunningResponse.LocationData.toDto(requestDto)));
+            RunningSocketResponseCode.UPDATE_LOCATION, RunningResponse.LocationData.toDto(requestDto, userId)));
   }
 
   /***
@@ -82,9 +76,9 @@ public class RunningSocketController {
    * @param requestDto
    */
   @MessageMapping("/users/runnings/pause")
-  public void pauseRunning(RunningRequest.PauseRunning requestDto) {
+  public void pauseRunning(@UserId String userId, RunningRequest.PauseRunning requestDto) {
     log.info("pauseRunning : {}", requestDto.getRunningId());
-    runningLiveService.pauseRunning(requestDto.getRunningId(), requestDto.getUserId());
+    runningLiveService.pauseRunning(requestDto.getRunningId(), userId);
     simpMessagingTemplate.convertAndSend(
         RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
         SuccessResponse.messageOnly(RunningSocketResponseCode.PAUSE_RUNNING));
@@ -95,9 +89,9 @@ public class RunningSocketController {
    * @param requestDto
    */
   @MessageMapping("/users/runnings/resume")
-  public void resumeRunning(RunningRequest.ResumeRunning requestDto) {
+  public void resumeRunning(@UserId String userId, RunningRequest.ResumeRunning requestDto, SimpMessageHeaderAccessor message) {
     log.info("resumeRunning : {}", requestDto.getRunningId());
-    runningLiveService.resumeRunning(requestDto.getRunningId(), requestDto.getUserId());
+    runningLiveService.resumeRunning(requestDto.getRunningId(), userId);
     simpMessagingTemplate.convertAndSend(
         RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
         SuccessResponse.messageOnly(RunningSocketResponseCode.RESUME_RUNNING));
@@ -108,10 +102,10 @@ public class RunningSocketController {
    * @param requestDto
    */
   @MessageMapping("/users/runnings/end")
-  public void endRunning(RunningRequest.StopRunning requestDto) {
+  public void endRunning(@UserId String userId,  RunningRequest.StopRunning requestDto) {
     // TODO:check if the user is the owner of the running session
     log.info("endRunning : {}", requestDto.getRunningId());
-    runningLiveService.endRunning(requestDto.getRunningId(), requestDto.getUserId());
+    runningLiveService.endRunning(requestDto.getRunningId(), userId);
     simpMessagingTemplate.convertAndSend(
         RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
         SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
@@ -119,17 +113,17 @@ public class RunningSocketController {
 
   /***
    * 러닝 결과 집계, 결과를 저장하고 라이브 러닝방에 결과를 publish
+   * @param sessionId 세션 ID (웹소켓 세션)
+   * @param userId 사용자 (고유번호 세션에서 추출)
    * @param requestDto
    */
   @MessageMapping("/users/runnings/aggregate")
   public void aggregateRunning(
-          @Header("simpSessionId") String sessionId, RunningRequest.AggregateRunning requestDto, StompHeaderAccessor accessor) {
-    // TODO : requestDto 수정 - 세션에 저장된 유저 정보를 사용하기 때문에 DTO 에 userId 를 받을 필요 없음
-
+          @Header("simpSessionId") String sessionId,
+          @UserId String userId,
+          RunningRequest.AggregateRunning requestDto) {
     log.info("aggregateRunning : {}", requestDto.getRunningId());
-    User user = (User) Objects.requireNonNull(accessor.getSessionAttributes()).get(SESSION_ATTRIBUTE_USER);
-
-    runningResultService.savePersonalRecord(requestDto.getRunningId(), user, RunningMapper.toRunningAggregation(requestDto));
+    runningResultService.savePersonalRecord(requestDto.getRunningId(), userId, RunningMapper.toRunningAggregation(requestDto));
 
     sendToUser(
             sessionId, USER_WS_LOGS_SUBSCRIBE_PATH, SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
