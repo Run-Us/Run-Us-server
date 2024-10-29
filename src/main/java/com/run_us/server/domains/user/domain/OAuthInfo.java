@@ -1,6 +1,7 @@
 package com.run_us.server.domains.user.domain;
 
-import com.run_us.server.global.common.DateAudit;
+import com.run_us.server.global.common.CreationTimeAudit;
+import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,15 +19,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "oauth_accounts")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OAuthInfo extends DateAudit {
+public class OAuthInfo extends CreationTimeAudit {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @Column(columnDefinition = "INT")
+  private Integer id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
+  @JoinColumn(name = "user_id", nullable = false, columnDefinition = "INT")
   private User user;
 
   @Enumerated(EnumType.STRING)

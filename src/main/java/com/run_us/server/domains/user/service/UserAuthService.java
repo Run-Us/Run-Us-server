@@ -2,6 +2,7 @@ package com.run_us.server.domains.user.service;
 
 import com.run_us.server.domains.user.controller.model.request.UserSignUpRequest;
 import com.run_us.server.domains.user.domain.User;
+import com.run_us.server.domains.user.domain.Profile;
 import com.run_us.server.domains.user.domain.OAuthInfo;
 import com.run_us.server.domains.user.domain.TokenPair;
 import com.run_us.server.domains.user.domain.AuthResult;
@@ -53,8 +54,12 @@ public class UserAuthService {
     }
 
     private User createAndSaveUser(UserSignUpRequest userSignUpRequest) {
-        User user = User.builder()
+        Profile profile = Profile.builder()
                 .nickname(userSignUpRequest.getNickName())
+                .build();
+
+        User user = User.builder()
+                .profile(profile)
                 .build();
         return userRepository.save(user);
     }

@@ -13,6 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
@@ -29,6 +30,8 @@ class PenaltyRepositoryTest {
   void create_penalty() {
     //given
     User user = UserFixtures.getDefaultUser();
+    ReflectionTestUtils.setField(user, "id", 1);
+    ReflectionTestUtils.setField(user.getProfile(), "userId", 1);
     userRepository.saveAndFlush(user);
 
 

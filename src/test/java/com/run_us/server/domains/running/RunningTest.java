@@ -48,7 +48,7 @@ class RunningTest {
       @Test
       @DisplayName("참가자목록에 유저 ID를 추가한다")
       void it_adds_a_participant() {
-        ReflectionTestUtils.setField(participant, "id", 1L);
+        ReflectionTestUtils.setField(participant, "id", 1);
         running.addParticipant(participant);
         assertTrue(running.hasParticipant(participant));
       }
@@ -67,7 +67,7 @@ class RunningTest {
       @Test
       @DisplayName("유저가 있는지 확인하고 유저가 있다면 true를 반환한다")
       void it_checks_participant_exists() {
-        ReflectionTestUtils.setField(participant, "id", 1L);
+        ReflectionTestUtils.setField(participant, "id", 1);
         running.addParticipant(participant);
         assertTrue(running.hasParticipant(participant));
       }
@@ -75,7 +75,7 @@ class RunningTest {
       @Test
       @DisplayName("유저가 있는지 확인하고 유저가 없다면 false를 반환한다")
       void it_checks_participant_non_exists() {
-        ReflectionTestUtils.setField(participant, "id", 2L);
+        ReflectionTestUtils.setField(participant, "id", 2);
         assertFalse(running.hasParticipant(participant));
       }
     }
@@ -93,7 +93,7 @@ class RunningTest {
       @Test
       @DisplayName("참가자목록에서 해당 유저 ID를 제거한다")
       void it_removes_a_participant() {
-        ReflectionTestUtils.setField(participant, "id", 1L);
+        ReflectionTestUtils.setField(participant, "id", 1);
         running.addParticipant(participant);
         running.removeParticipant(participant);
         assertFalse(running.hasParticipant(participant));
@@ -115,8 +115,8 @@ class RunningTest {
       @Test
       @DisplayName("참가자 목록을 반환한다")
       void it_returns_participants() {
-        ReflectionTestUtils.setField(participant1, "id", 1L);
-        ReflectionTestUtils.setField(participant2, "id", 2L);
+        ReflectionTestUtils.setField(participant1, "id", 1);
+        ReflectionTestUtils.setField(participant2, "id", 2);
         running.addParticipant(participant1);
         running.addParticipant(participant2);
         assertEquals(2, running.getAllParticipantsId().size());

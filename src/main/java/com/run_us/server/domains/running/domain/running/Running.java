@@ -3,9 +3,11 @@ package com.run_us.server.domains.running.domain.running;
 import com.run_us.server.domains.running.domain.running.RunningConstraints.RunningConstraintsConverter;
 import com.run_us.server.domains.running.domain.running.RunningDescription.RunningDescriptionConverter;
 import com.run_us.server.domains.user.domain.User;
-import com.run_us.server.global.common.DateAudit;
+import com.run_us.server.global.common.CreationTimeAudit;
 import com.run_us.server.global.util.PassCodeGenerator;
 import io.hypersistence.tsid.TSID;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
@@ -22,31 +24,29 @@ import org.locationtech.jts.geom.Point;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Running extends DateAudit {
+@Table(name = "runnings")
+public class Running extends CreationTimeAudit {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
-  @Column(name = "public_key", nullable = false)
+  @Column(name = "public_id", nullable = false, columnDefinition = "CHAR(13)")
   private String publicKey;
 
-  @Column(name = "passcode", nullable = false)
+  @Transient
   private String passcode;
 
   @Column(name = "start_location", nullable = false)
   private Point startLocation;
 
-  @Column(name = "running_constraints", nullable = false)
+  @Column(name = "constraints", nullable = false)
   @Convert(converter = RunningConstraintsConverter.class)
   private RunningConstraints constraints;
 
-  @Column(name = "running_annotation", nullable = false)
+  @Column(name = "annotation", nullable = false)
   @Convert(converter = RunningDescriptionConverter.class)
   private RunningDescription description;
-
-  @Column(name = "is_verified", nullable = false)
-  private boolean isVerified = false;
 
   @Embedded
   private Participants participants = new Participants();
@@ -72,12 +72,8 @@ public class Running extends DateAudit {
     this.participants.remove(user.getId());
   }
 
-  public List<Long> getAllParticipantsId() {
+  public List<Integer> getAllParticipantsId() {
     return this.participants.getAllParticipantsId();
-  }
-
-  public void verify() {
-    this.isVerified = true;
   }
 
   @Override

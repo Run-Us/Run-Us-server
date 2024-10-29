@@ -17,7 +17,7 @@ public interface PersonalRecordRepository extends JpaRepository<PersonalRecord, 
             "p.createdAt) " +
             "FROM PersonalRecord p " +
             "WHERE p.userId = :userId AND p.runningId = :runningId")
-    Optional<PersonalRecordQueryResult> findByUserIdAndRunningId(Long userId, Long runningId);
+    Optional<PersonalRecordQueryResult> findByUserIdAndRunningId(Integer userId, Integer runningId);
 
     @Query("SELECT new com.run_us.server.domains.running.service.model.PersonalRecordQueryResult(" +
             "p.runningDistanceInMeters, " +
@@ -26,5 +26,5 @@ public interface PersonalRecordRepository extends JpaRepository<PersonalRecord, 
             "p.createdAt) " +
             "FROM PersonalRecord p " +
             "WHERE p.userId = :userId")
-    List<PersonalRecordQueryResult> findAllByUserId(Long userId);
+    List<PersonalRecordQueryResult> findAllByUserId(Integer userId);
 }

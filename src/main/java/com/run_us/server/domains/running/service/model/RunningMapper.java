@@ -28,8 +28,8 @@ public final class RunningMapper {
    * @param aggregateRunning 러닝결과 집계
    */
   public static PersonalRecord toPersonalRecord(
-          final Long userId,
-          final Long runningId,
+          final Integer userId,
+          final Integer runningId,
           final RunningAggregation aggregateRunning) {
     return PersonalRecord.builder()
         .runningId(runningId)

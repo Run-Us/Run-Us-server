@@ -16,14 +16,14 @@ import lombok.NoArgsConstructor;
 @Table(name = "running_records")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RunningRecord extends DateAudit {
+public class RunningRecord {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @Column(name = "running_id", nullable = false)
-  private Long runningId;
+  private Integer runningId;
 
   @Column(name = "start_time", nullable = false)
   private ZonedDateTime startTime;
@@ -38,7 +38,7 @@ public class RunningRecord extends DateAudit {
   private int finishCount;
 
   @Column(name = "total_distance", nullable = false)
-  private Double totalDistance;
+  private Integer totalDistanceInMeter;
 
   /***
    * Constructor for RunningRecord
@@ -47,18 +47,18 @@ public class RunningRecord extends DateAudit {
    * @param endTime 기록 종료 시간
    * @param participantCount 참가자 수
    * @param finishCount 완주자 수
-   * @param totalDistance 총 거리
+   * @param totalDistanceInMeter 총 거리
    */
   @Builder
   public RunningRecord(
-      @NotNull Long runningId,
+      @NotNull Integer runningId,
       @NotNull ZonedDateTime startTime,
       @NotNull ZonedDateTime endTime,
       int participantCount,
       int finishCount,
-      @NotNull Double totalDistance) {
+      @NotNull Integer totalDistanceInMeter) {
     validateEndTime(startTime, endTime);
-    validateTotalDistance(totalDistance);
+    validateTotalDistance(totalDistanceInMeter);
     validateParticipantCount(participantCount);
     validateFinishCount(finishCount, participantCount);
     this.runningId = runningId;
@@ -66,7 +66,7 @@ public class RunningRecord extends DateAudit {
     this.endTime = endTime;
     this.participantCount = participantCount;
     this.finishCount = finishCount;
-    this.totalDistance = totalDistance;
+    this.totalDistanceInMeter = totalDistanceInMeter;
   }
 
   private void validateFinishCount(int finishCount, int participantCount) {
@@ -90,8 +90,8 @@ public class RunningRecord extends DateAudit {
     }
   }
 
-  private void validateTotalDistance(Double totalDistance) {
-    if (totalDistance < 0) {
+  private void validateTotalDistance(Integer totalDistanceInMeter) {
+    if (totalDistanceInMeter < 0) {
       throw new IllegalArgumentException("총 거리는 0 이상이어야 합니다.");
     }
   }

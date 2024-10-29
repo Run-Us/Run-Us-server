@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface PenaltyRepository extends JpaRepository<Penalty, Long> {
 
   @Query("SELECT p FROM Penalty p WHERE p.user.id = :userId")
-  List<Penalty> findByUserId(Long userId);
+  List<Penalty> findByUserId(Integer userId);
 }

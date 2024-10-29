@@ -28,7 +28,7 @@ public class Penalty {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
@@ -37,7 +37,7 @@ public class Penalty {
   @Column(name = "desc")
   private String description;
 
-  @Column(name = "penalty_type", nullable = false)
+  @Column(name = "type", nullable = false)
   private String penaltyType;
 
   @Column(name = "applied_at", nullable = false)

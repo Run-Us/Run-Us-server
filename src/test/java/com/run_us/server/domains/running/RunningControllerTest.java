@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @SpringBootTest
 @Import(TestRedisConfiguration.class)
@@ -51,7 +52,13 @@ class RunningControllerTest {
     void setUp() {
       // save users
       User u1 = UserFixtures.getDefaultUserWithNickname("us1");
+      ReflectionTestUtils.setField(u1, "id", 100);
+      ReflectionTestUtils.setField(u1.getProfile(), "userId", 100);
+
       User u2 = UserFixtures.getDefaultUserWithNickname("us2");
+      ReflectionTestUtils.setField(u2, "id", 200);
+      ReflectionTestUtils.setField(u2.getProfile(), "userId", 200);
+
       userRepository.saveAndFlush(u1);
       userRepository.saveAndFlush(u2);
 
@@ -66,8 +73,8 @@ class RunningControllerTest {
       // given
       String runningId = r1.getPublicKey();
       // when
-      SuccessResponse successResponse = runningController.joinedParticipants(runningId);
-      List<JoinedParticipant> joinedParticipants = (List<JoinedParticipant>) successResponse.getPayload();
+      SuccessResponse<List<JoinedParticipant>> successResponse = runningController.joinedParticipants(runningId);
+      List<JoinedParticipant> joinedParticipants = successResponse.getPayload();
       //then
       Assertions.assertEquals(2, joinedParticipants.size());
     }
@@ -84,7 +91,10 @@ class RunningControllerTest {
         void setUp() {
           // save users
           u1 = UserFixtures.getDefaultUserWithNickname("us1");
+          ReflectionTestUtils.setField(u1, "id", 11);
+          ReflectionTestUtils.setField(u1.getProfile(), "userId", 11);
           userRepository.saveAndFlush(u1);
+          u1 = userRepository.findByNickname("us1").get();
           // create running
           r1 = RunningFixtures.getDefaultRunningWithParticipants(List.of(u1));
           runningRepository.saveAndFlush(r1);
@@ -100,7 +110,7 @@ class RunningControllerTest {
           String runningId = r1.getPublicKey();
           String userId = u1.getPublicId();
           // when
-          SuccessResponse successResponse = runningController.getPersonalRecord(runningId, userId);
+          SuccessResponse<PersonalRecordQueryResult> successResponse = runningController.getPersonalRecord(runningId, userId);
           PersonalRecordQueryResult personalRecord = (PersonalRecordQueryResult) successResponse.getPayload();
           //then
           Assertions.assertNotNull(successResponse.getPayload());

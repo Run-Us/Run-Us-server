@@ -61,7 +61,7 @@ public class RunningResultService {
      * @param userId 유저 고유번호
      * @return 개인 기록 리스트
      */
-    public List<PersonalRecordQueryResult> getAllPersonalRecords(Long userId) {
+    public List<PersonalRecordQueryResult> getAllPersonalRecords(Integer userId) {
       return personalRecordRepository.findAllByUserId(userId);
     }
 }

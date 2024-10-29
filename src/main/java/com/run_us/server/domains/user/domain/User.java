@@ -4,20 +4,19 @@ import com.run_us.server.global.common.DateAudit;
 import io.hypersistence.tsid.TSID;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import java.time.LocalDate;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
@@ -30,25 +29,14 @@ public class User extends DateAudit{
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "user_id")
-  private Long id;
+  private Integer id;
 
-  @Column(name = "public_id", nullable = false)
+  @Column(name = "public_id", nullable = false, columnDefinition = "CHAR(13)")
   private String publicId;
 
-  @Column(name = "nickname", nullable = false)
-  private String nickname;
-
-  @Column(name = "birth_date")
-  private LocalDate birthDate;
-
-  @Column(name = "gender")
-  @Enumerated(EnumType.STRING)
-  @ColumnDefault("'NONE'")
-  private Gender gender;
-
-  @Column(name = "img_url")
-  private String imgUrl;
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinColumn(name = "id", referencedColumnName = "user_id")
+  private Profile profile;
 
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
@@ -57,17 +45,11 @@ public class User extends DateAudit{
 
   /***
    * User 생성자
-   * @param nickname 사용자 닉네임, 중복가능, Not null
-   * @param birthDate 사용자 생년월일
-   * @param gender 사용자 성별, default NONE
-   * @param imgUrl 사용자 프로필 이미지 URL
+   * @param profile 프로필 정보
    */
   @Builder
-  public User(@NotNull String nickname, LocalDate birthDate, Gender gender, String imgUrl) {
-    this.nickname = nickname;
-    this.birthDate = birthDate;
-    this.gender = gender;
-    this.imgUrl = imgUrl;
+  private User(Profile profile) {
+    this.profile = profile;
   }
 
   @Override
@@ -79,12 +61,12 @@ public class User extends DateAudit{
   // 비즈니스 로직 메소드
 
   /**
-   * change profile image url method
+   * change profile method
    *
-   * @param newImgUrl 변경할 이미지 URL
+   * @param profile 변경할 프로필 정보
    * */
-  public void changeProfileImgUrl(@NotNull String newImgUrl) {
-    this.imgUrl = newImgUrl;
+  public void setProfile(Profile profile) {
+    this.profile = profile;
   }
 
   /***
