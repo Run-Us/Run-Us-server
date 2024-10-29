@@ -41,7 +41,7 @@ public class RunningSocketController {
 
   /**
    * 러닝 시작
-   *
+   * @param userId 사용자 (고유번호 세션에서 추출)
    * @param requestDto 요청 body
    */
   @MessageMapping("/runnings/start")
@@ -54,7 +54,7 @@ public class RunningSocketController {
 
   /**
    * 위치 전송, 라이브 러닝방에 위치정보를 publish
-   *
+   * @param userId 사용자 (고유번호 세션에서 추출)
    * @param requestDto 요청 body
    */
   @MessageMapping("/users/runnings/location")
@@ -73,7 +73,8 @@ public class RunningSocketController {
 
   /***
    * 러닝 일시정지, 라이브 러닝방에 일시정지 이벤트를 publish
-   * @param requestDto
+   * @param userId 사용자 (고유번호 세션에서 추출)
+   * @param requestDto 요청 body
    */
   @MessageMapping("/users/runnings/pause")
   public void pauseRunning(@UserId String userId, RunningRequest.PauseRunning requestDto) {
@@ -86,10 +87,11 @@ public class RunningSocketController {
 
   /***
    * 러닝 재개, 라이브 러닝방에 재개 이벤트를 publish
-   * @param requestDto
+   * @param userId 사용자 (고유번호 세션에서 추출)
+   * @param requestDto 요청 body
    */
   @MessageMapping("/users/runnings/resume")
-  public void resumeRunning(@UserId String userId, RunningRequest.ResumeRunning requestDto, SimpMessageHeaderAccessor message) {
+  public void resumeRunning(@UserId String userId, RunningRequest.ResumeRunning requestDto) {
     log.info("resumeRunning : {}", requestDto.getRunningId());
     runningLiveService.resumeRunning(requestDto.getRunningId(), userId);
     simpMessagingTemplate.convertAndSend(
@@ -99,7 +101,8 @@ public class RunningSocketController {
 
   /***
    * 러닝 종료, 라이브 러닝방에 종료 이벤트를 publish
-   * @param requestDto
+   * @param userId 사용자 (고유번호 세션에서 추출)
+   * @param requestDto 요청 body
    */
   @MessageMapping("/users/runnings/end")
   public void endRunning(@UserId String userId,  RunningRequest.StopRunning requestDto) {
@@ -115,7 +118,7 @@ public class RunningSocketController {
    * 러닝 결과 집계, 결과를 저장하고 라이브 러닝방에 결과를 publish
    * @param sessionId 세션 ID (웹소켓 세션)
    * @param userId 사용자 (고유번호 세션에서 추출)
-   * @param requestDto
+   * @param requestDto 요청 body
    */
   @MessageMapping("/users/runnings/aggregate")
   public void aggregateRunning(
