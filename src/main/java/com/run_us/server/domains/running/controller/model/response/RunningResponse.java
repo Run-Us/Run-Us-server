@@ -41,9 +41,9 @@ public class RunningResponse {
             this.y = y;
         }
 
-        public static LocationData toDto(LocationUpdate data) {
+        public static LocationData toDto(LocationUpdate data, String userId) {
             return LocationData.builder()
-                    .userKey(data.getUserId())
+                    .userKey(userId)
                     .x(data.getLatitude())
                     .y(data.getLongitude())
                     .build();

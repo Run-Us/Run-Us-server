@@ -29,13 +29,15 @@ public class RunningResultService {
   /***
    * 러닝 개인 기록 저장
    * @param runningId 러닝 고유번호(public)
-   * @param user 요청 유저
+   * @param userId 요청 유저 고유번호(public)
    * @param aggregation 러닝 데이터 결과
    */
   @Transactional
-  public void savePersonalRecord(String runningId, User user, RunningAggregation aggregation) {
+  public void savePersonalRecord(String runningId, String userId, RunningAggregation aggregation) {
     Running running = runningRepository.findByPublicKey(runningId)
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
+    User user = userRepository.findByPublicId(userId)
+        .orElseThrow(IllegalArgumentException::new);
     PersonalRecord personalRecord = RunningMapper.toPersonalRecord(running.getId(), user.getId(), aggregation);
     personalRecordRepository.save(personalRecord);
   }
