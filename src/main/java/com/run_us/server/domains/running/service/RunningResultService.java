@@ -1,5 +1,7 @@
 package com.run_us.server.domains.running.service;
 
+import com.run_us.server.domains.running.controller.model.request.MultiRunRecordRequest;
+import com.run_us.server.domains.running.controller.model.request.SingleRunRecordRequest;
 import com.run_us.server.domains.running.domain.record.PersonalRecord;
 import com.run_us.server.domains.running.domain.running.Running;
 import com.run_us.server.domains.running.exception.RunningErrorCode;
@@ -33,13 +35,30 @@ public class RunningResultService {
    * @param aggregation 러닝 데이터 결과
    */
   @Transactional
-  public void savePersonalRecord(String runningId, String userId, RunningAggregation aggregation) {
+  public void savePersonalRecordWithRunningId(String runningId, String userId, MultiRunRecordRequest aggregation) {
     Running running = runningRepository.findByPublicKey(runningId)
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
     User user = userRepository.findByPublicId(userId)
         .orElseThrow(IllegalArgumentException::new);
     PersonalRecord personalRecord = RunningMapper.toPersonalRecord(running.getId(), user.getId(), aggregation);
     personalRecordRepository.save(personalRecord);
+  }
+
+  /***
+   * 혼자 달리기 기록 저장 시 Running 엔티티와 Record 엔티티 생성
+   * @param userId
+   * @param aggregation
+   * @return
+   */
+  @Transactional
+  public String saveSingleRunning(String userId, SingleRunRecordRequest aggregation) {
+    Running running = Running.createSingleRunning();
+    User user = userRepository.findByPublicId(userId)
+        .orElseThrow(IllegalArgumentException::new);
+    runningRepository.save(running);
+    PersonalRecord personalRecord = RunningMapper.toPersonalRecord(running.getId(), user.getId(), aggregation);
+    personalRecordRepository.save(personalRecord);
+    return running.getPublicKey();
   }
 
     /***

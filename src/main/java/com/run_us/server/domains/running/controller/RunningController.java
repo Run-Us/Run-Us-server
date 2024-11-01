@@ -1,7 +1,9 @@
 package com.run_us.server.domains.running.controller;
 
 import com.run_us.server.domains.running.controller.model.RunningHttpResponseCode;
+import com.run_us.server.domains.running.controller.model.request.MultiRunRecordRequest;
 import com.run_us.server.domains.running.controller.model.request.RunningCreateRequest;
+import com.run_us.server.domains.running.controller.model.request.SingleRunRecordRequest;
 import com.run_us.server.domains.running.controller.model.response.RunningCreateResponse;
 import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.domains.running.service.RunningResultService;
@@ -9,14 +11,10 @@ import com.run_us.server.domains.running.service.model.JoinedParticipant;
 import com.run_us.server.domains.running.service.model.PersonalRecordQueryResult;
 import com.run_us.server.global.common.SuccessResponse;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -53,5 +51,37 @@ public class RunningController {
     log.info("action=get_personal_record running_id={} user_id={}", runningId, userId);
     return SuccessResponse.of(RunningHttpResponseCode.SINGLE_RECORD_FETCHED,
         runningResultService.getPersonalRecord(runningId, userId));
+  }
+
+  /***
+   * 혼자 달리기 종료 후 기록을 저장하는 API
+   * requestParam mode=single
+   * e.g) /runnings/aggregates?mode=single
+   * @param runningAggregation 달리기 결과
+   * @return SuccessResponse
+   */
+  @PostMapping(value = "/aggregates", params = "mode=single")
+  public SuccessResponse<String> saveSingleRunPersonalRecord(
+      @RequestBody SingleRunRecordRequest runningAggregation,
+      @RequestAttribute("publicUserId") String userId) {
+    log.info("action=save_single_personal_record");
+    String runningId = runningResultService.saveSingleRunning(userId, runningAggregation);
+    return SuccessResponse.of(RunningHttpResponseCode.SINGLE_RECORD_SAVED, runningId);
+  }
+
+  /***
+   * 다수 달리기 종료 후 기록을 저장하는 API
+   * requestParam mode=multi
+   * e.g) /runnings/aggregates?mode=multi
+   * @param runningAggregation 달리기 결과
+   * @return SuccessResponse
+   */
+  @PostMapping(value = "/aggregates", params = "mode=multi")
+  public SuccessResponse saveMultiRunPersonalRecord(
+      @RequestBody MultiRunRecordRequest runningAggregation,
+      @RequestAttribute("publicUserId") String userId) {
+    log.info("action=save_multi_personal_record");
+    runningResultService.savePersonalRecordWithRunningId(runningAggregation.getRunningId(), userId, runningAggregation);
+    return SuccessResponse.messageOnly(RunningHttpResponseCode.MULTI_RECORD_SAVED);
   }
 }

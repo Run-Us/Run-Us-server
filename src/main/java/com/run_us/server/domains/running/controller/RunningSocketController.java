@@ -113,23 +113,6 @@ public class RunningSocketController {
         SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
   }
 
-  /***
-   * 러닝 결과 집계, 결과를 저장하고 라이브 러닝방에 결과를 publish
-   * @param sessionId 세션 ID (웹소켓 세션)
-   * @param userId 사용자 (고유번호 세션에서 추출)
-   * @param requestDto 요청 body
-   */
-  @MessageMapping("/users/runnings/aggregate")
-  public void aggregateRunning(
-          @Header("simpSessionId") String sessionId,
-          @UserId String userId,
-          RunningRequest.AggregateRunning requestDto) {
-    log.info("action=aggregate_running user_id={} running_id={}", userId, requestDto.getRunningId());
-    runningResultService.savePersonalRecord(requestDto.getRunningId(), userId, RunningMapper.toRunningAggregation(requestDto));
-    sendToUser(
-            sessionId, USER_WS_LOGS_SUBSCRIBE_PATH, SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
-  }
-
   private void sendToUser(@NotNull String sessionId, @NotNull String destination, Object payload) {
     SimpMessageHeaderAccessor headerAccessor =
         SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
