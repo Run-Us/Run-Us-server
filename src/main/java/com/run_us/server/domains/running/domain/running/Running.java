@@ -34,29 +34,37 @@ public class Running extends CreationTimeAudit {
   @Column(name = "public_id", nullable = false, columnDefinition = "CHAR(13)")
   private String publicKey;
 
+  @Column(name = "host_id")
+  private Integer hostId;
+
   @Transient
   private String passcode;
 
-  @Column(name = "start_location", nullable = false)
+  @Column(name = "start_location")
   private Point startLocation;
 
-  @Column(name = "constraints", nullable = false)
+  @Column(name = "constraints")
   @Convert(converter = RunningConstraintsConverter.class)
   private RunningConstraints constraints;
 
-  @Column(name = "annotation", nullable = false)
+  @Column(name = "annotation")
   @Convert(converter = RunningDescriptionConverter.class)
   private RunningDescription description;
 
   @Embedded
   private Participants participants = new Participants();
 
-  // 생성 메소드
+  // 같이 달리기 생성 메소드
   @Builder
-  public Running(Point startLocation, RunningConstraints constraints, RunningDescription description) {
+  public Running(Integer hostId, Point startLocation, RunningConstraints constraints, RunningDescription description) {
     this.startLocation = startLocation;
     this.constraints = constraints;
     this.description = description;
+  }
+
+  // 혼자 달리기 생성 메소드
+  public Running (Integer hostId) {
+    this.hostId = hostId;
   }
 
   // 비즈니스 로직

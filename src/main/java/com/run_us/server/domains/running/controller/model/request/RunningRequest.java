@@ -1,7 +1,6 @@
 package com.run_us.server.domains.running.controller.model.request;
 
-import com.run_us.server.domains.running.domain.LocationData;
-import java.util.List;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -80,33 +79,6 @@ public class RunningRequest {
         public StopRunning(final String runningId, final int count) {
             this.runningId = runningId;
             this.count = count;
-        }
-    }
-
-    @Getter
-    public static class AggregateRunning {
-
-        private final String runningId;
-        private final List<LocationData> dataList;
-        private final int count;
-        private final int runningDistanceInMeter;
-        private final int runningDurationInMilliSecond;
-        private final int averagePaceInMilliSecond;
-
-        @Builder
-        public AggregateRunning(
-                final String runningId,
-                final int count,
-                final List<LocationData> dataList,
-                final int runningDistanceInMeter,
-                final int runningDurationInMilliSecond,
-                final int averagePaceInMilliSecond) {
-            this.runningId = runningId;
-            this.count = count;
-            this.dataList = dataList;
-            this.runningDistanceInMeter = runningDistanceInMeter;
-            this.runningDurationInMilliSecond = runningDurationInMilliSecond;
-            this.averagePaceInMilliSecond = averagePaceInMilliSecond;
         }
     }
 }

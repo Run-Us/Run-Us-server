@@ -12,13 +12,11 @@ import lombok.NoArgsConstructor;
 public class RunningConstraints {
   private Integer maxParticipantCount;
   private Integer minPace;
-  private String ageGroup;
 
   @Builder
-  public RunningConstraints(Integer maxParticipantCount, Integer minPace, String ageGroup) {
+  public RunningConstraints(Integer maxParticipantCount, Integer minPace) {
     this.maxParticipantCount = maxParticipantCount;
     this.minPace = minPace;
-    this.ageGroup = ageGroup;
   }
 
   @Override
@@ -31,16 +29,14 @@ public class RunningConstraints {
     }
     RunningConstraints that = (RunningConstraints) o;
     return Objects.equals(maxParticipantCount, that.maxParticipantCount)
-        && Objects.equals(minPace, that.minPace) && Objects.equals(ageGroup,
-        that.ageGroup);
+        && Objects.equals(minPace, that.minPace);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(maxParticipantCount, minPace, ageGroup);
+    return Objects.hash(maxParticipantCount, minPace);
   }
 
   public static class RunningConstraintsConverter extends JsonConverter<RunningConstraints> {
-
   }
 }

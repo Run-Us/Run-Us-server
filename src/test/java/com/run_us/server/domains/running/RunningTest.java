@@ -29,7 +29,7 @@ class RunningTest {
         Point startLocation = PointGenerator.generatePoint(0L, 0L);
         RunningConstraints constraints = RunningFixtures.getDefaultRunningConstraints();
         RunningDescription description = RunningFixtures.getDefaultRunningDescription();
-        Running running = new Running(startLocation, constraints, description);
+        Running running = new Running(1, startLocation, constraints, description);
         assertNotNull(running);
       }
     }

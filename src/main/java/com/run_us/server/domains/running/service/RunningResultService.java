@@ -7,9 +7,11 @@ import com.run_us.server.domains.running.exception.RunningException;
 import com.run_us.server.domains.running.repository.PersonalRecordRepository;
 import com.run_us.server.domains.running.repository.RunningRepository;
 import com.run_us.server.domains.running.service.model.PersonalRecordQueryResult;
-import com.run_us.server.domains.running.service.model.RunningAggregation;
+import com.run_us.server.domains.running.service.model.RunningAggregations;
 import com.run_us.server.domains.running.service.model.RunningMapper;
 import com.run_us.server.domains.user.domain.User;
+import com.run_us.server.domains.user.exception.UserErrorCode;
+import com.run_us.server.domains.user.exception.UserException;
 import com.run_us.server.domains.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -27,19 +29,37 @@ public class RunningResultService {
   private final UserRepository userRepository;
 
   /***
-   * 러닝 개인 기록 저장
+   * 존재하는 달리기(같이달리기)에 대한 개인 기록 저장
    * @param runningId 러닝 고유번호(public)
    * @param userId 요청 유저 고유번호(public)
    * @param aggregation 러닝 데이터 결과
    */
   @Transactional
-  public void savePersonalRecord(String runningId, String userId, RunningAggregation aggregation) {
+  public void saveRecordForExistingRunning(String runningId, String userId, RunningAggregations aggregation) {
     Running running = runningRepository.findByPublicKey(runningId)
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
     User user = userRepository.findByPublicId(userId)
         .orElseThrow(IllegalArgumentException::new);
     PersonalRecord personalRecord = RunningMapper.toPersonalRecord(running.getId(), user.getId(), aggregation);
     personalRecordRepository.save(personalRecord);
+  }
+
+  /***
+   * 혼자 달리기 기록 저장 시 Running 엔티티와 Record 엔티티 생성
+   * @param userId
+   * @param aggregation
+   * @return
+   */
+  @Transactional
+  public String createSingleRunAndSaveRecord(String userId, RunningAggregations aggregation) {
+    User user = userRepository.findByPublicId(userId)
+        .orElseThrow(() -> UserException.of(UserErrorCode.PUBLIC_ID_NOT_FOUND));
+    Running running = new Running(user.getId());
+    running.addParticipant(user);
+    runningRepository.save(running);
+    PersonalRecord personalRecord = RunningMapper.toPersonalRecord(running.getId(), user.getId(), aggregation);
+    personalRecordRepository.save(personalRecord);
+    return running.getPublicKey();
   }
 
     /***
@@ -52,7 +72,7 @@ public class RunningResultService {
               .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
 
       User user = userRepository.findByPublicId(userId)
-              .orElseThrow(IllegalArgumentException::new);
+              .orElseThrow(() -> UserException.of(UserErrorCode.PUBLIC_ID_NOT_FOUND));
 
       return personalRecordRepository.findByUserIdAndRunningId(user.getId(), running.getId())
                 .orElseThrow(() -> RunningException.of(RunningErrorCode.PERSONAL_RECORD_NOT_FOUND));

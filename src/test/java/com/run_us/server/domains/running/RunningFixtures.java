@@ -23,7 +23,6 @@ public final class RunningFixtures {
   public static RunningConstraints getDefaultRunningConstraints() {
     return RunningConstraints.builder()
         .maxParticipantCount(10)
-        .ageGroup("20-29")
         .minPace(6)
         .build();
   }

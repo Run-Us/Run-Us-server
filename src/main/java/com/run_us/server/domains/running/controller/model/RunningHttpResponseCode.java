@@ -9,7 +9,8 @@ public enum RunningHttpResponseCode implements CustomResponseCode {
   SINGLE_RECORD_SAVED("RSH2003", "싱글런 기록 저장 성공", "싱글런 기록 저장 성공"),
   ROOM_ID_FETCHED("RSH2004", "대기방 ID 조회 성공", "Passcode Translation 성공"),
   SINGLE_RECORD_FETCHED("RSH2005", "단일 러닝 기록 상세 조회 성공", "단일 러닝 기록 상세 조회 성공"),
-  RUNNING_DELETED("RSH2006", "러닝 삭제 성공", "러닝 삭제 성공");
+  RUNNING_DELETED("RSH2006", "러닝 삭제 성공", "러닝 삭제 성공"),
+  MULTI_RECORD_SAVED("RSH2007", "멀티런 기록 저장 성공", "멀티런 기록 저장 성공");
 
   private final String code;
   private final String clientMessage;
