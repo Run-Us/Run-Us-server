@@ -1,6 +1,5 @@
 package com.run_us.server.domains.running.service.model;
 
-import com.run_us.server.domains.running.controller.model.request.RecordRequest;
 import com.run_us.server.domains.running.domain.record.PersonalRecord;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -13,19 +12,19 @@ public final class RunningMapper {
    *
    * @param userId 유저 id
    * @param runningId 러닝 id
-   * @param aggregateRunning 러닝결과 집계
+   * @param runningAggregations 러닝 기록
    */
   public static PersonalRecord toPersonalRecord(
       final Integer userId,
       final Integer runningId,
-      final RecordRequest aggregateRunning) {
+      final RunningAggregations runningAggregations) {
     return PersonalRecord.builder()
         .runningId(runningId)
         .userId(userId)
-        .recordData(aggregateRunning.getRecordData())
-        .runningDistanceInMeters(aggregateRunning.getRunningDistanceInMeters())
-        .runningDurationInMilliseconds(aggregateRunning.getRunningDurationInMilliSeconds())
-        .averagePaceInMilliseconds(aggregateRunning.getAveragePaceInMilliSeconds())
+        .recordData(runningAggregations.getRecordData())
+        .runningDistanceInMeters(runningAggregations.getRunningDistanceInMeters())
+        .runningDurationInMilliseconds(runningAggregations.getRunningDurationInMilliSeconds())
+        .averagePaceInMilliseconds(runningAggregations.getAveragePaceInMilliSeconds())
         .build();
   }
 }

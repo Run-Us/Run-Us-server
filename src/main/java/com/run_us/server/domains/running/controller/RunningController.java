@@ -9,9 +9,9 @@ import com.run_us.server.domains.running.service.RunningPreparationService;
 import com.run_us.server.domains.running.service.RunningResultService;
 import com.run_us.server.domains.running.service.model.JoinedParticipant;
 import com.run_us.server.domains.running.service.model.PersonalRecordQueryResult;
+import com.run_us.server.domains.running.service.model.RunningAggregations;
 import com.run_us.server.global.common.SuccessResponse;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -57,15 +57,15 @@ public class RunningController {
    * 혼자 달리기 종료 후 기록을 저장하는 API
    * requestParam mode=single
    * e.g) /runnings/aggregates?mode=single
-   * @param runningAggregation 달리기 결과
+   * @param singleRunRecordRequest 달리기 결과
    * @return SuccessResponse
    */
   @PostMapping(value = "/aggregates", params = "mode=single")
   public SuccessResponse<String> saveSingleRunPersonalRecord(
-      @RequestBody SingleRunRecordRequest runningAggregation,
-      @RequestAttribute("publicUserId") String userId) {
+      @RequestBody SingleRunRecordRequest singleRunRecordRequest) {
     log.info("action=save_single_personal_record");
-    String runningId = runningResultService.createSingleRunAndSaveRecord(userId, runningAggregation);
+    RunningAggregations aggregations= SingleRunRecordRequest.toRunningAggregations(singleRunRecordRequest);
+    String runningId = runningResultService.createSingleRunAndSaveRecord("s", aggregations);
     return SuccessResponse.of(RunningHttpResponseCode.SINGLE_RECORD_SAVED, runningId);
   }
 
@@ -73,15 +73,19 @@ public class RunningController {
    * 다수 달리기 종료 후 기록을 저장하는 API
    * requestParam mode=multi
    * e.g) /runnings/aggregates?mode=multi
-   * @param runningAggregation 달리기 결과
+   * @param multiRunRecordRequest 달리기 결과
    * @return SuccessResponse
    */
   @PostMapping(value = "/aggregates", params = "mode=multi")
   public SuccessResponse saveMultiRunPersonalRecord(
-      @RequestBody MultiRunRecordRequest runningAggregation,
+      @RequestBody MultiRunRecordRequest multiRunRecordRequest,
       @RequestAttribute("publicUserId") String userId) {
     log.info("action=save_multi_personal_record");
-    runningResultService.saveRecordForExistingRunning(runningAggregation.getRunningId(), userId, runningAggregation);
+    RunningAggregations aggregations= MultiRunRecordRequest.toRunningAggregations(multiRunRecordRequest);
+    runningResultService.saveRecordForExistingRunning(
+        multiRunRecordRequest.getRunningId(),
+        userId,
+        aggregations);
     return SuccessResponse.messageOnly(RunningHttpResponseCode.MULTI_RECORD_SAVED);
   }
 }
