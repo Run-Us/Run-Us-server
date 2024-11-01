@@ -9,7 +9,6 @@ import com.run_us.server.domains.running.exception.RunningException;
 import com.run_us.server.domains.running.repository.PersonalRecordRepository;
 import com.run_us.server.domains.running.repository.RunningRepository;
 import com.run_us.server.domains.running.service.model.PersonalRecordQueryResult;
-import com.run_us.server.domains.running.service.model.RunningAggregation;
 import com.run_us.server.domains.running.service.model.RunningMapper;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.repository.UserRepository;

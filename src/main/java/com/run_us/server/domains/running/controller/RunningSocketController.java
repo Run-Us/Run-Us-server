@@ -8,21 +8,16 @@ import com.run_us.server.domains.running.controller.model.request.RunningRequest
 import com.run_us.server.domains.running.controller.model.response.RunningResponse;
 import com.run_us.server.domains.running.service.RunningLiveService;
 import com.run_us.server.domains.running.service.RunningResultService;
-import com.run_us.server.domains.running.service.model.RunningMapper;
 import com.run_us.server.global.common.SuccessResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-
-
-import static com.run_us.server.global.common.SocketConst.USER_WS_LOGS_SUBSCRIBE_PATH;
 
 /** 러닝 websocket 컨트롤러 */
 @Slf4j
