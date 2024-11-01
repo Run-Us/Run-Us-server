@@ -65,7 +65,7 @@ public class RunningController {
       @RequestBody SingleRunRecordRequest runningAggregation,
       @RequestAttribute("publicUserId") String userId) {
     log.info("action=save_single_personal_record");
-    String runningId = runningResultService.saveSingleRunning(userId, runningAggregation);
+    String runningId = runningResultService.createSingleRunAndSaveRecord(userId, runningAggregation);
     return SuccessResponse.of(RunningHttpResponseCode.SINGLE_RECORD_SAVED, runningId);
   }
 
@@ -81,7 +81,7 @@ public class RunningController {
       @RequestBody MultiRunRecordRequest runningAggregation,
       @RequestAttribute("publicUserId") String userId) {
     log.info("action=save_multi_personal_record");
-    runningResultService.savePersonalRecordWithRunningId(runningAggregation.getRunningId(), userId, runningAggregation);
+    runningResultService.saveRecordForExistingRunning(runningAggregation.getRunningId(), userId, runningAggregation);
     return SuccessResponse.messageOnly(RunningHttpResponseCode.MULTI_RECORD_SAVED);
   }
 }

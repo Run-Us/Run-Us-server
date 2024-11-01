@@ -28,13 +28,13 @@ public class RunningResultService {
   private final UserRepository userRepository;
 
   /***
-   * 러닝 개인 기록 저장
+   * 존재하는 달리기(같이달리기)에 대한 개인 기록 저장
    * @param runningId 러닝 고유번호(public)
    * @param userId 요청 유저 고유번호(public)
    * @param aggregation 러닝 데이터 결과
    */
   @Transactional
-  public void savePersonalRecordWithRunningId(String runningId, String userId, MultiRunRecordRequest aggregation) {
+  public void saveRecordForExistingRunning(String runningId, String userId, MultiRunRecordRequest aggregation) {
     Running running = runningRepository.findByPublicKey(runningId)
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
     User user = userRepository.findByPublicId(userId)
@@ -50,10 +50,11 @@ public class RunningResultService {
    * @return
    */
   @Transactional
-  public String saveSingleRunning(String userId, SingleRunRecordRequest aggregation) {
+  public String createSingleRunAndSaveRecord(String userId, SingleRunRecordRequest aggregation) {
     User user = userRepository.findByPublicId(userId)
         .orElseThrow(IllegalArgumentException::new);
     Running running = new Running(user.getId());
+    running.addParticipant(user);
     runningRepository.save(running);
     PersonalRecord personalRecord = RunningMapper.toPersonalRecord(running.getId(), user.getId(), aggregation);
     personalRecordRepository.save(personalRecord);
