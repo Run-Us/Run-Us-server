@@ -31,6 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             String publicId = jwtService.getUserIdFromAccessToken(jwt);
+            request.setAttribute("publicUserId", publicId);
         } catch (Exception e) {
             logger.error("Unable to set user authentication: {}", e);
         }
