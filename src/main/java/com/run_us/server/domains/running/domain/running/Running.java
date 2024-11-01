@@ -37,14 +37,14 @@ public class Running extends CreationTimeAudit {
   @Transient
   private String passcode;
 
-  @Column(name = "start_location", nullable = false)
+  @Column(name = "start_location")
   private Point startLocation;
 
-  @Column(name = "constraints", nullable = false)
+  @Column(name = "constraints")
   @Convert(converter = RunningConstraintsConverter.class)
   private RunningConstraints constraints;
 
-  @Column(name = "annotation", nullable = false)
+  @Column(name = "annotation")
   @Convert(converter = RunningDescriptionConverter.class)
   private RunningDescription description;
 
@@ -57,6 +57,10 @@ public class Running extends CreationTimeAudit {
     this.startLocation = startLocation;
     this.constraints = constraints;
     this.description = description;
+  }
+
+  public static Running createSingleRunning() {
+    return new Running();
   }
 
   // 비즈니스 로직
