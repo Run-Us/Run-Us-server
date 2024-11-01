@@ -51,9 +51,9 @@ public class RunningResultService {
    */
   @Transactional
   public String saveSingleRunning(String userId, SingleRunRecordRequest aggregation) {
-    Running running = Running.createSingleRunning();
     User user = userRepository.findByPublicId(userId)
         .orElseThrow(IllegalArgumentException::new);
+    Running running = new Running(user.getId());
     runningRepository.save(running);
     PersonalRecord personalRecord = RunningMapper.toPersonalRecord(running.getId(), user.getId(), aggregation);
     personalRecordRepository.save(personalRecord);
