@@ -75,12 +75,12 @@ public class JwtService {
         return jwt.getSubject();
     }
 
-    public DecodedJWT verifyOAuthToken(String token, String provider, String expectedNonce) throws JWTVerificationException {
-        return tokenVerifierFactory.getVerifier(provider).verifyToken(token, expectedNonce);
+    public DecodedJWT verifyOAuthToken(String token, String provider) throws JWTVerificationException {
+        return tokenVerifierFactory.getVerifier(provider).verifyToken(token);
     }
 
-    public String getUserIdFromOAuthToken(String token, String provider, String expectedNonce) throws JWTVerificationException {
-        DecodedJWT jwt = verifyOAuthToken(token, provider, expectedNonce);
+    public String getUserIdFromOAuthToken(String token, String provider) throws JWTVerificationException {
+        DecodedJWT jwt = verifyOAuthToken(token, provider);
         return jwt.getSubject();
     }
 }
