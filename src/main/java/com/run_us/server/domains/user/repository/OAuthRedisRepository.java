@@ -25,7 +25,7 @@ public class OAuthRedisRepository {
      * @return nonce가 처음 사용되는 경우 true, 이미 사용된 경우 false
      */
     public boolean validateAndStoreNonce(SocialProvider provider, String sub, String nonce, Duration expiration) {
-        String redisKey = provider.name() + ":" + sub;
+        String redisKey = "auth:" + provider.name() + ":" + sub;
         return Boolean.TRUE.equals(
                 redisTemplate.opsForValue()
                         .setIfAbsent(redisKey, nonce, expiration));

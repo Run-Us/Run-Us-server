@@ -19,6 +19,8 @@ spring:
         dialect: ${JPA_DIALECT}
         format_sql: true
     open-in-view: false
+  jackson:
+    property-naming-strategy: SNAKE_CASE
   data:
     redis:
       host: ${REDIS_HOST}

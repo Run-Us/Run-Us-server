@@ -1,7 +1,6 @@
 package com.run_us.server.domains.user.repository;
 
 import com.run_us.server.domains.running.service.model.JoinedParticipant;
-import com.run_us.server.domains.user.domain.Profile;
 import com.run_us.server.domains.user.domain.User;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
   @Query("SELECT u FROM User u WHERE u.publicId = :publicId AND u.deletedAt IS NULL")
   Optional<User> findByPublicId(String publicId);
+
+  @Query("SELECT u FROM User u WHERE u.id = :internalId")
+  Optional<User> findByInternalId(Integer internalId);
 
   @Query("SELECT new com.run_us.server.domains.running.service.model.JoinedParticipant(p.nickname, p.imgUrl)"
           + " FROM Profile p"
