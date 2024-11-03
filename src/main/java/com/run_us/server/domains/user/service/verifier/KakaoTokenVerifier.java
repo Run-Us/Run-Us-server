@@ -6,6 +6,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.run_us.server.domains.user.domain.SocialProvider;
+import com.run_us.server.domains.user.repository.OAuthRedisRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,8 @@ import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPublicKeySpec;
-import java.security.spec.X509EncodedKeySpec;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,12 +29,14 @@ public class KakaoTokenVerifier implements TokenVerifier {
     private final String appKey;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
+    private final OAuthRedisRepository oauthRedisRepository;
     private Map<String, RSAPublicKey> publicKeys = new HashMap<>();
 
-    public KakaoTokenVerifier(@Value("${spring.security.oauth2.client.registration.kakao.client-id}") String appKey) {
+    public KakaoTokenVerifier(@Value("${spring.security.oauth2.client.registration.kakao.client-id}") String appKey, OAuthRedisRepository oauthRedisRepository) {
         this.appKey = appKey;
         this.restTemplate = new RestTemplate();
         this.objectMapper = new ObjectMapper();
+        this.oauthRedisRepository = oauthRedisRepository;
         refreshPublicKeys();
     }
 
@@ -68,9 +73,30 @@ public class KakaoTokenVerifier implements TokenVerifier {
     }
 
     @Override
-    public DecodedJWT verifyToken(String token, String expectedNonce) {
+    public DecodedJWT verifyToken(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);
+
+            String nonce = jwt.getClaim("nonce").asString();
+            if (nonce == null) {
+                throw new JWTVerificationException("Token nonce is missing");
+            }
+
+            String sub = jwt.getSubject();
+            boolean isFirstUse = oauthRedisRepository.validateAndStoreNonce(
+                    SocialProvider.KAKAO,
+                    sub,
+                    nonce,
+                    Duration.between(
+                            Instant.now(),
+                            Instant.ofEpochSecond(jwt.getExpiresAt().getTime() / 1000)
+                    )
+            );
+
+            if (!isFirstUse) {
+                throw new JWTVerificationException("Token nonce has already been used");
+            }
+
             String kid = jwt.getKeyId();
             RSAPublicKey publicKey = publicKeys.get(kid);
 
@@ -83,7 +109,6 @@ public class KakaoTokenVerifier implements TokenVerifier {
             return JWT.require(algorithm)
                     .withIssuer("https://kauth.kakao.com")
                     .withAudience(appKey)
-                    .withClaim("nonce", expectedNonce)
                     .build()
                     .verify(token);
         } catch (JWTVerificationException exception) {

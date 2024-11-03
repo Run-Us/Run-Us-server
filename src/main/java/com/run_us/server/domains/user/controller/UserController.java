@@ -1,15 +1,11 @@
 package com.run_us.server.domains.user.controller;
 
-import com.run_us.server.domains.user.controller.model.request.UserSignUpRequest;
-import com.run_us.server.domains.user.domain.Profile;
-import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
   private final UserRepository userRepository;
@@ -18,18 +14,4 @@ public class UserController {
     this.userRepository = userRepository;
   }
 
-  @PostMapping("/auth/users")
-  @Transactional
-  public User createUser(@RequestBody UserSignUpRequest userSignUpRequest) {
-
-    Profile profile = Profile.builder()
-            .nickname(userSignUpRequest.getNickName())
-            .build();
-
-    // create user
-    User user = User.builder()
-            .profile(profile)
-            .build();
-    return userRepository.save(user);
-  }
 }
