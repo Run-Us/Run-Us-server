@@ -40,6 +40,7 @@ public class RunningResultService {
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
     User user = userRepository.findByPublicId(userId)
         .orElseThrow(IllegalArgumentException::new);
+    user.updateUserRunningInfo(aggregation.getRunningDistanceInMeters(), aggregation.getRunningDurationInMilliSeconds());
     PersonalRecord personalRecord = RunningMapper.toPersonalRecord(running.getId(), user.getId(), aggregation);
     personalRecordRepository.save(personalRecord);
   }
@@ -59,6 +60,7 @@ public class RunningResultService {
     runningRepository.save(running);
     PersonalRecord personalRecord = RunningMapper.toPersonalRecord(running.getId(), user.getId(), aggregation);
     personalRecordRepository.save(personalRecord);
+    user.updateUserRunningInfo(aggregation.getRunningDistanceInMeters(), aggregation.getRunningDurationInMilliSeconds());
     return running.getPublicKey();
   }
 
