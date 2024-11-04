@@ -72,6 +72,9 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  sql:
+    init:
+      mode: always
 jwt:
   expiration: 300000
   refresh:
@@ -89,8 +92,20 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+  sql:
+    init:
+      mode: never
 
 jwt:
   expiration: 3600000
   refresh:
     expiration: 604800000
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  sql:
+    init:
+      mode: never
