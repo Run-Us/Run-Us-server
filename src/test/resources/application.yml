@@ -92,3 +92,11 @@ jwt:
   expiration: 3600000
   refresh:
     expiration: 604800000
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  sql:
+    init:
+      mode: never
