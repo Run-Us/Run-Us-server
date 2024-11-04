@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 public final class RunningCreateResponse {
-  private final String runningKey;
+  private final String runningId;
   private final String passcode;
 
-  private RunningCreateResponse(String runningKey, String passcode) {
-    this.runningKey = runningKey;
+  private RunningCreateResponse(String runningId, String passcode) {
+    this.runningId = runningId;
     this.passcode = passcode;
   }
 
