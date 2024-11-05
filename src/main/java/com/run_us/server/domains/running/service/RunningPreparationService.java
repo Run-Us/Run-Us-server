@@ -8,6 +8,8 @@ import com.run_us.server.domains.running.exception.RunningErrorCode;
 import com.run_us.server.domains.running.exception.RunningException;
 import com.run_us.server.domains.running.repository.RunningRepository;
 import com.run_us.server.domains.user.domain.User;
+import com.run_us.server.domains.user.exception.UserErrorCode;
+import com.run_us.server.domains.user.exception.UserException;
 import com.run_us.server.domains.user.repository.UserRepository;
 import com.run_us.server.global.util.PointGenerator;
 import java.util.List;
@@ -25,8 +27,11 @@ public class RunningPreparationService {
   private final UserRepository userRepository;
 
   @Transactional
-  public RunningCreateResponse createRunning(RunningCreateRequest runningCreateDto) {
+  public RunningCreateResponse createRunning(RunningCreateRequest runningCreateDto, String userId) {
+    User user = userRepository.findByPublicId(userId)
+        .orElseThrow(() -> UserException.of(UserErrorCode.PUBLIC_ID_NOT_FOUND));
     Running running = Running.builder()
+        .hostId(user.getId())
         .description(runningCreateDto.getDescription())
         .constraints(runningCreateDto.getConstraints())
         .startLocation(PointGenerator.generatePoint(runningCreateDto.getStartLocation()))

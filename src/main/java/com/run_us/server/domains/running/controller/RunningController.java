@@ -26,11 +26,12 @@ public class RunningController {
   private final RunningResultService runningResultService;
 
   @PostMapping
-  public SuccessResponse<RunningCreateResponse> createRunning(@RequestBody RunningCreateRequest runningCreateDto) {
-    //TODO: HTTP request 에서 userId를 추출 기능개발
+  public SuccessResponse<RunningCreateResponse> createRunning(
+      @RequestBody RunningCreateRequest runningCreateDto,
+      @RequestAttribute("publicUserId") String userId) {
     log.info("action=create_running");
     return SuccessResponse.of(RunningHttpResponseCode.RUNNING_CREATED,
-        runningPreparationService.createRunning(runningCreateDto));
+        runningPreparationService.createRunning(runningCreateDto, userId));
   }
 
   @GetMapping("/{runningId}/participants")

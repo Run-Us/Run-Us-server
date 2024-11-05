@@ -13,10 +13,15 @@ import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.exception.UserErrorCode;
 import com.run_us.server.domains.user.exception.UserException;
 import com.run_us.server.domains.user.repository.UserRepository;
+import com.run_us.server.domains.user.service.model.MyRunningRecord;
 import jakarta.transaction.Transactional;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -57,7 +62,7 @@ public class RunningResultService {
     Running running = new Running(user.getId());
     running.addParticipant(user);
     runningRepository.save(running);
-    PersonalRecord personalRecord = RunningMapper.toPersonalRecord(running.getId(), user.getId(), aggregation);
+    PersonalRecord personalRecord = RunningMapper.toPersonalRecord(user.getId(), running.getId(), aggregation);
     personalRecordRepository.save(personalRecord);
     return running.getPublicKey();
   }
@@ -85,5 +90,12 @@ public class RunningResultService {
      */
     public List<PersonalRecordQueryResult> getAllPersonalRecords(Integer userId) {
       return personalRecordRepository.findAllByUserId(userId);
+    }
+
+    public List<MyRunningRecord> getKLatestRecordsByUserId(int k, Integer userId) {
+      Pageable pageable = PageRequest.of(0, k);
+      Page<MyRunningRecord> kLatestRecordsByUserId = personalRecordRepository.findKLatestRecordsByUserId(userId, pageable);
+      log.info("kLatestRecordsByUserId: {}", kLatestRecordsByUserId.getContent().size());
+      return kLatestRecordsByUserId.getContent().stream().toList();
     }
 }
