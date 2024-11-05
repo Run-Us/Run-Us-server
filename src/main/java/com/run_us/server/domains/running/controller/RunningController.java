@@ -62,10 +62,11 @@ public class RunningController {
    */
   @PostMapping(value = "/aggregates", params = "mode=single")
   public SuccessResponse<String> saveSingleRunPersonalRecord(
-      @RequestBody SingleRunRecordRequest singleRunRecordRequest) {
+      @RequestBody SingleRunRecordRequest singleRunRecordRequest,
+      @RequestAttribute("publicUserId") String userId) {
     log.info("action=save_single_personal_record");
     RunningAggregations aggregations= SingleRunRecordRequest.toRunningAggregations(singleRunRecordRequest);
-    String runningId = runningResultService.createSingleRunAndSaveRecord("s", aggregations);
+    String runningId = runningResultService.createSingleRunAndSaveRecord(userId, aggregations);
     return SuccessResponse.of(RunningHttpResponseCode.SINGLE_RECORD_SAVED, runningId);
   }
 

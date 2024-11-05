@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.security.core.parameters.P;
 
 class UserTest {
 
@@ -20,18 +18,35 @@ class UserTest {
     assertEquals(user.getProfile().getBirthDate(), UserFixtures.DEFAULT_BIRTH_DATE);
   }
 
-  @MethodSource("provideChangeUserProfileImgUrl")
-  @DisplayName("User 프로필 이미지 변경")
-  void change_user_profile_img_url() {
+  @Test
+  @DisplayName("User 달리기 정보 수정")
+  void update_user_running_info() {
     //given
     User user = UserFixtures.getDefaultUser();
-    Profile profile = new Profile().builder().imgUrl(URL_FIXTURE).build();
-    String expectedImgUrl = URL_FIXTURE;
+    int distance = 1000;
+    int duration = 1000;
     //when
-    user.setProfile(profile);
-
+    user.updateUserRunningInfo(distance, duration);
     //then
-    assertEquals(user.getProfile().getImgUrl(), expectedImgUrl);
+    Profile profile = user.getProfile();
+    assertEquals(profile.getTotalDistance(), distance);
+    assertEquals(profile.getTotalTime(), duration);
+  }
+
+  @Test
+  @DisplayName("User 달리기 수정 시 최댓값만 갱신")
+  void update_user_running_info_when_max() {
+    //given
+    User user = UserFixtures.getDefaultUser();
+    int distance = 1000;
+    int duration = 1000;
+    //when
+    user.updateUserRunningInfo(distance, duration);
+    user.updateUserRunningInfo(distance * 2, 500);
+    //then
+    Profile profile = user.getProfile();
+    assertEquals(profile.getLongestDistance(), distance * 2);
+    assertEquals(profile.getLongestTime(), duration);
   }
 
   @Test

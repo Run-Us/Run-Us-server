@@ -65,4 +65,20 @@ public class Profile {
         this.gender = gender;
         this.pace = pace;
     }
+
+
+    public void updateRunningInfos(int runningDistanceInMeters, int runningDurationInMilliSeconds) {
+        this.totalDistance += runningDistanceInMeters;
+        this.totalTime += runningDurationInMilliSeconds;
+        updateLongestDistance(runningDistanceInMeters);
+        updateLongestTime(runningDurationInMilliSeconds);
+    }
+
+    private void updateLongestDistance(int runningDistanceInMeters) {
+        this.longestDistance = Math.max(this.longestDistance, runningDistanceInMeters);
+    }
+
+    private void updateLongestTime(int runningDurationInMilliSeconds) {
+        this.longestTime = Math.max(this.longestTime, runningDurationInMilliSeconds);
+    }
 }

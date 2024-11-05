@@ -79,6 +79,15 @@ public class User extends DateAudit{
     this.deletedAt = LocalDateTime.now();
   }
 
+  /***
+   * 유저의 달리기 정보 업데이트
+   * @param runningDistanceInMeters 달린 거리
+   * @param runningTimeInMilliSeconds 달린 시간
+   */
+  public void updateUserRunningInfo(Integer runningDistanceInMeters, Integer runningTimeInMilliSeconds) {
+    profile.updateRunningInfos(runningDistanceInMeters, runningTimeInMilliSeconds);
+  }
+
   private boolean isRemoved() {
     return deletedAt != null;
   }
