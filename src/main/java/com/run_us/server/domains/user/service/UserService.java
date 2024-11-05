@@ -20,7 +20,7 @@ import static com.run_us.server.domains.user.exception.UserErrorCode.PUBLIC_ID_N
 public class UserService {
     private final UserRepository userRepository;
     private final RunningResultService runningResultService;
-    private static final int K = 3;
+    private static final int PROFILE_FETCHING_RECORD_NUM = 3;
 
     /**
      * publicId 로 유저 정보를 가져오는 메서드
@@ -34,7 +34,7 @@ public class UserService {
 
     public MyPageResult getMyPageData(String publicId) {
         User user = getUserByPublicId(publicId);
-        List<MyRunningRecord> runningRecords = runningResultService.getKLatestRecordsByUserId(K, user.getId());
+        List<MyRunningRecord> runningRecords = runningResultService.getKLatestRecordsByUserId(PROFILE_FETCHING_RECORD_NUM, user.getId());
         return MyPageResult.of(user.getProfile(), runningRecords);
     }
 }
