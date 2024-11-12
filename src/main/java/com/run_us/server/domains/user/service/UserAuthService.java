@@ -4,10 +4,13 @@ import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.domain.Profile;
 import com.run_us.server.domains.user.domain.OAuthInfo;
 import com.run_us.server.domains.user.domain.TokenPair;
+import com.run_us.server.domains.user.domain.TokenStatus;
+import com.run_us.server.domains.user.domain.OAuthToken;
 import com.run_us.server.domains.user.domain.AuthResult;
 import com.run_us.server.domains.user.domain.AuthResultType;
 import com.run_us.server.domains.user.domain.SocialProvider;
 import com.run_us.server.domains.user.repository.OAuthInfoRepository;
+import com.run_us.server.domains.user.repository.OAuthTokenRepository;
 import com.run_us.server.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,33 +23,37 @@ import java.util.Optional;
 public class UserAuthService {
     private final UserRepository userRepository;
     private final OAuthInfoRepository oAuthInfoRepository;
+    private final OAuthTokenRepository oAuthTokenRepository;
     private final JwtService jwtService;
 
     @Transactional(readOnly = true)
-    public AuthResult authenticateOAuth(String oAuthToken, SocialProvider provider) {
+    public AuthResult authenticateOAuth(String rawToken, SocialProvider provider) {
         try {
-            String providerId = getProviderId(oAuthToken, provider);
+            OAuthToken oAuthToken = OAuthToken.from(rawToken, provider);
+            String providerId = getProviderId(oAuthToken.getToken(), provider);
 
             return findOAuthInfo(provider, providerId)
-                    .map(oAuthInfo -> new AuthResult(AuthResultType.LOGIN_SUCCESS, login(oAuthInfo.getUser())))
-                    .orElseGet(() -> new AuthResult(AuthResultType.SIGNUP_REQUIRED, null));
+                    .map(oAuthInfo -> proceedLogin(oAuthToken, oAuthInfo.getUser()))
+                    .orElseGet(() -> new AuthResult(AuthResultType.AUTH_FAILED, null));
         } catch (Exception e) {
             return new AuthResult(AuthResultType.AUTH_FAILED, null);
         }
     }
 
     @Transactional
-    public AuthResult signupAndLogin(String oAuthToken, SocialProvider provider, Profile profile) {
+    public AuthResult signupAndLogin(String rawToken, SocialProvider provider, Profile profile) {
         try {
-            String providerId = getProviderId(oAuthToken, provider);
+            OAuthToken oAuthToken = OAuthToken.from(rawToken, provider);
+            String providerId = getProviderId(oAuthToken.getToken(), provider);
+
             if (findOAuthInfo(provider, providerId).isPresent()) {
                 return new AuthResult(AuthResultType.SIGNUP_FAILED, null);
             }
 
             User user = createAndSaveUser(profile);
-            OAuthInfo oAuthInfo = createAndSaveOAuthInfo(provider, providerId, user);
+            createAndSaveOAuthInfo(provider, providerId, user);
 
-            return new AuthResult(AuthResultType.LOGIN_SUCCESS, login(oAuthInfo.getUser()));
+            return proceedLogin(oAuthToken, user);
         } catch (Exception e) {
             return new AuthResult(AuthResultType.SIGNUP_FAILED, null);
         }
@@ -81,6 +88,16 @@ public class UserAuthService {
                 .user(user)
                 .build();
         return oAuthInfoRepository.save(oAuthInfo);
+    }
+
+    private AuthResult proceedLogin(OAuthToken oAuthToken, User user) {
+        TokenPair tokenPair = login(user);
+        oAuthTokenRepository.updateNonceStatus(
+                oAuthToken.getProvider(),
+                oAuthToken.getSub(),
+                oAuthToken.getNonce(),
+                TokenStatus.USED);
+        return new AuthResult(AuthResultType.LOGIN_SUCCESS, tokenPair);
     }
 
     /**
