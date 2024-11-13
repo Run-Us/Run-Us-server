@@ -7,7 +7,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.run_us.server.domains.user.domain.SocialProvider;
-import com.run_us.server.domains.user.repository.OAuthRedisRepository;
+import com.run_us.server.domains.user.domain.TokenStatus;
+import com.run_us.server.domains.user.repository.OAuthTokenRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class KakaoTokenVerifier implements TokenVerifier {
@@ -29,14 +31,14 @@ public class KakaoTokenVerifier implements TokenVerifier {
     private final String appKey;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-    private final OAuthRedisRepository oauthRedisRepository;
+    private final OAuthTokenRepository oauthTokenRepository;
     private Map<String, RSAPublicKey> publicKeys = new HashMap<>();
 
-    public KakaoTokenVerifier(@Value("${spring.security.oauth2.client.registration.kakao.client-id}") String appKey, OAuthRedisRepository oauthRedisRepository) {
+    public KakaoTokenVerifier(@Value("${spring.security.oauth2.client.registration.kakao.client-id}") String appKey, OAuthTokenRepository oauthTokenRepository) {
         this.appKey = appKey;
         this.restTemplate = new RestTemplate();
         this.objectMapper = new ObjectMapper();
-        this.oauthRedisRepository = oauthRedisRepository;
+        this.oauthTokenRepository = oauthTokenRepository;
         refreshPublicKeys();
     }
 
@@ -83,19 +85,13 @@ public class KakaoTokenVerifier implements TokenVerifier {
             }
 
             String sub = jwt.getSubject();
-            boolean isFirstUse = oauthRedisRepository.validateAndStoreNonce(
-                    SocialProvider.KAKAO,
-                    sub,
-                    nonce,
-                    Duration.between(
-                            Instant.now(),
-                            Instant.ofEpochSecond(jwt.getExpiresAt().getTime() / 1000)
-                    )
-            );
-
-            if (!isFirstUse) {
-                throw new JWTVerificationException("Token nonce has already been used");
+            Optional<TokenStatus> existingEntry =
+                    oauthTokenRepository.getNonceStatus(SocialProvider.KAKAO, sub, nonce);
+            if (existingEntry.isPresent() && existingEntry.get() == TokenStatus.USED) {
+                throw new JWTVerificationException("Token has already been used");
             }
+            Duration ttl = Duration.between(Instant.now(), jwt.getExpiresAt().toInstant());
+            oauthTokenRepository.storeNonce(SocialProvider.KAKAO, sub, nonce, TokenStatus.PENDING, ttl);
 
             String kid = jwt.getKeyId();
             RSAPublicKey publicKey = publicKeys.get(kid);
