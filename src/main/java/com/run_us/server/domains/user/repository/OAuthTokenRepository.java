@@ -29,20 +29,13 @@ public class OAuthTokenRepository {
 
     public void updateNonceStatus(SocialProvider provider, String sub, String nonce, TokenStatus status) {
         String key = generateKey(provider, sub, nonce);
-        Optional<CacheEntry<TokenStatus>> existingEntry = tokenCache.getEntry(key);
+        CacheEntry<TokenStatus> entry = tokenCache.getEntry(key)
+                .orElseThrow(() -> new IllegalStateException("Token not found for key: " + key));
 
-        if (existingEntry.isPresent()) {
-            CacheEntry<TokenStatus> entry = existingEntry.get();
-            tokenCache.remove(key);
-            if (entry.expiresAt() != null) {
-                Duration remainingTtl = Duration.between(java.time.Instant.now(), entry.expiresAt());
-                tokenCache.put(key, status, remainingTtl);
-            } else {
-                tokenCache.put(key, status);
-            }
-        } else {
-            throw new IllegalStateException("Token not found for key: " + key);
-        }
+        tokenCache.remove(key);
+
+        Duration remainingTtl = Duration.between(java.time.Instant.now(), entry.expiresAt());
+        tokenCache.put(key, status, remainingTtl);
     }
 
     private String generateKey(SocialProvider provider, String sub, String nonce) {
