@@ -1,7 +1,7 @@
 package com.run_us.server.v2.running.run.controller;
 
-import com.run_us.server.domains.running.controller.model.RunningHttpResponseCode;
 import com.run_us.server.global.common.SuccessResponse;
+import com.run_us.server.v2.RunningHttpResponseCode;
 import com.run_us.server.v2.running.run.controller.model.request.SessionRunCreateRequest;
 import com.run_us.server.v2.running.run.service.model.ParticipantInfo;
 import com.run_us.server.v2.running.run.service.model.RunCreateResponse;
