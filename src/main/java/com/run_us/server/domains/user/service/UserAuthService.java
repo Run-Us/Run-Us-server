@@ -9,6 +9,9 @@ import com.run_us.server.domains.user.domain.OAuthToken;
 import com.run_us.server.domains.user.domain.AuthResult;
 import com.run_us.server.domains.user.domain.AuthResultType;
 import com.run_us.server.domains.user.domain.SocialProvider;
+import com.run_us.server.domains.user.exception.UserAuthException;
+import com.run_us.server.domains.user.exception.UserErrorCode;
+import com.run_us.server.domains.user.exception.UserException;
 import com.run_us.server.domains.user.repository.OAuthInfoRepository;
 import com.run_us.server.domains.user.repository.OAuthTokenRepository;
 import com.run_us.server.domains.user.repository.UserRepository;
@@ -28,16 +31,11 @@ public class UserAuthService {
 
     @Transactional(readOnly = true)
     public AuthResult authenticateOAuth(String rawToken, SocialProvider provider) {
-        try {
-            OAuthToken oAuthToken = OAuthToken.from(rawToken, provider);
-            String providerId = getProviderId(oAuthToken.getToken(), provider);
-
-            return findOAuthInfo(provider, providerId)
-                    .map(oAuthInfo -> proceedLogin(oAuthToken, oAuthInfo.getUser()))
-                    .orElseGet(() -> new AuthResult(AuthResultType.AUTH_FAILED, null));
-        } catch (Exception e) {
-            return new AuthResult(AuthResultType.AUTH_FAILED, null);
-        }
+        OAuthToken oAuthToken = OAuthToken.from(rawToken, provider);
+        String providerId = getProviderId(oAuthToken.getToken(), provider);
+        return findOAuthInfo(provider, providerId)
+            .map(oAuthInfo -> proceedLogin(oAuthToken, oAuthInfo.getUser()))
+            .orElseThrow(() -> UserException.of(UserErrorCode.LOGIN_FAILED_BY_PROVIDER));
     }
 
     @Transactional
@@ -45,17 +43,14 @@ public class UserAuthService {
         try {
             OAuthToken oAuthToken = OAuthToken.from(rawToken, provider);
             String providerId = getProviderId(oAuthToken.getToken(), provider);
-
             if (findOAuthInfo(provider, providerId).isPresent()) {
-                return new AuthResult(AuthResultType.SIGNUP_FAILED, null);
+                throw UserException.of(UserErrorCode.USER_ALREADY_EXISTS);
             }
-
             User user = createAndSaveUser(profile);
             createAndSaveOAuthInfo(provider, providerId, user);
-
             return proceedLogin(oAuthToken, user);
         } catch (Exception e) {
-            return new AuthResult(AuthResultType.SIGNUP_FAILED, null);
+            throw UserAuthException.of(UserErrorCode.SIGNUP_FAILED);
         }
     }
 
