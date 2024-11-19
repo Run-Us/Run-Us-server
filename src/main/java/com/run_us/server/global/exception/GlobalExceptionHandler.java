@@ -1,5 +1,6 @@
 package com.run_us.server.global.exception;
 
+import com.run_us.server.domains.user.exception.UserAuthException;
 import com.run_us.server.global.common.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,13 @@ public class GlobalExceptionHandler {
       return new ResponseEntity<>(response, e.getHttpStatusCode());
   * }
   */
+
+  @ExceptionHandler(UserAuthException.class)
+  protected ResponseEntity<ErrorResponse> handleUserAuthException(final UserAuthException e) {
+    log.error("UserAuthException Caught! [{}]", e.getLogMessage());
+    final ErrorResponse response = ErrorResponse.of(e.getErrorCode());
+    return new ResponseEntity<>(response, e.getHttpStatusCode());
+  }
 
   /*
   * BusinessException을 처리하는 핸들러

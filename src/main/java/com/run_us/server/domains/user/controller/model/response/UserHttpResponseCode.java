@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 
 public enum UserHttpResponseCode implements CustomResponseCode {
 
-  MY_PAGE_DATA_FETCHED("USH2001", "마이페이지 데이터 조회 성공", "마이페이지 데이터 조회 성공"),;
+  MY_PAGE_DATA_FETCHED("USH2001", "마이페이지 데이터 조회 성공", "마이페이지 데이터 조회 성공"),
+  SIGNUP_SUCCESS("USH2002", "회원가입 성공", "회원가입 성공"),
+  LOGIN_SUCCESS("USH2003", "로그인 성공", "로그인 성공"),;
 
   private final String code;
   private final String clientMessage;
