@@ -8,7 +8,10 @@ public enum RunningErrorCode implements CustomResponseCode {
   RUNNING_NOT_FOUND("RE001", "Running not found", "Running not found", HttpStatus.NOT_FOUND),
   AGGREGATE_FAILED("RE4001", "Failed to Save Running Result", "Failed to Save Running Result",
       HttpStatus.BAD_REQUEST),
-  PERSONAL_RECORD_NOT_FOUND("REH4001", "Personal Record not found", "Personal Record not found", HttpStatus.BAD_REQUEST);
+  PERSONAL_RECORD_NOT_FOUND("REH4001", "Personal Record not found", "Personal Record not found", HttpStatus.BAD_REQUEST),
+  USER_NOT_JOINED("REH4002", "User not joined to Run", "User not joined to Run", HttpStatus.BAD_REQUEST),
+  RUNNING_ALREADY_FINISHED("REH4003", "Running Already Finished", "Running Already Finished", HttpStatus.BAD_REQUEST),
+  RUNNING_CANCELED("REH4004", "Running Already Canceled", "Running Already Canceled", HttpStatus.BAD_REQUEST),;
 
 
   private final String code;
