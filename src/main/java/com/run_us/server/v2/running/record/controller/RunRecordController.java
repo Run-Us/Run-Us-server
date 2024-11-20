@@ -49,7 +49,7 @@ public class RunRecordController {
     log.info("action=save_single_personal_record user_id={}", userId);
     RecordStats recordStats = singleRunRecordRequest.toRecordStats();
     recordCommandUseCase.saveSingleRunRecordStats(userId, recordStats);
-    return SuccessResponse.messageOnly(RunningHttpResponseCode.SINGLE_RECORD_SAVED);
+    return SuccessResponse.messageOnly(RunningHttpResponseCode.SINGLE_RUN_RECORD_SAVED);
   }
 
   /***
@@ -70,6 +70,6 @@ public class RunRecordController {
     RecordStats recordStats = multiRunRecordRequest.toRecordStats();
     recordCommandUseCase.saveGroupRunRecordStats(
         userId, multiRunRecordRequest.getRunningId(), recordStats);
-    return SuccessResponse.messageOnly(RunningHttpResponseCode.GROUP_RECORD_SAVED);
+    return SuccessResponse.messageOnly(RunningHttpResponseCode.GROUP_RUN_RECORD_SAVED);
   }
 }
