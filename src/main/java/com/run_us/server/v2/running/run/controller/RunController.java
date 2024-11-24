@@ -3,8 +3,9 @@ package com.run_us.server.v2.running.run.controller;
 import com.run_us.server.global.common.SuccessResponse;
 import com.run_us.server.v2.RunningHttpResponseCode;
 import com.run_us.server.v2.running.run.controller.model.request.SessionRunCreateRequest;
+import com.run_us.server.v2.running.run.service.model.CustomRunCreateResponse;
 import com.run_us.server.v2.running.run.service.model.ParticipantInfo;
-import com.run_us.server.v2.running.run.service.model.RunCreateResponse;
+import com.run_us.server.v2.running.run.service.model.SessionRunCreateResponse;
 import com.run_us.server.v2.running.run.service.usecase.RunCreateUseCase;
 import com.run_us.server.v2.running.run.service.usecase.RunRegisterUseCase;
 import java.util.List;
@@ -23,7 +24,7 @@ public class RunController {
   private final RunRegisterUseCase runRegisterUseCase;
 
   @PostMapping(params = "mode=custom")
-  public SuccessResponse<RunCreateResponse> createCustomRun(
+  public SuccessResponse<CustomRunCreateResponse> createCustomRun(
       @RequestAttribute("publicUserId") String userId) {
     log.info("action=create_custom_running user_id={}", userId);
     return SuccessResponse.of(
@@ -31,7 +32,7 @@ public class RunController {
   }
 
   @PostMapping(params = "mode=normal")
-  public SuccessResponse<RunCreateResponse> createNormalRun(
+  public SuccessResponse<SessionRunCreateResponse> createNormalRun(
       @RequestBody SessionRunCreateRequest runningCreateRequest,
       @RequestAttribute("publicUserId") String userId) {
     log.info("action=create_session_running user_id={}", userId);

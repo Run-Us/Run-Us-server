@@ -24,8 +24,6 @@ public class Run extends CreationTimeAudit {
 
   private String publicId;
 
-  private String passcode;
-
   @Enumerated(EnumType.STRING)
   private RunStatus status;
 
