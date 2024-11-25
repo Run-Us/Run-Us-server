@@ -53,6 +53,9 @@ public class SecurityConfig {
     public SecurityFilterChain devSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers
+                  .frameOptions(frameOptions -> frameOptions.sameOrigin().disable())
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
