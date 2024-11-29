@@ -1,6 +1,6 @@
 package com.run_us.server.global.util;
 
-import com.run_us.server.domains.running.domain.LocationData.RunnerPos;
+import com.run_us.server.domains.running.live.service.model.LocationData;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -17,7 +17,7 @@ public final class PointGenerator {
     return geometryFactory.createPoint(new Coordinate(latitude, longitude));
   }
 
-  public static Point generatePoint(RunnerPos runnerPos) {
+  public static Point generatePoint(LocationData.RunnerPos runnerPos) {
     return geometryFactory.createPoint(new Coordinate(runnerPos.getLatitude(), runnerPos.getLongitude()));
   }
 }
