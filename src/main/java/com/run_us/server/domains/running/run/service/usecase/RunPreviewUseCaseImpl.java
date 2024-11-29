@@ -1,11 +1,14 @@
 package com.run_us.server.domains.running.run.service.usecase;
 
+import com.run_us.server.domains.running.run.controller.model.RunningHttpResponseCode;
 import com.run_us.server.domains.running.run.domain.RunningPreview;
 import com.run_us.server.domains.running.run.service.RunCommandService;
 import com.run_us.server.domains.running.run.service.RunQueryService;
 import com.run_us.server.domains.running.run.service.model.GetRunPreviewResponse;
+import com.run_us.server.domains.running.run.service.model.UpdatePreviewResponse;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.service.UserService;
+import com.run_us.server.global.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +21,16 @@ public class RunPreviewUseCaseImpl implements RunPreviewUseCase {
   private final RunQueryService runQueryService;
 
   @Override
-  public void updateRunPreview(String userId, Integer runId, RunningPreview preview) {
+  public SuccessResponse<UpdatePreviewResponse> updateRunPreview(String userId, Integer runId, RunningPreview preview) {
     User user = userService.getUserByPublicId(userId);
     runCommandService.updateRunPreview(user.getId(), runId, preview);
+    return SuccessResponse.of(RunningHttpResponseCode.RUN_PREVIEW_CREATED,
+        new UpdatePreviewResponse(runId, preview));
   }
 
   @Override
-  public GetRunPreviewResponse getRunPreview(Integer runId) {
-    return runQueryService.getRunPreviewById(runId);
+  public SuccessResponse<GetRunPreviewResponse> getRunPreview(Integer runId) {
+    return SuccessResponse.of(RunningHttpResponseCode.RUN_PREVIEW_FETCHED,
+        runQueryService.getRunPreviewById(runId));
   }
 }

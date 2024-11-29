@@ -1,5 +1,6 @@
 package com.run_us.server.domains.running.run.service.usecase;
 
+import com.run_us.server.domains.running.run.controller.model.RunningHttpResponseCode;
 import com.run_us.server.domains.running.run.domain.Run;
 import com.run_us.server.domains.running.run.service.ParticipantService;
 import com.run_us.server.domains.running.run.service.RunQueryService;
@@ -7,6 +8,8 @@ import com.run_us.server.domains.running.run.service.model.ParticipantInfo;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.service.UserService;
 import java.util.List;
+
+import com.run_us.server.global.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +36,8 @@ public class RunRegisterUseCaseImpl implements RunRegisterUseCase {
   }
 
   @Override
-  public List<ParticipantInfo> getRunParticipants(String runPublicId) {
+  public SuccessResponse<List<ParticipantInfo>> getRunParticipants(String runPublicId) {
     Run run = runQueryService.findByRunPublicId(runPublicId);
-    return participantService.getParticipants(run);
+    return SuccessResponse.of(RunningHttpResponseCode.PARTICIPANTS_FETCHED,participantService.getParticipants(run));
   }
 }
