@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 class TestAuthController {
 
-    private final UserAuthService userAuthService;
+  private final UserAuthService userAuthService;
 
-    @PreAuthorize("permitAll()")
-    @PostMapping("/auth/users")
-    public ResponseEntity<AuthResponse> createTestUserToken(@RequestBody Integer internalId) {
-        TokenPair tokenPair = userAuthService.devLogin(internalId);
-        return ResponseEntity.ok(new AuthResponse(tokenPair));
-    }
+  @PreAuthorize("permitAll()")
+  @PostMapping("/auth/users")
+  public ResponseEntity<AuthResponse> createTestUserToken(@RequestBody Integer internalId) {
+    TokenPair tokenPair = userAuthService.devLogin(internalId);
+    return ResponseEntity.ok(new AuthResponse(tokenPair));
+  }
 }

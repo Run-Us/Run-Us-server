@@ -34,7 +34,7 @@ public class Penalty {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  @Column(name = "desc")
+  @Column(name = "description")
   private String description;
 
   @Column(name = "type", nullable = false)
@@ -47,7 +47,8 @@ public class Penalty {
   private ZonedDateTime expiresAt;
 
   @Builder
-  public Penalty(String description, @NotNull String penaltyType, @NotNull ZonedDateTime expiresAt) {
+  public Penalty(
+      String description, @NotNull String penaltyType, @NotNull ZonedDateTime expiresAt) {
     this.description = description;
     this.penaltyType = penaltyType;
     this.expiresAt = expiresAt;

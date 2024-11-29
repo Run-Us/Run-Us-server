@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class AuthResponse {
-    private final String accessToken;
-    private final String refreshToken;
+  private final String accessToken;
+  private final String refreshToken;
 
-    public AuthResponse(TokenPair tokenPair) {
-        this.accessToken = tokenPair.accessToken();
-        this.refreshToken = tokenPair.refreshToken();
-    }
+  public AuthResponse(TokenPair tokenPair) {
+    this.accessToken = tokenPair.accessToken();
+    this.refreshToken = tokenPair.refreshToken();
+  }
 }

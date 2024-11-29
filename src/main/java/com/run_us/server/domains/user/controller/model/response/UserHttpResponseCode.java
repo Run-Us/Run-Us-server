@@ -4,10 +4,10 @@ import com.run_us.server.global.exception.code.CustomResponseCode;
 import org.springframework.http.HttpStatus;
 
 public enum UserHttpResponseCode implements CustomResponseCode {
-
   MY_PAGE_DATA_FETCHED("USH2001", "마이페이지 데이터 조회 성공", "마이페이지 데이터 조회 성공"),
   SIGNUP_SUCCESS("USH2002", "회원가입 성공", "회원가입 성공"),
-  LOGIN_SUCCESS("USH2003", "로그인 성공", "로그인 성공"),;
+  LOGIN_SUCCESS("USH2003", "로그인 성공", "로그인 성공"),
+  ;
 
   private final String code;
   private final String clientMessage;
@@ -18,7 +18,6 @@ public enum UserHttpResponseCode implements CustomResponseCode {
     this.clientMessage = clientMessage;
     this.logMessage = logMessage;
   }
-
 
   @Override
   public String getCode() {

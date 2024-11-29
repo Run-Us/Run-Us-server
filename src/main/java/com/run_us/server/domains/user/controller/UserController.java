@@ -13,5 +13,4 @@ public class UserController {
   public UserController(UserRepository userRepository) {
     this.userRepository = userRepository;
   }
-
 }

@@ -2,16 +2,16 @@ package com.run_us.server.domains.user.domain;
 
 import com.run_us.server.global.common.DateAudit;
 import io.hypersistence.tsid.TSID;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +25,7 @@ import org.hibernate.annotations.SQLRestriction;
 @NoArgsConstructor
 @SQLRestriction("deleted_at is null")
 @ToString
-public class User extends DateAudit{
+public class User extends DateAudit {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,7 +64,7 @@ public class User extends DateAudit{
    * change profile method
    *
    * @param profile 변경할 프로필 정보
-   * */
+   */
   public void setProfile(Profile profile) {
     this.profile = profile;
   }
@@ -73,7 +73,7 @@ public class User extends DateAudit{
    * soft delete method. deletedAt에 현재 시간을 저장
    */
   public void remove() {
-    if(isRemoved()) {
+    if (isRemoved()) {
       throw new IllegalStateException();
     }
     this.deletedAt = LocalDateTime.now();
@@ -84,7 +84,8 @@ public class User extends DateAudit{
    * @param runningDistanceInMeters 달린 거리
    * @param runningTimeInMilliSeconds 달린 시간
    */
-  public void updateUserRunningInfo(Integer runningDistanceInMeters, Integer runningTimeInMilliSeconds) {
+  public void updateUserRunningInfo(
+      Integer runningDistanceInMeters, Integer runningTimeInMilliSeconds) {
     profile.updateRunningInfos(runningDistanceInMeters, runningTimeInMilliSeconds);
   }
 

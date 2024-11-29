@@ -1,9 +1,8 @@
 package com.run_us.server.domains.user.service.model;
 
+import java.time.ZonedDateTime;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.ZonedDateTime;
 
 @Getter
 public class MyRunningRecord {
@@ -13,7 +12,11 @@ public class MyRunningRecord {
   private final Integer averagePaceInMilliseconds;
 
   @Builder
-  public MyRunningRecord(ZonedDateTime startedAt, Integer runningDistanceInMeters, Integer runningDurationInMilliseconds, Integer averagePaceInMilliseconds) {
+  public MyRunningRecord(
+      ZonedDateTime startedAt,
+      Integer runningDistanceInMeters,
+      Integer runningDurationInMilliseconds,
+      Integer averagePaceInMilliseconds) {
     this.startedAt = startedAt;
     this.runningDistanceInMeters = runningDistanceInMeters;
     this.runningDurationInMilliseconds = runningDurationInMilliseconds;
