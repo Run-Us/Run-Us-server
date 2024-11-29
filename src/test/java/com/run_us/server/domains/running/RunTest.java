@@ -1,9 +1,9 @@
-package com.run_us.server.v2;
+package com.run_us.server.domains.running;
 
-import com.run_us.server.v2.running.run.domain.Run;
-import com.run_us.server.v2.running.run.domain.RunPace;
-import com.run_us.server.v2.running.run.domain.RunStatus;
-import com.run_us.server.v2.running.run.domain.RunningPreview;
+import com.run_us.server.domains.running.run.domain.Run;
+import com.run_us.server.domains.running.run.domain.RunPace;
+import com.run_us.server.domains.running.run.domain.RunStatus;
+import com.run_us.server.domains.running.run.domain.RunningPreview;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

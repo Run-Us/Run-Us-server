@@ -1,8 +1,8 @@
-package com.run_us.server.v2;
+package com.run_us.server.domains.running;
 
-import com.run_us.server.v2.running.run.domain.Run;
-import com.run_us.server.v2.running.run.domain.RunPace;
-import com.run_us.server.v2.running.run.domain.RunningPreview;
+import com.run_us.server.domains.running.run.domain.Run;
+import com.run_us.server.domains.running.run.domain.RunPace;
+import com.run_us.server.domains.running.run.domain.RunningPreview;
 
 import java.time.ZonedDateTime;
 
