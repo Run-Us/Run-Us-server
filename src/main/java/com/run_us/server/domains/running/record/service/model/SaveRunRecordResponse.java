@@ -3,7 +3,10 @@ package com.run_us.server.domains.running.record.service.model;
 import com.run_us.server.domains.running.record.domain.RecordContent;
 import com.run_us.server.domains.running.record.domain.RecordStats;
 import com.run_us.server.domains.running.record.domain.RunRecord;
+import lombok.Getter;
 
+
+@Getter
 public class SaveRunRecordResponse {
 
   private final Long recordId;

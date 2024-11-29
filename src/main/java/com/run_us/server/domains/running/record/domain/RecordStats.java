@@ -5,10 +5,12 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RecordStats {
+public class RecordStats implements Serializable {
   private int runningDistanceInMeters;
   private int runningTimeInSeconds;
   private int runningPaceInSeconds;
