@@ -4,14 +4,17 @@ import com.run_us.server.global.exception.code.CustomResponseCode;
 import org.springframework.http.HttpStatus;
 
 public enum RunningErrorCode implements CustomResponseCode {
-  RUNNING_NOT_FOUND("RE001", "Running not found", "Running not found", HttpStatus.NOT_FOUND),
+  // 404
+  RUNNING_NOT_FOUND("REH4041", "Running not found", "Running not found", HttpStatus.NOT_FOUND),
+  PERSONAL_RECORD_NOT_FOUND(
+      "REH4042", "Personal Record not found", "Personal Record not found", HttpStatus.NOT_FOUND),
+
+  // 400
   AGGREGATE_FAILED(
-      "RE4001",
+      "REH4001",
       "Failed to Save Running Result",
       "Failed to Save Running Result",
       HttpStatus.BAD_REQUEST),
-  PERSONAL_RECORD_NOT_FOUND(
-      "REH4001", "Personal Record not found", "Personal Record not found", HttpStatus.BAD_REQUEST),
   USER_NOT_JOINED(
       "REH4002", "User not joined to Run", "User not joined to Run", HttpStatus.BAD_REQUEST),
   RUNNING_ALREADY_FINISHED(
