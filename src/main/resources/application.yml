@@ -61,17 +61,13 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:${DB_NAME};DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
   sql:
     init:
       mode: always

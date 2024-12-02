@@ -1,6 +1,6 @@
 package com.run_us.server.global.config;
 
-import com.run_us.server.domains.running.controller.aop.UserIdArgumentResolver;
+import com.run_us.server.domains.running.live.controller.aop.UserIdArgumentResolver;
 import com.run_us.server.global.exception.StompErrorHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

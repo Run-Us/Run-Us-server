@@ -1,7 +1,6 @@
 package com.run_us.server.domains.user.domain;
 
 import com.run_us.server.global.common.CreationTimeAudit;
-import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -47,9 +47,7 @@ public class OAuthInfo extends CreationTimeAudit {
    */
   @Builder
   public OAuthInfo(
-      @NotNull User user,
-      @NotNull SocialProvider provider,
-      @NotNull String providerId) {
+      @NotNull User user, @NotNull SocialProvider provider, @NotNull String providerId) {
     this.user = user;
     this.provider = provider;
     this.providerId = providerId;

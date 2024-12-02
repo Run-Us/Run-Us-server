@@ -3,15 +3,12 @@ package com.run_us.server.global.config;
 import static com.run_us.server.global.common.GlobalConst.SESSION_ATTRIBUTE_USER;
 import static com.run_us.server.global.common.GlobalConst.WS_USER_AUTH_HEADER;
 
-import com.run_us.server.domains.running.controller.model.UserSocketResponseCode;
-import com.run_us.server.domains.running.service.SubscriptionService;
+import com.run_us.server.domains.running.live.service.SubscriptionService;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.service.UserService;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
-import com.run_us.server.global.exception.UserSocketException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;

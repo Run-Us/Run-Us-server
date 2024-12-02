@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class AuthLoginRequest {
-    @NotBlank
-    private String oidcToken;
+  @NotBlank private String oidcToken;
 
-    @NotBlank
-    @EnumValid(enumClass = SocialProvider.class)
-    private String provider;
+  @NotBlank
+  @EnumValid(enumClass = SocialProvider.class)
+  private String provider;
 }
