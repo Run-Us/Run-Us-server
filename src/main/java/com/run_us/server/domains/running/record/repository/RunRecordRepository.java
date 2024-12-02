@@ -14,8 +14,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RunRecordRepository extends JpaRepository<RunRecord, Integer> {
-  Optional<RunRecord> findById(Integer id);
+public interface RunRecordRepository extends JpaRepository<RunRecord, Long> {
+  Optional<RunRecord> findById(Long id);
 
   Slice<RunRecord> findAllByUserId(Integer userId, Pageable pageable);
 

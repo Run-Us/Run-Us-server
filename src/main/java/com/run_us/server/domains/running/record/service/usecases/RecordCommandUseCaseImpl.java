@@ -50,7 +50,7 @@ public class RecordCommandUseCaseImpl implements RecordCommandUseCase {
 
   @Override
   public SuccessResponse<UpdateRecordResponse> updateRecordContent(
-      String userId, Integer recordId, RecordContent recordContent) {
+      String userId, Long recordId, RecordContent recordContent) {
     User user = userService.getUserByPublicId(userId);
     RunRecord record =
         recordCommandService.updateRunRecordContent(user.getId(), recordId, recordContent);

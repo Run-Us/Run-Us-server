@@ -5,10 +5,6 @@ import static com.run_us.server.domains.running.run.service.DateUtils.*;
 import com.run_us.server.domains.running.record.service.RecordQueryService;
 import com.run_us.server.domains.running.record.service.model.RecordPost;
 import com.run_us.server.domains.running.run.controller.model.RunningHttpResponseCode;
-import com.run_us.server.domains.running.run.domain.Run;
-import com.run_us.server.domains.running.run.service.RunQueryService;
-import com.run_us.server.domains.user.domain.User;
-import com.run_us.server.domains.user.service.UserService;
 import com.run_us.server.global.common.SuccessResponse;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -20,17 +16,13 @@ import org.springframework.stereotype.Service;
 public class RecordQueryUseCaseImpl implements RecordQueryUseCase {
 
   private final RecordQueryService recordQueryService;
-  private final RunQueryService runQueryService;
-  private final UserService userService;
 
   @Override
-  public SuccessResponse<RecordPost> getSingleRecordPost(String userId, String runId) {
-    User user = userService.getUserByPublicId(userId);
-    Run run = runQueryService.findByRunPublicId(runId);
+  public SuccessResponse<RecordPost> getSingleRecordPost(Long recordPostId) {
     return SuccessResponse.of(
         RunningHttpResponseCode.SINGLE_RECORD_FETCHED,
         RecordPost.fromRunRecords(
-            recordQueryService.findRunRecordByUserIdAndRunId(user.getId(), run.getId())));
+            recordQueryService.findRunRecordById(recordPostId)));
   }
 
   /***

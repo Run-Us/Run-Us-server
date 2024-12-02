@@ -14,5 +14,5 @@ public interface RecordCommandUseCase {
       String userId, String runPublicId, RecordStats recordStats);
 
   SuccessResponse<UpdateRecordResponse> updateRecordContent(
-      String userId, Integer recordId, RecordContent recordContent);
+      String userId, Long recordId, RecordContent recordContent);
 }

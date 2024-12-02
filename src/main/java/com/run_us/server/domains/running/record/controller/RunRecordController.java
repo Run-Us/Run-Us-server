@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/runnigs/records")
+@RequestMapping("/runnings/records")
 @RequiredArgsConstructor
 public class RunRecordController {
 
@@ -25,15 +25,14 @@ public class RunRecordController {
 
   /***
    * 특정 러닝의 특정 사용자 기록을 조회하는 API
-   * @param runningId 러닝 고유번호
-   * @param userId 사용자 고유번호
+   * @param recordPostId 러닝 고유번호
    * */
-  @GetMapping("/{runningId}/records/{userId}")
+  @GetMapping("/{recordPostId}")
   public ResponseEntity<SuccessResponse<RecordPost>> getPersonalRecord(
-      @PathVariable String runningId, @PathVariable String userId) {
-    log.info("action=get_personal_record running_id={} user_id={}", runningId, userId);
+      @PathVariable Long recordPostId) {
+    log.info("action=get_personal_record recordId={}", recordPostId);
     SuccessResponse<RecordPost> response =
-        recordQueryUseCase.getSingleRecordPost(runningId, userId);
+        recordQueryUseCase.getSingleRecordPost(recordPostId);
     return ResponseEntity.ok().body(response);
   }
 
@@ -44,7 +43,7 @@ public class RunRecordController {
    * @param singleRunRecordRequest 달리기 결과
    * @return SuccessResponse
    */
-  @PostMapping(value = "/aggregates", params = "mode=single")
+  @PostMapping(params = "mode=single")
   public ResponseEntity<SuccessResponse<SaveRunRecordResponse>> saveSingleRunPersonalRecord(
       @RequestBody SingleRunRecordRequest singleRunRecordRequest,
       @RequestAttribute("publicUserId") String userId) {
@@ -62,7 +61,7 @@ public class RunRecordController {
    * @param multiRunRecordRequest 달리기 결과
    * @return SuccessResponse
    */
-  @PostMapping(value = "/aggregates", params = "mode=multi")
+  @PostMapping(params = "mode=multi")
   public ResponseEntity<SuccessResponse<SaveRunRecordResponse>> saveMultiRunPersonalRecord(
       @RequestBody GroupRunRecordRequest multiRunRecordRequest,
       @RequestAttribute("publicUserId") String userId) {

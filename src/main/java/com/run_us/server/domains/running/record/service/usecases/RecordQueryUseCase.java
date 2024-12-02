@@ -5,7 +5,7 @@ import com.run_us.server.global.common.SuccessResponse;
 import java.util.List;
 
 public interface RecordQueryUseCase {
-  SuccessResponse<RecordPost> getSingleRecordPost(String userId, String runId);
+  SuccessResponse<RecordPost> getSingleRecordPost(Long recordPostId);
 
   SuccessResponse<List<RecordPost>> getUserRecordPosts(Integer userId, int page, int fetchSize);
 

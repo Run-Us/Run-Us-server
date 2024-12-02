@@ -20,7 +20,7 @@ public class RecordQueryService {
 
   private final RunRecordRepository runRecordRepository;
 
-  public RunRecord findRunRecordById(Integer recordId) {
+  public RunRecord findRunRecordById(Long recordId) {
     return runRecordRepository
         .findById(recordId)
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));

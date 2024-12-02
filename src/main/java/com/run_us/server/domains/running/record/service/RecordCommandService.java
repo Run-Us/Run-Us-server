@@ -26,7 +26,7 @@ public class RecordCommandService {
   }
 
   public RunRecord updateRunRecordContent(
-      Integer userId, Integer recordId, RecordContent updatedContent) {
+      Integer userId, Long recordId, RecordContent updatedContent) {
     RunRecord runRecord = recordQueryService.findRunRecordById(recordId);
     recordValidator.validateIsRecordOwner(userId, runRecord);
     runRecord.modifyContent(updatedContent);
