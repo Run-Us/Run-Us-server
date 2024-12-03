@@ -1,20 +1,20 @@
 package com.run_us.server.domains.running.run.controller;
 
+import com.run_us.server.domains.running.run.controller.model.request.SessionRunCreateRequest;
 import com.run_us.server.domains.running.run.service.model.CustomRunCreateResponse;
 import com.run_us.server.domains.running.run.service.model.FetchRunningIdResponse;
-import com.run_us.server.domains.running.run.service.model.SessionRunCreateResponse;
-import com.run_us.server.domains.running.run.controller.model.request.SessionRunCreateRequest;
 import com.run_us.server.domains.running.run.service.model.ParticipantInfo;
+import com.run_us.server.domains.running.run.service.model.SessionRunCreateResponse;
 import com.run_us.server.domains.running.run.service.usecase.RunCreateUseCase;
 import com.run_us.server.domains.running.run.service.usecase.RunRegisterUseCase;
 import com.run_us.server.global.common.SuccessResponse;
-
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -49,8 +49,9 @@ public class RunController {
     return ResponseEntity.ok().body(response);
   }
 
-  @GetMapping("/{passcode}/runningId")
-  public ResponseEntity<SuccessResponse<FetchRunningIdResponse>> fetchRunningIdWithPasscode(@PathVariable String passcode) {
+  @GetMapping("/id")
+  public ResponseEntity<SuccessResponse<FetchRunningIdResponse>> fetchRunningIdWithPasscode(
+      @RequestParam String passcode) {
     log.info("action=fetch_running_id_with_passcode passcode={}", passcode);
     SuccessResponse<FetchRunningIdResponse> response = runRegisterUseCase.getRunningIdWithPasscode(passcode);
     return ResponseEntity.ok().body(response);
