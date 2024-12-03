@@ -13,7 +13,9 @@ public enum RunningHttpResponseCode implements CustomResponseCode {
   GROUP_RUN_RECORD_SAVED("RSH2007", "그룹런 기록 저장 성공", "그룹런 기록 저장 성공"),
   RUN_PREVIEW_FETCHED("RSH2008", "러닝 세션글 조회 성공", "러닝 세션글 조회 성공"),
   RUN_PREVIEW_CREATED("RSH2009", "러닝 세션글 수정 성공", "러닝 세션글 수정 성공"),
-  LIVE_ROOM_CREATED("RSH2011", "라이브 러닝방 생성 성공", "라이브 러닝방 생성 성공"),;
+  LIVE_ROOM_CREATED("RSH2011", "라이브 러닝방 생성 성공", "라이브 러닝방 생성 성공"),
+  RUN_ID_FETCHED("RSH20013", "러닝 ID 조회 성공", "러닝 ID 조회 성공"),;
+
 
   private final String code;
   private final String clientMessage;

@@ -1,6 +1,7 @@
 package com.run_us.server.domains.running.run.controller;
 
 import com.run_us.server.domains.running.run.service.model.CustomRunCreateResponse;
+import com.run_us.server.domains.running.run.service.model.FetchRunningIdResponse;
 import com.run_us.server.domains.running.run.service.model.SessionRunCreateResponse;
 import com.run_us.server.domains.running.run.controller.model.request.SessionRunCreateRequest;
 import com.run_us.server.domains.running.run.service.model.ParticipantInfo;
@@ -45,6 +46,13 @@ public class RunController {
   public ResponseEntity<SuccessResponse<List<ParticipantInfo>>> joinedParticipants(@PathVariable String runningId) {
     log.info("action=joined_participants running_id={}", runningId);
     SuccessResponse<List<ParticipantInfo>> response = runRegisterUseCase.getRunParticipants(runningId);
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/{passcode}/runningId")
+  public ResponseEntity<SuccessResponse<FetchRunningIdResponse>> fetchRunningIdWithPasscode(@PathVariable String passcode) {
+    log.info("action=fetch_running_id_with_passcode passcode={}", passcode);
+    SuccessResponse<FetchRunningIdResponse> response = runRegisterUseCase.getRunningIdWithPasscode(passcode);
     return ResponseEntity.ok().body(response);
   }
 }
