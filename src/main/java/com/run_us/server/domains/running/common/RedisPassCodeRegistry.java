@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -37,7 +38,7 @@ public class RedisPassCodeRegistry implements PassCodeRegistry{
   }
 
   @Override
-  public String getRunIdByPassCode(String passCode) {
-    return redisTemplate.opsForValue().get(passCode);
+  public Optional<String> getRunIdByPassCode(String passCode) {
+    return Optional.ofNullable(redisTemplate.opsForValue().get(passCode));
   }
 }
