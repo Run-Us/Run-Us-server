@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-// 임시로 /runs로 변경
-@RequestMapping("/runs")
+@RequestMapping("/runnings")
 @RequiredArgsConstructor
 public class RunController {
 
