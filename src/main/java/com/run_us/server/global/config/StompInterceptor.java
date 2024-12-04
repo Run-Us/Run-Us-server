@@ -1,10 +1,10 @@
 package com.run_us.server.global.config;
 
 import static com.run_us.server.global.common.GlobalConst.SESSION_ATTRIBUTE_USER;
-import static com.run_us.server.global.common.GlobalConst.WS_USER_AUTH_HEADER;
 
 import com.run_us.server.domains.running.live.service.SubscriptionService;
 import com.run_us.server.domains.user.domain.User;
+import com.run_us.server.domains.user.service.JwtService;
 import com.run_us.server.domains.user.service.UserService;
 import java.util.Map;
 import java.util.Objects;
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 public class StompInterceptor implements ChannelInterceptor {
   private final UserService userService;
   private final SubscriptionService subscriptionService;
-
+  private final JwtService jwtService;
   @Override
   public Message<?> preSend(Message<?> message, MessageChannel channel) {
 
@@ -58,7 +58,10 @@ public class StompInterceptor implements ChannelInterceptor {
    * @param accessor
    */
   private void setUserInfoInSession(StompHeaderAccessor accessor) {
-    String userPublicId = accessor.getFirstNativeHeader(WS_USER_AUTH_HEADER);
+
+    String token = accessor.getFirstNativeHeader("Authorization");
+    String userPublicId=jwtService.getUserIdFromAccessToken(token);
+    log.info("userPublicId : {}", userPublicId);
     User user = userService.getUserByPublicId(userPublicId);
     Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
     sessionAttributes.put(SESSION_ATTRIBUTE_USER, user);
