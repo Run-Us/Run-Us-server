@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "crews")
 @SQLRestriction("deleted_at is null")
-public class Crews extends DateAudit {
+public class Crew extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
