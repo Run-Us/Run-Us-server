@@ -30,11 +30,11 @@ public class RunningSocketController {
    */
   @MessageMapping("/runnings/start")
   public void startRunning(@UserId String userId, RunningSocketRequest.StartRunning requestDto) {
-    log.info("action=start_running user_id={} running_id={}", userId, requestDto.getRunningId());
-    runningLiveService.startRunning(requestDto.getRunningId(), userId);
+    log.info("action=start_running user_id={} running_id={}", userId, requestDto.getRunningPublicId());
+    SuccessResponse<RunningSocketResponse.StartRunning> response =
+        runningLiveService.startRunning(requestDto.getRunningPublicId(), userId, requestDto.getCount());
     simpMessagingTemplate.convertAndSend(
-        RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
-        SuccessResponse.messageOnly(RunningSocketResponseCode.START_RUNNING));
+        RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningPublicId(), response);
   }
 
   /**
@@ -44,17 +44,14 @@ public class RunningSocketController {
    */
   @MessageMapping("/users/runnings/location")
   public void updateLocation(@UserId String userId,  RunningSocketRequest.LocationUpdate requestDto) {
-    log.info("action=update_running user_id={} running_id={}", userId, requestDto.getRunningId());
-    runningLiveService.updateLocation(
-        requestDto.getRunningId(),
+    log.info("action=update_running user_id={} running_id={}", userId, requestDto.getRunningPublicId());
+    SuccessResponse<RunningSocketResponse.LocationUpdate> response = runningLiveService.updateLocation(
+        requestDto.getRunningPublicId(),
         userId,
         requestDto.getLatitude(),
         requestDto.getLongitude(),
         requestDto.getCount());
-    simpMessagingTemplate.convertAndSend(
-        RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
-        SuccessResponse.of(
-            RunningSocketResponseCode.UPDATE_LOCATION, RunningSocketResponse.LocationData.toDto(requestDto, userId)));
+    simpMessagingTemplate.convertAndSend(RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningPublicId(), response);
   }
 
   /***
@@ -64,10 +61,10 @@ public class RunningSocketController {
    */
   @MessageMapping("/users/runnings/pause")
   public void pauseRunning(@UserId String userId, RunningSocketRequest.PauseRunning requestDto) {
-    log.info("action=pause_running user_id={} running_id={}", userId, requestDto.getRunningId());
-    runningLiveService.pauseRunning(requestDto.getRunningId(), userId);
+    log.info("action=pause_running user_id={} running_id={}", userId, requestDto.getRunningPublicId());
+    runningLiveService.pauseRunning(requestDto.getRunningPublicId(), userId, requestDto.getCount());
     simpMessagingTemplate.convertAndSend(
-        RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
+        RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningPublicId(),
         SuccessResponse.messageOnly(RunningSocketResponseCode.PAUSE_RUNNING));
   }
 
@@ -78,10 +75,10 @@ public class RunningSocketController {
    */
   @MessageMapping("/users/runnings/resume")
   public void resumeRunning(@UserId String userId, RunningSocketRequest.ResumeRunning requestDto) {
-    log.info("action=resume_running user_id={} running_id={}", userId, requestDto.getRunningId());
-    runningLiveService.resumeRunning(requestDto.getRunningId(), userId);
+    log.info("action=resume_running user_id={} running_id={}", userId, requestDto.getRunningPublicId());
+    runningLiveService.resumeRunning(requestDto.getRunningPublicId(), userId, requestDto.getCount());
     simpMessagingTemplate.convertAndSend(
-        RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
+        RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningPublicId(),
         SuccessResponse.messageOnly(RunningSocketResponseCode.RESUME_RUNNING));
   }
 
@@ -93,10 +90,10 @@ public class RunningSocketController {
   @MessageMapping("/users/runnings/end")
   public void endRunning(@UserId String userId,  RunningSocketRequest.StopRunning requestDto) {
     // TODO:check if the user is the owner of the running session
-    log.info("action=end_running user_id={} running_id={}", userId, requestDto.getRunningId());
-    runningLiveService.endRunning(requestDto.getRunningId(), userId);
+    log.info("action=end_running user_id={} running_id={}", userId, requestDto.getRunningPublicId());
+    runningLiveService.endRunning(requestDto.getRunningPublicId(), userId);
     simpMessagingTemplate.convertAndSend(
-        RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningId(),
+        RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningPublicId(),
         SuccessResponse.messageOnly(RunningSocketResponseCode.END_RUNNING));
   }
 }
