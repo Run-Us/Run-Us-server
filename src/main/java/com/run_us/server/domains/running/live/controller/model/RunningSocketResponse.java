@@ -1,49 +1,87 @@
 package com.run_us.server.domains.running.live.controller.model;
 
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+
 public class RunningSocketResponse {
 
-  /**
-   * 러닝 위치 전송 response dto
-   *
-   * <p>(매번 실시간으로 주면 부하 심하지 않을까? -> 모아뒀다가 보내줘야 하나 해서 일단 만들어봄..)
-   */
+
+  /** 러닝 시작 dto */
   @Getter
   @ToString
-  public static class UpdateLocation {
-    private final List<RunningSocketRequest.LocationUpdate> locations;
+  public static class StartRunning {
+    private final String runningPublicId;
+    private final long count;
 
-    @Builder
-    public UpdateLocation(List<RunningSocketRequest.LocationUpdate> locations) {
-      this.locations = locations;
+    public StartRunning(String runningId, long count) {
+      this.runningPublicId = runningId;
+      this.count = count;
     }
   }
 
-  /** 러닝 위치 전송 response dto */
+  // DTO e다 분리 / inner class
+
+  /** 러닝 위치 전송 request dto */
   @Getter
   @ToString
-  public static class LocationData {
-    private final String userKey; // TODO : 추후 User 쪽에 간단한 프로필 응답 response dto 만들어서 넣기
-    private final Float x;
-    private final Float y;
+  public static class LocationUpdate {
+    private final String userPublicId;
+    private final Float latitude;
+    private final Float longitude;
+    private final long count;
 
     @Builder
-    public LocationData(String userKey, Float x, Float y) {
-      this.userKey = userKey;
-      this.x = x;
-      this.y = y;
+    public LocationUpdate(
+        final String userPublicId, final Float latitude, final Float longitude, final long count) {
+      this.userPublicId = userPublicId;
+      this.latitude = latitude;
+      this.longitude = longitude;
+      this.count = count;
     }
+  }
 
-    public static LocationData toDto(RunningSocketRequest.LocationUpdate data, String userId) {
-      return LocationData.builder()
-          .userKey(userId)
-          .x(data.getLatitude())
-          .y(data.getLongitude())
-          .build();
+  @Getter
+  @ToString
+  public static class PauseRunning {
+    private final String userPublicId;
+    private final long count;
+
+    public PauseRunning(final String userPublicId, long count) {
+      this.userPublicId = userPublicId;
+      this.count = count;
+    }
+  }
+
+  @Getter
+  @ToString
+  public static final class ResumeRunning {
+
+    private final String userPublicId;
+    private final String runningPublicId;
+    private final long count;
+
+    @Builder
+    public ResumeRunning(String userPublicId, final String runningId, final long count) {
+      this.userPublicId = userPublicId;
+      this.runningPublicId = runningId;
+      this.count = count;
+    }
+  }
+
+  @Getter
+  public static class StopRunning {
+
+    private final String userPublicId;
+    private final String runningPublicId;
+    private final int count;
+
+    @Builder
+    public StopRunning(String userPublicId, final String runningId, final int count) {
+      this.userPublicId = userPublicId;
+      this.runningPublicId = runningId;
+      this.count = count;
     }
   }
 }
