@@ -27,12 +27,12 @@ public class RunCreateUseCaseImpl implements RunCreateUseCase {
     User user = userService.getUserByPublicId(userId);
     Run run = runCommandService.saveNewRun(user, null);
     String passcode = passCodeRegistry.generateAndGetPassCode(run.getPublicId());
-    return SuccessResponse.of(RunningHttpResponseCode.RUNNING_CREATED, CustomRunCreateResponse.from(run, passcode));
+    return SuccessResponse.of(RunningHttpResponseCode.CUSTOM_RUN_CREATED, CustomRunCreateResponse.from(run, passcode));
   }
 
   @Override
   public SuccessResponse<SessionRunCreateResponse> saveNewSessionRun(String userId, RunningPreview runningPreview) {
     User user = userService.getUserByPublicId(userId);
-    return SuccessResponse.of(RunningHttpResponseCode.RUNNING_CREATED,SessionRunCreateResponse.from(runCommandService.saveNewRun(user, runningPreview)));
+    return SuccessResponse.of(RunningHttpResponseCode.SESSION_RUN_CREATED,SessionRunCreateResponse.from(runCommandService.saveNewRun(user, runningPreview)));
   }
 }
