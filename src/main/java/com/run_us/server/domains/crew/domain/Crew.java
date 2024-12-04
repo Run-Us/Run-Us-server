@@ -24,17 +24,19 @@ public class Crew extends DateAudit {
     @Column(name = "public_id", nullable = false, columnDefinition = "CHAR(13)")
     private String publicId;
 
+    @Column(nullable = false, length = 50)
     private String name;
 
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "organizer_id")
+    @JoinColumn(name = "organizer_id", nullable = false)
     private User organizer;
 
-    @Column(name = "deleted_at")
+    @Column(name = "deleted_at", nullable = false)
     private LocalDateTime deletedAt;
 
+    @Column(nullable = false)
     private CrewStatusEnum status;
 
 }

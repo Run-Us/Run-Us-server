@@ -20,16 +20,17 @@ public class CrewMembership {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="crew_id")
+    @JoinColumn(name="crew_id", nullable = false)
     private Crew crew;
 
+    @Column(nullable = false)
     private CrewMembershipRoleEnum role;
 
-    @Column(name = "join_at")
+    @Column(name = "joined_at", nullable = false)
     private ZonedDateTime joinedAt;
 
 }
