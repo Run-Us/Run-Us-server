@@ -10,10 +10,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.run_us.server.global.common.SocketConst.WS_CONNECT_ENDPOINT;
+
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private static final String AUTH_HEADER = "Authorization";
   private static final String AUTH_PREFIX = "Bearer ";
@@ -31,7 +35,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     if (!hasValidAuthorizationHeader(request)) {
       setErrorResponse(UserErrorCode.JWT_NOT_FOUND, response);
-      filterChain.doFilter(request, response);
       return;
     }
     String jwt = extractToken(request);
@@ -58,6 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     } catch (TokenExpiredException e) {
       setErrorResponse(UserErrorCode.JWT_EXPIRED, response);
     } catch (Exception e) { // JWT 손상 시 오류
+      log.warn("[ERROR]JWT broken : {}", e.getMessage());
       setErrorResponse(UserErrorCode.JWT_BROKEN, response);
     }
     return false;
@@ -69,5 +73,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     response.setCharacterEncoding("UTF-8");
     ErrorResponse errorResponse = ErrorResponse.of(errorCode);
     response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+  }
+
+  // JWT 필터는 로그인, 회원가입, 테스트용 API, 웹소켓 연결 요청에 대해서는 필터링을 하지 않는다.
+  @Override
+  protected boolean shouldNotFilter(HttpServletRequest request) {
+    return request.getServletPath().startsWith("/test/auth")
+        || request.getServletPath().startsWith(WS_CONNECT_ENDPOINT)
+        || request.getServletPath().startsWith("/auth");
   }
 }
