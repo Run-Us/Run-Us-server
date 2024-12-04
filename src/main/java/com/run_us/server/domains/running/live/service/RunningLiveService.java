@@ -3,6 +3,8 @@ package com.run_us.server.domains.running.live.service;
 import static com.run_us.server.domains.running.live.service.model.RunningConst.RUNNING_PREFIX;
 import static com.run_us.server.domains.running.live.service.util.RunningKeyUtil.createLiveKey;
 
+import com.run_us.server.domains.running.live.controller.model.RunningSocketResponse;
+import com.run_us.server.domains.running.live.controller.model.RunningSocketResponseCode;
 import com.run_us.server.domains.running.live.repository.RunningRedisRepository;
 import com.run_us.server.domains.running.live.repository.UpdateLocationRepository;
 import com.run_us.server.domains.running.live.service.model.LocationData;
@@ -13,6 +15,7 @@ import com.run_us.server.domains.running.run.service.ParticipantService;
 import com.run_us.server.domains.running.run.service.RunCommandService;
 import com.run_us.server.domains.running.run.service.RunQueryService;
 import com.run_us.server.domains.user.domain.User;
+import com.run_us.server.global.common.SuccessResponse;
 import jakarta.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
@@ -54,8 +57,11 @@ public class RunningLiveService {
    * @param runningId 러닝세션 외부 노출용 ID
    * @param userId 유저 외부 노출용 ID
    */
-  public void startRunning(String runningId, String userId) {
+  public SuccessResponse<RunningSocketResponse.StartRunning> startRunning(String runningId, String userId, long count) {
     runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.RUN);
+    return SuccessResponse.of(
+        RunningSocketResponseCode.START_RUNNING,
+        new RunningSocketResponse.StartRunning(runningId, count));
   }
 
   /***
@@ -63,11 +69,14 @@ public class RunningLiveService {
    * @param runningId 러닝세션 외부 노출용 ID
    * @param userId 유저 외부 노출용 ID
    */
-  public void pauseRunning(String runningId, String userId) {
+  public SuccessResponse<RunningSocketResponse.PauseRunning> pauseRunning(String runningId, String userId, long count) {
     ParticipantStatus status = runningRedisRepository.getParticipantStatus(runningId, userId);
     if (status != null && status.isRunning()) {
       runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.PAUSE);
     }
+    return SuccessResponse.of(
+        RunningSocketResponseCode.PAUSE_RUNNING,
+        new RunningSocketResponse.PauseRunning(userId, count));
   }
 
   /***
@@ -75,11 +84,14 @@ public class RunningLiveService {
    * @param runningId 러닝세션 외부 노출용 ID
    * @param userId 유저 외부 노출용 ID
    */
-  public void resumeRunning(String runningId, String userId) {
+  public SuccessResponse<RunningSocketResponse.ResumeRunning> resumeRunning(String runningId, String userId, long count) {
     ParticipantStatus status = runningRedisRepository.getParticipantStatus(runningId, userId);
     if (status != null && status.isPaused()) {
       runningRedisRepository.updateParticipantStatus(runningId, userId, ParticipantStatus.RUN);
     }
+    return SuccessResponse.of(
+        RunningSocketResponseCode.RESUME_RUNNING,
+        new RunningSocketResponse.ResumeRunning(userId, runningId, count));
   }
 
   /***
@@ -102,7 +114,7 @@ public class RunningLiveService {
    * 러닝세션 시작: 전체 참가자 상태를 RUN으로 변경하고, 위치 업데이트 스케줄러 시작
    * @param runningId 러닝세션 외부 노출용 ID
    */
-  public void startRunningSession(String runningId) {
+  public void startRunningSession(String runningId, long count) {
     ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     scheduler.scheduleAtFixedRate(
         () -> runningRedisRepository.publishLocationUpdatesAll(runningId),
@@ -113,7 +125,7 @@ public class RunningLiveService {
 
     Set<String> participants = runningRedisRepository.getSessionParticipants(runningId);
     for (String userId : participants) {
-      startRunning(runningId, userId);
+      startRunning(runningId, userId, count);
     }
   }
 
@@ -141,8 +153,8 @@ public class RunningLiveService {
    * @param longitude 경도
    * @param count 송신 횟수
    */
-  public void updateLocation(
-      String runningId, String userId, double latitude, double longitude, long count) {
+  public SuccessResponse<RunningSocketResponse.LocationUpdate> updateLocation(
+      String runningId, String userId, float latitude, float longitude, long count) {
     runningRedisRepository.updateParticipantLocation(runningId, userId, latitude, longitude, count);
 
     LocationData.RunnerPos lastLocation =
@@ -153,6 +165,9 @@ public class RunningLiveService {
     if (lastLocation != null && isSignificantMove(lastLocation, newLocation)) {
       runningRedisRepository.publishLocationUpdateSingle(runningId, userId, latitude, longitude);
     }
+    return SuccessResponse.of(
+        RunningSocketResponseCode.UPDATE_LOCATION,
+        new RunningSocketResponse.LocationUpdate(userId, latitude, longitude, count));
   }
 
   /***

@@ -55,6 +55,6 @@ public class RecordCommandUseCaseImpl implements RecordCommandUseCase {
     RunRecord record =
         recordCommandService.updateRunRecordContent(user.getId(), recordId, recordContent);
     return SuccessResponse.of(
-        RunningHttpResponseCode.RUN_PREVIEW_CREATED, UpdateRecordResponse.of(record));
+        RunningHttpResponseCode.RUN_PREVIEW_UPDATED, UpdateRecordResponse.of(record));
   }
 }

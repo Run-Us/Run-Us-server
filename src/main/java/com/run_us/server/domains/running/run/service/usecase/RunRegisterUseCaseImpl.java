@@ -50,6 +50,6 @@ public class RunRegisterUseCaseImpl implements RunRegisterUseCase {
   public SuccessResponse<FetchRunningIdResponse> getRunningIdWithPasscode(String passcode) {
     String runId = passCodeRegistry.getRunIdByPassCode(passcode)
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
-    return SuccessResponse.of(RunningHttpResponseCode.RUN_ID_FETCHED, new FetchRunningIdResponse(runId, passcode));
+    return SuccessResponse.of(RunningHttpResponseCode.ROOM_ID_FETCHED, new FetchRunningIdResponse(runId, passcode));
   }
 }

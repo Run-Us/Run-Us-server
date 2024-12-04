@@ -1,6 +1,5 @@
 package com.run_us.server.domains.running.live.controller.model;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -10,11 +9,12 @@ public class RunningSocketRequest {
   @Getter
   @ToString
   public static class StartRunning {
-    private final String runningId;
+    private final String runningPublicId;
+    private final long count;
 
-    @Builder
-    public StartRunning(String runningId) {
-      this.runningId = runningId;
+    public StartRunning(final String runningPublicId, long count) {
+      this.runningPublicId = runningPublicId;
+      this.count = count;
     }
   }
 
@@ -24,15 +24,14 @@ public class RunningSocketRequest {
   @Getter
   @ToString
   public static class LocationUpdate {
-    private final String runningId;
+    private final String runningPublicId;
     private final Float latitude;
     private final Float longitude;
     private final int count;
 
-    @Builder
     public LocationUpdate(
-        final String runningId, final Float latitude, final Float longitude, final int count) {
-      this.runningId = runningId;
+        final String runningPublicId, final Float latitude, final Float longitude, final int count) {
+      this.runningPublicId = runningPublicId;
       this.latitude = latitude;
       this.longitude = longitude;
       this.count = count;
@@ -42,12 +41,11 @@ public class RunningSocketRequest {
   @Getter
   @ToString
   public static class PauseRunning {
-    private final String runningId;
+    private final String runningPublicId;
     private final int count;
 
-    @Builder
     public PauseRunning(final String runningKey, final int count) {
-      this.runningId = runningKey;
+      this.runningPublicId = runningKey;
       this.count = count;
     }
   }
@@ -55,26 +53,22 @@ public class RunningSocketRequest {
   @Getter
   @ToString
   public static final class ResumeRunning {
-
-    private final String runningId;
+    private final String runningPublicId;
     private final int count;
 
-    @Builder
-    public ResumeRunning(final String runningId, final int count) {
-      this.runningId = runningId;
+    public ResumeRunning(final String runningPublicId, final int count) {
+      this.runningPublicId = runningPublicId;
       this.count = count;
     }
   }
 
   @Getter
   public static class StopRunning {
-
-    private final String runningId;
+    private final String runningPublicId;
     private final int count;
 
-    @Builder
-    public StopRunning(final String runningId, final int count) {
-      this.runningId = runningId;
+    public StopRunning(final String runningPublicId, final int count) {
+      this.runningPublicId = runningPublicId;
       this.count = count;
     }
   }

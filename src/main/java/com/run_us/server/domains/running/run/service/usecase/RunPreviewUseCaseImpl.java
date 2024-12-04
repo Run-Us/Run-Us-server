@@ -24,7 +24,7 @@ public class RunPreviewUseCaseImpl implements RunPreviewUseCase {
   public SuccessResponse<UpdatePreviewResponse> updateRunPreview(String userId, Integer runId, RunningPreview preview) {
     User user = userService.getUserByPublicId(userId);
     runCommandService.updateRunPreview(user.getId(), runId, preview);
-    return SuccessResponse.of(RunningHttpResponseCode.RUN_PREVIEW_CREATED,
+    return SuccessResponse.of(RunningHttpResponseCode.RUN_PREVIEW_UPDATED,
         new UpdatePreviewResponse(runId, preview));
   }
 

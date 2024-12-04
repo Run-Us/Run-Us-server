@@ -1,6 +1,6 @@
 package com.run_us.server.domains.user.service;
 
-import static com.run_us.server.domains.user.exception.UserErrorCode.PUBLIC_ID_NOT_FOUND;
+import static com.run_us.server.domains.user.exception.UserErrorCode.USER_NOT_FOUND;
 
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.exception.UserException;
@@ -25,6 +25,6 @@ public class UserService {
   public User getUserByPublicId(String publicId) {
     return userRepository
         .findByPublicId(publicId)
-        .orElseThrow(() -> UserException.of(PUBLIC_ID_NOT_FOUND));
+        .orElseThrow(() -> UserException.of(USER_NOT_FOUND));
   }
 }
