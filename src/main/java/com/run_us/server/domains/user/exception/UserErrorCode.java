@@ -4,12 +4,19 @@ import com.run_us.server.global.exception.code.CustomResponseCode;
 import org.springframework.http.HttpStatus;
 
 public enum UserErrorCode implements CustomResponseCode {
-  PUBLIC_ID_NOT_FOUND(
-      "UEH4001", HttpStatus.BAD_REQUEST, "public id 에 해당하는 사용자 없음", "public id 에 해당하는 사용자 없음"),
-  USER_NOT_FOUND("UEH4002", HttpStatus.BAD_REQUEST, "사용자를 찾을 수 없음", "사용자를 찾을 수 없음"),
-  USER_ALREADY_EXISTS("UEH4003", HttpStatus.BAD_REQUEST, "이미 존재하는 사용자", "이미 존재하는 사용자"),
-  SIGNUP_FAILED("UEH4004", HttpStatus.BAD_REQUEST, "회원가입 실패", "회원가입 실패"),
-  LOGIN_FAILED_BY_PROVIDER("UEH4031", HttpStatus.FORBIDDEN, "소셜 로그인 실패", "소셜 로그인 실패");
+
+  // 400
+  USER_ALREADY_EXISTS("UEH4001", HttpStatus.BAD_REQUEST, "이미 존재하는 사용자", "이미 존재하는 사용자"),
+  SIGNUP_FAILED("UEH4002", HttpStatus.BAD_REQUEST, "회원가입 실패", "회원가입 실패"),
+
+  // 401
+  LOGIN_FAILED_BY_PROVIDER("UEH4011", HttpStatus.FORBIDDEN, "소셜 로그인 실패", "소셜 로그인 실패"),
+  JWT_NOT_FOUND("UEH4012", HttpStatus.UNAUTHORIZED, "JWT 토큰이 존재하지 않습니다.", "JWT 토큰이 존재하지 않습니다."),
+  JWT_EXPIRED("UEH4013", HttpStatus.UNAUTHORIZED, "JWT 토큰이 만료되었습니다.", "JWT 토큰이 만료되었습니다."),
+  JWT_BROKEN("UEH4014", HttpStatus.UNAUTHORIZED, "JWT 토큰이 손상되었습니다", "JWT 토큰이 손상되었습니다"),
+
+  // 404
+  USER_NOT_FOUND("UEH4041", HttpStatus.NOT_FOUND, "사용자를 찾을 수 없음", "사용자를 찾을 수 없음"),;
 
   private final String code;
   private final HttpStatus httpStatusCode;
