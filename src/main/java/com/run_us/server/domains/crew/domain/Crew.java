@@ -1,5 +1,6 @@
 package com.run_us.server.domains.crew.domain;
 
+import com.run_us.server.domains.crew.domain.enums.CrewStatusEnum;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.DateAudit;
 import jakarta.persistence.*;

@@ -1,5 +1,6 @@
 package com.run_us.server.domains.crew.domain;
 
+import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatusEnum;
 import com.run_us.server.domains.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
