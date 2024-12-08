@@ -16,13 +16,15 @@ import org.hibernate.annotations.ColumnDefault;
 @Embeddable
 public class CrewDescription {
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 10)
     private String title;
 
     private String profileImage;
 
+    @Column(length = 10)
     private String location;
 
+    @Column(length = 300)
     private String intro;
 
     @Column(nullable = false)
@@ -41,7 +43,7 @@ public class CrewDescription {
     @Enumerated(EnumType.STRING)
     private CrewJoinTypeEnum joinType;
 
-    @Column(name = "join_question")
+    @Column(name = "join_question", length = 50)
     private String joinQuestion;
 
     @Column(nullable = false)
