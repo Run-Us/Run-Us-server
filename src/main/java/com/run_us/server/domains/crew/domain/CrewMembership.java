@@ -13,12 +13,10 @@ import java.time.ZonedDateTime;
 @ToString
 @Getter
 @NoArgsConstructor
-@Entity
 @Table(name = "crew_memberships")
 @SQLRestriction("deleted_at is null")
+@Embeddable
 public class CrewMembership {
-    @Id
-    private Long id;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
@@ -29,6 +27,7 @@ public class CrewMembership {
     private Crew crew;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private CrewMembershipRoleEnum role;
 
     @Column(name = "joined_at", nullable = false)

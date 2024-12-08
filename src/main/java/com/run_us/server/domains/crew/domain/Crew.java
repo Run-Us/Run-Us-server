@@ -1,7 +1,5 @@
 package com.run_us.server.domains.crew.domain;
 
-import com.run_us.server.domains.crew.domain.enums.CrewStatusEnum;
-import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.DateAudit;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,6 +8,7 @@ import lombok.ToString;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @ToString
 @Getter
@@ -25,19 +24,18 @@ public class Crew extends DateAudit {
     @Column(name = "public_id", nullable = false, columnDefinition = "CHAR(13)")
     private String publicId;
 
-    @Column(nullable = false, length = 50)
-    private String name;
+    @Embedded
+    private CrewDescription crewDescription;
 
-    private String description;
+    @ElementCollection
+    @CollectionTable(name = "crew_join_requests", joinColumns = @JoinColumn(name="crew_id"))
+    private List<CrewJoinRequest> joinRequests;
 
-    @ManyToOne
-    @JoinColumn(name = "organizer_id", nullable = false)
-    private User organizer;
+    @ElementCollection
+    @CollectionTable(name = "crew_memberships", joinColumns = @JoinColumn(name="crew_id"))
+    private List<CrewMembership> crewMemberships;
 
     @Column(name = "deleted_at", nullable = false)
     private LocalDateTime deletedAt;
-
-    @Column(nullable = false)
-    private CrewStatusEnum status;
 
 }
