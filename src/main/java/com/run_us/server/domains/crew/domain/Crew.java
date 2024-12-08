@@ -1,7 +1,9 @@
 package com.run_us.server.domains.crew.domain;
 
 import com.run_us.server.global.common.DateAudit;
+import io.hypersistence.tsid.TSID;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -38,4 +40,19 @@ public class Crew extends DateAudit {
     @Column(name = "deleted_at", nullable = false)
     private LocalDateTime deletedAt;
 
+
+    @Override
+    public void prePersist() {
+        this.publicId = TSID.Factory.getTsid().toString();
+        super.prePersist();
+    }
+
+    @Builder
+    public Crew(
+        CrewDescription crewDescription,
+        List<CrewMembership> crewMemberships
+    ){
+        this.crewDescription = crewDescription;
+        this.crewMemberships = crewMemberships;
+    }
 }

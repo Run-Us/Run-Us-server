@@ -5,6 +5,7 @@ import com.run_us.server.domains.crew.domain.enums.CrewStatusEnum;
 import com.run_us.server.domains.crew.domain.enums.CrewThemeTypeEnum;
 import com.run_us.server.domains.user.domain.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -48,5 +49,26 @@ public class CrewDescription {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CrewStatusEnum status;
+    private CrewStatusEnum status = CrewStatusEnum.ACTIVE;
+
+    @Builder
+    public CrewDescription(
+            String title,
+            String profileImage,
+            String location,
+            String intro,
+            CrewThemeTypeEnum themeType,
+            User owner,
+            CrewJoinTypeEnum joinType,
+            String joinQuestion
+    ){
+        this.title = title;
+        this.profileImage = profileImage;
+        this.location = location;
+        this.intro = intro;
+        this.themeType = themeType;
+        this.owner = owner;
+        this.joinType = joinType;
+        this.joinQuestion = joinQuestion;
+    }
 }
