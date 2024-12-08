@@ -13,22 +13,17 @@ import java.time.ZonedDateTime;
 @ToString
 @Getter
 @NoArgsConstructor
-@Entity
 @Table(name = "crew_join_requests")
 @SQLRestriction("deleted_at is null")
+@Embeddable
 public class CrewJoinRequest {
-    @Id
-    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "crew_id", nullable = false)
-    private Crew crew;
-
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private CrewJoinRequestStatusEnum status;
 
     @Column(name = "requested_at", nullable = false)
