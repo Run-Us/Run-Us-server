@@ -22,9 +22,8 @@ import static com.run_us.server.global.common.GlobalConst.TIME_ZONE_ID;
 @Embeddable
 public class CrewMembership {
 
-    @ManyToOne
-    @JoinColumn(name="user_id", nullable = false)
-    private User user;
+    @Column(nullable = false)
+    private Integer userId;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -40,10 +39,10 @@ public class CrewMembership {
 
     @Builder
     public CrewMembership(
-            User user,
+            Integer userId,
             CrewMembershipRole role
     ){
-        this.user = user;
+        this.userId = userId;
         this.role = role;
     }
 }
