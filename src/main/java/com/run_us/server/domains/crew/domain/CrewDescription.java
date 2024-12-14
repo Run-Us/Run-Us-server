@@ -20,7 +20,7 @@ public class CrewDescription {
     @Column(nullable = false, length = 10)
     private String title;
 
-    private String profileImage;
+    private String profileImageUrl;
 
     @Column(length = 10)
     private String location;
@@ -54,7 +54,7 @@ public class CrewDescription {
     @Builder
     public CrewDescription(
             String title,
-            String profileImage,
+            String profileImageUrl,
             String location,
             String intro,
             CrewThemeType themeType,
@@ -63,7 +63,7 @@ public class CrewDescription {
             String joinQuestion
     ){
         this.title = title;
-        this.profileImage = profileImage;
+        this.profileImageUrl = profileImageUrl;
         this.location = location;
         this.intro = intro;
         this.themeType = themeType;
