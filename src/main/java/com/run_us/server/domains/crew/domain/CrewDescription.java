@@ -28,28 +28,13 @@ public class CrewDescription {
     @Column(length = 300)
     private String intro;
 
+    // TODO : 크루 성격도 상태로 보아야 할까?
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CrewThemeType themeType;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
-
-    @ColumnDefault("0")
-    @Column(nullable = false)
-    private int memberCount;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private CrewJoinType joinType;
-
     @Column(name = "join_question", length = 50)
     private String joinQuestion;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private CrewStatus status = CrewStatus.ACTIVE;
 
     @Builder
     public CrewDescription(
@@ -58,8 +43,6 @@ public class CrewDescription {
             String location,
             String intro,
             CrewThemeType themeType,
-            User owner,
-            CrewJoinType joinType,
             String joinQuestion
     ){
         this.title = title;
@@ -67,8 +50,6 @@ public class CrewDescription {
         this.location = location;
         this.intro = intro;
         this.themeType = themeType;
-        this.owner = owner;
-        this.joinType = joinType;
         this.joinQuestion = joinQuestion;
     }
 }
