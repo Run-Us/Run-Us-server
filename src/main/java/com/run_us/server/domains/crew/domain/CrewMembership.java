@@ -1,6 +1,6 @@
 package com.run_us.server.domains.crew.domain;
 
-import com.run_us.server.domains.crew.domain.enums.CrewMembershipRoleEnum;
+import com.run_us.server.domains.crew.domain.enums.CrewMembershipRole;
 import com.run_us.server.domains.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -28,7 +28,7 @@ public class CrewMembership {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CrewMembershipRoleEnum role;
+    private CrewMembershipRole role;
 
     @Column(name = "joined_at", nullable = false)
     private ZonedDateTime joinedAt;
@@ -41,7 +41,7 @@ public class CrewMembership {
     @Builder
     public CrewMembership(
             User user,
-            CrewMembershipRoleEnum role
+            CrewMembershipRole role
     ){
         this.user = user;
         this.role = role;

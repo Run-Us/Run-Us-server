@@ -1,6 +1,6 @@
 package com.run_us.server.domains.crew.domain.enums;
 
-public enum CrewThemeTypeEnum {
+public enum CrewThemeType {
     LOCAL_MATE,
     AGE_MATE,
     OFFICE_WORKER,

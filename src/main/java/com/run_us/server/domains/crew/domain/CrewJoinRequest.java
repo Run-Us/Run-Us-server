@@ -1,6 +1,6 @@
 package com.run_us.server.domains.crew.domain;
 
-import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatusEnum;
+import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
 import com.run_us.server.domains.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,7 +24,7 @@ public class CrewJoinRequest {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CrewJoinRequestStatusEnum status;
+    private CrewJoinRequestStatus status;
 
     @Column(name = "requested_at", nullable = false)
     private ZonedDateTime requestedAt;

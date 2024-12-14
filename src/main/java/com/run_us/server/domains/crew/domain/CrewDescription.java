@@ -1,8 +1,8 @@
 package com.run_us.server.domains.crew.domain;
 
-import com.run_us.server.domains.crew.domain.enums.CrewJoinTypeEnum;
-import com.run_us.server.domains.crew.domain.enums.CrewStatusEnum;
-import com.run_us.server.domains.crew.domain.enums.CrewThemeTypeEnum;
+import com.run_us.server.domains.crew.domain.enums.CrewJoinType;
+import com.run_us.server.domains.crew.domain.enums.CrewStatus;
+import com.run_us.server.domains.crew.domain.enums.CrewThemeType;
 import com.run_us.server.domains.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -30,7 +30,7 @@ public class CrewDescription {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CrewThemeTypeEnum themeType;
+    private CrewThemeType themeType;
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
@@ -42,14 +42,14 @@ public class CrewDescription {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CrewJoinTypeEnum joinType;
+    private CrewJoinType joinType;
 
     @Column(name = "join_question", length = 50)
     private String joinQuestion;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CrewStatusEnum status = CrewStatusEnum.ACTIVE;
+    private CrewStatus status = CrewStatus.ACTIVE;
 
     @Builder
     public CrewDescription(
@@ -57,9 +57,9 @@ public class CrewDescription {
             String profileImage,
             String location,
             String intro,
-            CrewThemeTypeEnum themeType,
+            CrewThemeType themeType,
             User owner,
-            CrewJoinTypeEnum joinType,
+            CrewJoinType joinType,
             String joinQuestion
     ){
         this.title = title;

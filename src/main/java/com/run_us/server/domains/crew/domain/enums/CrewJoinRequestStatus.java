@@ -1,6 +1,6 @@
 package com.run_us.server.domains.crew.domain.enums;
 
-public enum CrewJoinRequestStatusEnum {
+public enum CrewJoinRequestStatus {
     WAITING,
     APPROVED,
     REJECTED,
