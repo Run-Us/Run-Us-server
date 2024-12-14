@@ -21,7 +21,7 @@ import java.util.List;
 public class Crew extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "public_id", nullable = false, columnDefinition = "CHAR(13)")
     private String publicId;
