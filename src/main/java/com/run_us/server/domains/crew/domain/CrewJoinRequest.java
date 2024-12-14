@@ -18,9 +18,8 @@ import java.time.ZonedDateTime;
 @Embeddable
 public class CrewJoinRequest {
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(nullable = false)
+    private Integer userId;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
