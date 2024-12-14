@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
 public enum CrewHttpResponseCode implements CustomResponseCode {
-    CREW_CREATED("CSH2001", HttpStatus.CREATED, "크루 생성 성공", "크루 생성 성공"),
+    CREW_CREATED("CSH2011", HttpStatus.CREATED, "크루 생성 성공", "크루 생성 성공"),
     CREW_HOME_INFO_FETCHED("CSH2002", HttpStatus.OK, "크루 홈 데이터 조회 성공", "크루 홈 데이터 조회 성공"),
     CREW_FETCHED("CSH2003", HttpStatus.OK, "크루 정보 조회 성공", "크루 정보 조회 성공"),
     CREW_UPDATED("CSH2004", HttpStatus.OK, "크루 정보 수정 성공", "크루 정보 수정 성공"),
