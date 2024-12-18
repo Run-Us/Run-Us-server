@@ -9,6 +9,7 @@ import lombok.ToString;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 @ToString
 @Getter
@@ -35,4 +36,27 @@ public class CrewJoinRequest {
     @JoinColumn(name = "processed_by")
     private User processedBy;
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        CrewJoinRequest target = (CrewJoinRequest) obj;
+        return this.userId.equals(target.userId) &&
+                this.status.equals(target.status) &&
+                this.requestedAt.equals(target.requestedAt) &&
+                this.processedAt.equals(target.processedAt) &&
+                this.processedBy.equals(target.processedBy);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.userId, this.status, this.requestedAt, this.processedAt, this.processedBy);
+    }
 }
