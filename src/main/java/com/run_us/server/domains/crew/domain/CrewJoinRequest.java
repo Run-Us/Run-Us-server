@@ -5,6 +5,7 @@ import com.run_us.server.domains.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.SQLRestriction;
@@ -27,6 +28,9 @@ public class CrewJoinRequest {
     @Enumerated(EnumType.STRING)
     private CrewJoinRequestStatus status;
 
+    @Column(name="answer", length = 100)
+    private String answer;
+
     @Column(name = "requested_at", nullable = false)
     private ZonedDateTime requestedAt;
 
@@ -36,6 +40,29 @@ public class CrewJoinRequest {
     @ManyToOne
     @JoinColumn(name = "processed_by")
     private User processedBy;
+
+    @Builder
+    public CrewJoinRequest(
+            Integer userId,
+            CrewJoinRequestStatus status,
+            String answer,
+            ZonedDateTime requestedAt,
+            ZonedDateTime processedAt,
+            User processedBy
+    ){
+        this.userId = userId;
+        this.status = status;
+        this.answer = answer;
+        this.requestedAt = requestedAt;
+        this.processedAt = processedAt;
+        this.processedBy = processedBy;
+    }
+
+    public void approve(User processedBy) {
+        this.status = CrewJoinRequestStatus.APPROVED;
+        this.processedAt = ZonedDateTime.now();
+        this.processedBy = processedBy;
+    }
 
     @Override
     public boolean equals(Object obj) {

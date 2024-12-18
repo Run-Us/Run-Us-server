@@ -1,5 +1,6 @@
 package com.run_us.server.domains.crew.domain;
 
+import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinType;
 import com.run_us.server.domains.crew.domain.enums.CrewStatus;
 import com.run_us.server.domains.user.domain.User;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @ToString
@@ -57,6 +59,39 @@ public class Crew extends DateAudit {
     @Column(name = "deleted_at", nullable = false)
     private LocalDateTime deletedAt;
 
+    public boolean isMember(Integer userId) {
+        return crewMemberships.stream()
+                .anyMatch(membership -> membership.getUserId().equals(userId));
+    }
+
+    public boolean isActive() {
+        return this.status == CrewStatus.ACTIVE;
+    }
+
+    public boolean hasWaitingRequest(Integer userId) {
+        return joinRequests.stream()
+                .anyMatch(request ->
+                        request.getUserId().equals(userId) &&
+                                request.getStatus() == CrewJoinRequestStatus.WAITING
+                );
+    }
+
+    public void addJoinRequest(CrewJoinRequest joinRequest) {
+        if (this.joinRequests == null) {
+            this.joinRequests = new ArrayList<>();
+        }
+        this.joinRequests.add(joinRequest);
+    }
+
+    public void addMember(Integer userId) {
+        if (this.crewMemberships == null) {
+            this.crewMemberships = new ArrayList<>();
+        }
+        this.crewMemberships.add(CrewMembership.builder()
+            .userId(userId)
+            .build()
+        );
+    }
 
     @Override
     public void prePersist() {
