@@ -1,4 +1,4 @@
-package com.run_us.server.domains.crew.controller.model.response;
+package com.run_us.server.domains.crew.controller.model.enums;
 
 import com.run_us.server.global.exception.code.CustomResponseCode;
 import lombok.RequiredArgsConstructor;
