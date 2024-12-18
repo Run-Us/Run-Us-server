@@ -11,6 +11,7 @@ import org.hibernate.annotations.SQLRestriction;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 import static com.run_us.server.global.common.GlobalConst.TIME_ZONE_ID;
 
@@ -44,5 +45,26 @@ public class CrewMembership {
     ){
         this.userId = userId;
         this.role = role;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (obj == null || obj.getClass() == this.getClass()) {
+            return false;
+        }
+
+        CrewMembership target = (CrewMembership) obj;
+        return this.userId.equals(target.userId) &&
+                this.role.equals(target.role) &&
+                this.joinedAt.equals(target.joinedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.userId, this.role, this.joinedAt);
     }
 }
