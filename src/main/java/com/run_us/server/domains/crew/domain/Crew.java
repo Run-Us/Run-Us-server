@@ -6,10 +6,7 @@ import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.DateAudit;
 import io.hypersistence.tsid.TSID;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -18,7 +15,7 @@ import java.util.List;
 
 @ToString
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "crews")
 @SQLRestriction("deleted_at is null")

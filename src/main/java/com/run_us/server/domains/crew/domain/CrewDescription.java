@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.util.Objects;
 
@@ -27,7 +26,6 @@ public class CrewDescription {
     @Column(length = 300)
     private String intro;
 
-    // TODO : 크루 성격도 상태로 보아야 할까?
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CrewThemeType themeType;

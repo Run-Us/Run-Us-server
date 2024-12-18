@@ -1,12 +1,9 @@
 package com.run_us.server.domains.crew.domain;
 
 import com.run_us.server.domains.crew.domain.enums.CrewMembershipRole;
-import com.run_us.server.domains.user.domain.User;
+
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.ZoneId;
@@ -17,7 +14,7 @@ import static com.run_us.server.global.common.GlobalConst.TIME_ZONE_ID;
 
 @ToString
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "crew_memberships")
 @SQLRestriction("deleted_at is null")
 @Embeddable
