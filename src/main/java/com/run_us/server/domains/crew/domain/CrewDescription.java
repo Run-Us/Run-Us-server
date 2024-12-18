@@ -1,15 +1,14 @@
 package com.run_us.server.domains.crew.domain;
 
-import com.run_us.server.domains.crew.domain.enums.CrewJoinType;
-import com.run_us.server.domains.crew.domain.enums.CrewStatus;
 import com.run_us.server.domains.crew.domain.enums.CrewThemeType;
-import com.run_us.server.domains.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.util.Objects;
 
 @ToString
 @Getter
@@ -51,5 +50,30 @@ public class CrewDescription {
         this.intro = intro;
         this.themeType = themeType;
         this.joinQuestion = joinQuestion;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        CrewDescription target = (CrewDescription) obj;
+
+        return this.title.equals(target.title) &&
+                this.profileImageUrl.equals(target.profileImageUrl) &&
+                this.location.equals(target.location) &&
+                this.intro.equals(target.intro) &&
+                this.themeType == target.themeType &&
+                this.joinQuestion.equals(target.joinQuestion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.title, this.profileImageUrl, this.location, this.intro, this.themeType, this.joinQuestion);
     }
 }
