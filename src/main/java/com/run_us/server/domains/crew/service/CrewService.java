@@ -43,4 +43,18 @@ public class CrewService {
 
         return joinRequest;
     }
+
+    @Transactional
+    public void cancelJoinRequest(Crew crew, Integer userInternalId) {
+        log.debug("action=cancel_join_request crewPublicId={} userInternalId={}", crew.getPublicId(), userInternalId);
+
+
+        CrewJoinRequest joinRequest = crewRepository.findWaitingJoinRequest(crew.getPublicId(), userInternalId)
+                .orElseThrow(() -> new CrewException(CrewErrorCode.JOIN_REQUEST_NOT_FOUND));
+
+        crew.removeJoinRequest(joinRequest);
+        crewRepository.save(crew);
+
+        log.debug("action=cancel_join_request_complete crewPublicId={} userInternalId={}", crew.getPublicId(), userInternalId);
+    }
 }

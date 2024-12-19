@@ -24,4 +24,10 @@ public class CrewJoinRequestInternalResponse {
                 .requestedAt(this.requestedAt)
                 .build();
     }
+
+    public CancelJoinRequestResponse toPublicCancelResponse() {
+        return CancelJoinRequestResponse.builder()
+                .requestId(this.id)
+                .build();
+    }
 }

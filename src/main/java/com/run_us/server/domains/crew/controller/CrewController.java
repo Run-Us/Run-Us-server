@@ -2,6 +2,7 @@ package com.run_us.server.domains.crew.controller;
 
 import com.run_us.server.domains.crew.controller.model.enums.CrewHttpResponseCode;
 import com.run_us.server.domains.crew.controller.model.request.CreateJoinRequest;
+import com.run_us.server.domains.crew.controller.model.response.CancelJoinRequestResponse;
 import com.run_us.server.domains.crew.controller.model.response.CreateJoinRequestResponse;
 import com.run_us.server.domains.crew.controller.model.response.CrewJoinRequestInternalResponse;
 import com.run_us.server.domains.crew.service.usecase.CrewJoinUseCase;
@@ -34,5 +35,20 @@ public class CrewController {
                 SuccessResponse.of(
                         CrewHttpResponseCode.JOIN_REQUEST_CREATED,
                         response.toPublicCreateResponse(userPrincipal.getPublicId())));
+    }
+
+    @DeleteMapping("/{crewPublicId}/join-requests")
+    public ResponseEntity<SuccessResponse<CancelJoinRequestResponse>> cancelJoinRequest(
+            @PathVariable String crewPublicId,
+            @CurrentUser UserPrincipal userPrincipal
+    ) {
+        log.info("action=cancel_join_request crewPublicId={} userPublicId={}", crewPublicId, userPrincipal.getPublicId());
+        CrewJoinRequestInternalResponse response = crewJoinUseCase.cancelJoinRequest(crewPublicId, userPrincipal.getInternalId());
+        return ResponseEntity.ok(
+                SuccessResponse.of(
+                        CrewHttpResponseCode.JOIN_REQUEST_CANCELLED,
+                        response.toPublicCancelResponse()
+                )
+        );
     }
 }

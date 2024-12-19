@@ -5,4 +5,5 @@ import com.run_us.server.domains.crew.controller.model.response.CrewJoinRequestI
 
 public interface CrewJoinUseCase {
     CrewJoinRequestInternalResponse createJoinRequest(String crewPublicId, Integer userId, CreateJoinRequest request);
+    CrewJoinRequestInternalResponse cancelJoinRequest(String crewPublicId, Integer userId);
 }

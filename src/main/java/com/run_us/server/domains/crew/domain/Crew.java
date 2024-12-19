@@ -80,6 +80,10 @@ public class Crew extends DateAudit {
         this.joinRequests.add(joinRequest);
     }
 
+    public void removeJoinRequest(CrewJoinRequest joinRequest) {
+        this.joinRequests.remove(joinRequest);
+    }
+
     public void addMember(Integer userId) {
         this.crewMemberships.add(CrewMembership.builder()
             .userId(userId)

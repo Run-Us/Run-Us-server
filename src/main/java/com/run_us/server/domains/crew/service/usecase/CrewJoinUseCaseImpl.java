@@ -38,4 +38,22 @@ public class CrewJoinUseCaseImpl implements CrewJoinUseCase {
                 .requestedAt(joinRequest.getRequestedAt())
                 .build();
     }
+
+    @Override
+    @Transactional
+    public CrewJoinRequestInternalResponse cancelJoinRequest(String crewPublicId, Integer userInternalId) {
+        log.debug("action=cancel_join_request_start crewPublicId={} userInternalId={}", crewPublicId, userInternalId);
+
+        Crew crew = crewService.getCrewByPublicId(crewPublicId);
+        crewService.cancelJoinRequest(crew, userInternalId);
+
+        log.debug("action=cancel_join_request_end crewPublicId={} userInternalId={}", crewPublicId, userInternalId);
+
+        return CrewJoinRequestInternalResponse.builder()
+                .crewPublicId(crewPublicId)
+                .userInternalId(userInternalId)
+                .status(null)
+                .requestedAt(null)
+                .build();
+    }
 }
