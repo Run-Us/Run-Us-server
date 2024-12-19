@@ -20,6 +20,9 @@ import java.util.Objects;
 @SQLRestriction("deleted_at is null")
 @Embeddable
 public class CrewJoinRequest {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(nullable = false)
     private Integer userId;
