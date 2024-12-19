@@ -58,6 +58,13 @@ public class CrewJoinRequest {
         this.processedBy = processedBy;
     }
 
+    public static CrewJoinRequest from(Integer userId, String answer) {
+        return CrewJoinRequest.builder()
+                .userId(userId)
+                .answer(answer)
+                .build();
+    }
+
     public void approve(User processedBy) {
         this.status = CrewJoinRequestStatus.APPROVED;
         this.processedAt = ZonedDateTime.now();

@@ -27,10 +27,7 @@ public class CrewService {
     public CrewJoinRequest createJoinRequest(Crew crew, Integer userInternalId, String answer) {
         log.debug("action=create_join_request crewPublicId={} userInternalId={}", crew.getPublicId(), userInternalId);
 
-        CrewJoinRequest joinRequest = CrewJoinRequest.builder()
-                                                        .userId(userInternalId)
-                                                        .answer(answer)
-                                                        .build();
+        CrewJoinRequest joinRequest = CrewJoinRequest.from(userInternalId, answer);
 
         if (crew.getJoinType() == CrewJoinType.OPEN) {
             log.debug("action=auto_approve_join_request crewPublicId={} userInternalId={}", crew.getPublicId(), userInternalId);
