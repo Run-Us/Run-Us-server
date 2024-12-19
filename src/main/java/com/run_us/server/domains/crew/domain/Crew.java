@@ -50,11 +50,11 @@ public class Crew extends DateAudit {
 
     @ElementCollection
     @CollectionTable(name = "crew_join_requests", joinColumns = @JoinColumn(name="crew_id"))
-    private List<CrewJoinRequest> joinRequests;
+    private List<CrewJoinRequest> joinRequests = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "crew_memberships", joinColumns = @JoinColumn(name="crew_id"))
-    private List<CrewMembership> crewMemberships;
+    private List<CrewMembership> crewMemberships = new ArrayList<>();
 
     @Column(name = "deleted_at", nullable = false)
     private LocalDateTime deletedAt;
@@ -77,16 +77,10 @@ public class Crew extends DateAudit {
     }
 
     public void addJoinRequest(CrewJoinRequest joinRequest) {
-        if (this.joinRequests == null) {
-            this.joinRequests = new ArrayList<>();
-        }
         this.joinRequests.add(joinRequest);
     }
 
     public void addMember(Integer userId) {
-        if (this.crewMemberships == null) {
-            this.crewMemberships = new ArrayList<>();
-        }
         this.crewMemberships.add(CrewMembership.builder()
             .userId(userId)
             .build()
