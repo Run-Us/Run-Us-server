@@ -3,6 +3,7 @@ package com.run_us.server.global.config;
 import com.run_us.server.global.common.cache.InMemoryCache;
 import com.run_us.server.global.common.cache.SpringInMemoryCache;
 import com.run_us.server.domains.user.domain.TokenStatus;
+import com.run_us.server.global.security.principal.UserPrincipal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,14 @@ public class CacheConfig {
 
     @Bean
     public InMemoryCache<String, TokenStatus> tokenStatusCache(TaskScheduler cacheCleanupScheduler) {
+        return new SpringInMemoryCache<>(
+                cacheCleanupScheduler,
+                Duration.ofSeconds(cleanupIntervalSeconds)
+        );
+    }
+
+    @Bean
+    public InMemoryCache<String, UserPrincipal> userPrincipalCache(TaskScheduler cacheCleanupScheduler) {
         return new SpringInMemoryCache<>(
                 cacheCleanupScheduler,
                 Duration.ofSeconds(cleanupIntervalSeconds)

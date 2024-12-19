@@ -9,7 +9,7 @@ public class UserException extends BusinessException {
     super(errorCode, logMessage);
   }
 
-  protected UserException(CustomResponseCode errorCode) {
+  public UserException(CustomResponseCode errorCode) {
     super(errorCode);
   }
 
