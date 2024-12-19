@@ -6,22 +6,18 @@ import com.run_us.server.domains.user.exception.UserException;
 import com.run_us.server.domains.user.repository.UserRepository;
 import com.run_us.server.global.common.cache.InMemoryCache;
 import com.run_us.server.global.security.principal.UserPrincipal;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
 @Component
+@RequiredArgsConstructor
 public class UserIdResolver {
     private final InMemoryCache<String, UserPrincipal> principalCache;
     private final UserRepository userRepository;
 
     private static final Duration CACHE_TTL = Duration.ofMinutes(30);
-
-    public UserIdResolver(InMemoryCache<String, UserPrincipal> principalCache,
-                          UserRepository userRepository) {
-        this.principalCache = principalCache;
-        this.userRepository = userRepository;
-    }
 
     public UserPrincipal resolveUser(String publicId) {
         return principalCache.get(publicId)
