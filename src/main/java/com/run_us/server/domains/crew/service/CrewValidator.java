@@ -8,18 +8,27 @@ import com.run_us.server.domains.crew.repository.CrewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 @RequiredArgsConstructor
 public class CrewValidator {
     private final CrewRepository crewRepository;
+    private static final int REJECT_LOCK_PERIOD_MONTHS = 1;
 
     public void validateCanJoinCrew(Integer userId, Crew crew) {
-        if (crew.isMember(userId)) {
+        if (crewRepository.existsMembershipByCrewIdAndUserId(crew.getId(), userId)) {
             throw new CrewException(CrewErrorCode.ALREADY_CREW_MEMBER);
         }
 
-        if (crew.hasWaitingRequest(userId)) {
+        if (crewRepository.existsWaitingRequestByCrewIdAndUserId(crew.getId(), userId)) {
             throw new CrewException(CrewErrorCode.DUPLICATE_JOIN_REQUEST);
+        }
+
+        LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(REJECT_LOCK_PERIOD_MONTHS);
+        if (crewRepository.existsRecentRejectedRequestByCrewIdAndUserId(
+                crew.getId(), userId, oneMonthAgo)) {
+            throw new CrewException(CrewErrorCode.RECENTLY_REJECTED_REQUEST);
         }
 
         if (!crew.isActive()) {

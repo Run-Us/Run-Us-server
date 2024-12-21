@@ -52,7 +52,7 @@ public class CrewService {
         CrewJoinRequest joinRequest = crewRepository.findWaitingJoinRequest(crew.getPublicId(), userInternalId)
                 .orElseThrow(() -> new CrewException(CrewErrorCode.JOIN_REQUEST_NOT_FOUND));
 
-        crew.removeJoinRequest(joinRequest);
+        crew.cancelJoinRequest(joinRequest);
         crewRepository.save(crew);
 
         log.debug("action=cancel_join_request_complete crewPublicId={} userInternalId={}", crew.getPublicId(), userInternalId);

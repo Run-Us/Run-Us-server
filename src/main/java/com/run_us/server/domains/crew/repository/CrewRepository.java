@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface CrewRepository extends JpaRepository<Crew, Integer> {
@@ -19,5 +20,24 @@ public interface CrewRepository extends JpaRepository<Crew, Integer> {
     Optional<CrewJoinRequest> findWaitingJoinRequest(
             @Param("crewId") String publicId,
             @Param("userId") Integer userInternalId
+    );
+
+    @Query("SELECT EXISTS (SELECT 1 FROM Crew c JOIN c.crewMemberships m " +
+            "WHERE c.id = :crewId AND m.userId = :userId)")
+    boolean existsMembershipByCrewIdAndUserId(Integer crewId, Integer userId);
+
+    @Query("SELECT EXISTS (SELECT 1 FROM Crew c JOIN c.joinRequests r " +
+            "WHERE c.id = :crewId AND r.userId = :userId " +
+            "AND r.status = 'WAITING')")
+    boolean existsWaitingRequestByCrewIdAndUserId(Integer crewId, Integer userId);
+
+    @Query("SELECT EXISTS (SELECT 1 FROM Crew c JOIN c.joinRequests r " +
+            "WHERE c.id = :crewId AND r.userId = :userId " +
+            "AND r.status = 'REJECTED' " +
+            "AND r.processedAt > :recentDate)")
+    boolean existsRecentRejectedRequestByCrewIdAndUserId(
+            Integer crewId,
+            Integer userId,
+            LocalDateTime recentDate
     );
 }

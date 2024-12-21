@@ -4,5 +4,6 @@ public enum CrewJoinRequestStatus {
     WAITING,
     APPROVED,
     REJECTED,
+    CANCELED
     ;
 }

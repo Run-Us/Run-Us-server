@@ -14,7 +14,8 @@ public enum CrewErrorCode implements CustomResponseCode {
     DUPLICATE_JOIN_REQUEST("CEH4003", "Duplicate join request", "Duplicate join request", HttpStatus.BAD_REQUEST),
 
     // 403
-    NOT_CREW_OWNER("CEH4031", "User is not crew owner", "User is not crew owner", HttpStatus.FORBIDDEN)
+    NOT_CREW_OWNER("CEH4031", "User is not crew owner", "User is not crew owner", HttpStatus.FORBIDDEN),
+    RECENTLY_REJECTED_REQUEST("CEH4032","Recently rejected request","Recently rejected request",HttpStatus.FORBIDDEN)
     ;
 
     private final String code;

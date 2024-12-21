@@ -74,6 +74,17 @@ public class CrewJoinRequest {
         this.processedBy = processedBy;
     }
 
+    public void reject(User processedBy) {
+        this.status = CrewJoinRequestStatus.REJECTED;
+        this.processedAt = ZonedDateTime.now();
+        this.processedBy = processedBy;
+    }
+
+    public void cancel() {
+        this.status = CrewJoinRequestStatus.CANCELED;
+        this.processedAt = ZonedDateTime.now();
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

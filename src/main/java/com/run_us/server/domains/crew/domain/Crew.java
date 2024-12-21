@@ -56,7 +56,7 @@ public class Crew extends DateAudit {
     @CollectionTable(name = "crew_memberships", joinColumns = @JoinColumn(name="crew_id"))
     private List<CrewMembership> crewMemberships = new ArrayList<>();
 
-    @Column(name = "deleted_at", nullable = false)
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     public boolean isMember(Integer userId) {
@@ -68,20 +68,16 @@ public class Crew extends DateAudit {
         return this.status == CrewStatus.ACTIVE;
     }
 
-    public boolean hasWaitingRequest(Integer userId) {
-        return joinRequests.stream()
-                .anyMatch(request ->
-                        request.getUserId().equals(userId) &&
-                                request.getStatus() == CrewJoinRequestStatus.WAITING
-                );
-    }
-
     public void addJoinRequest(CrewJoinRequest joinRequest) {
         this.joinRequests.add(joinRequest);
     }
 
-    public void removeJoinRequest(CrewJoinRequest joinRequest) {
-        this.joinRequests.remove(joinRequest);
+    public void cancelJoinRequest(CrewJoinRequest joinRequest) {
+        joinRequests.stream()
+                .filter(request -> request.getUserId().equals(joinRequest.getUserId()))
+                .filter(request -> request.getStatus() == CrewJoinRequestStatus.WAITING)
+                .findFirst()
+                .ifPresent(CrewJoinRequest::cancel);
     }
 
     public void addMember(Integer userId) {
@@ -89,6 +85,7 @@ public class Crew extends DateAudit {
             .userId(userId)
             .build()
         );
+        this.memberCount++;
     }
 
     @Override
