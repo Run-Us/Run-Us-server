@@ -21,6 +21,8 @@ public enum RunningErrorCode implements CustomResponseCode {
       "REH4003", "Running Already Finished", "Running Already Finished", HttpStatus.BAD_REQUEST),
   RUNNING_CANCELED(
       "REH4004", "Running Already Canceled", "Running Already Canceled", HttpStatus.BAD_REQUEST),
+  RUNNING_SESSION_INVALID(
+      "REH4005", "Running Session Invalid", "Running Session Invalid", HttpStatus.BAD_REQUEST),
   ;
 
   private final String code;
