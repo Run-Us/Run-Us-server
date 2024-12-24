@@ -5,6 +5,7 @@ import com.run_us.server.domains.running.common.RunningException;
 import com.run_us.server.domains.running.run.domain.RunPace;
 import com.run_us.server.domains.running.run.domain.RunningPreview;
 import com.run_us.server.global.validator.annotation.EnumValid;
+import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -33,6 +34,7 @@ public class SessionRunCreateRequest {
       String crewPublicId,
       List<RunPace> pace) {
     validateCrewPublicId(accessLevel, crewPublicId);
+    validatePace(pace);
     this.title = title;
     this.description = description;
     this.startDateTime = startDateTime;
@@ -56,6 +58,12 @@ public class SessionRunCreateRequest {
   // 크루 공개일 경우 크루 아이디가 필수
   private void validateCrewPublicId(SessionAccessLevel accessLevel, String crewPublicId) {
     if(accessLevel == SessionAccessLevel.ONLY_CREW && crewPublicId == null) {
+      throw RunningException.of(RunningErrorCode.RUNNING_SESSION_INVALID);
+    }
+  }
+
+  private void validatePace(List<RunPace> pace) {
+    if(pace != null && pace.size() > 3) {
       throw RunningException.of(RunningErrorCode.RUNNING_SESSION_INVALID);
     }
   }
