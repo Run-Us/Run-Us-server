@@ -11,11 +11,11 @@ import com.run_us.server.domains.running.run.service.model.FetchRunningIdRespons
 import com.run_us.server.domains.running.run.service.model.ParticipantInfo;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.service.UserService;
-import java.util.List;
-
 import com.run_us.server.global.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

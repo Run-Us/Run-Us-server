@@ -6,9 +6,10 @@ import com.run_us.server.domains.running.run.domain.Participant;
 import com.run_us.server.domains.running.run.domain.Run;
 import com.run_us.server.domains.running.run.repository.ParticipantRepository;
 import com.run_us.server.domains.running.run.service.model.ParticipantInfo;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
