@@ -9,5 +9,5 @@ public enum RunPace {
   PACE_700,
   PACE_730,
   PACE_800,
-  PACE_WALKING
+  PACE_WALKING;
 }
