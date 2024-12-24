@@ -1,53 +1,62 @@
 package com.run_us.server.domains.running.run.controller.model.request;
 
+import com.run_us.server.domains.running.common.RunningErrorCode;
+import com.run_us.server.domains.running.common.RunningException;
 import com.run_us.server.domains.running.run.domain.RunPace;
 import com.run_us.server.domains.running.run.domain.RunningPreview;
-import java.time.ZonedDateTime;
-import java.util.List;
+import com.run_us.server.global.validator.annotation.EnumValid;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 @Getter
 public class SessionRunCreateRequest {
   private final String title;
   private final String description;
-  private final ZonedDateTime beginTime;
-  private final String meetingPoint;
-  private final String goal;
-  private final String accessLevel;
-  private final List<String> exposingCrews;
-  private final RunPace paceTag;
+  private final ZonedDateTime startDateTime;
+  private final String meetingPlace;
+  @EnumValid(enumClass = SessionAccessLevel.class)
+  private final SessionAccessLevel accessLevel;
+  private final String crewPublicId;
+  @EnumValid(enumClass = RunPace.class)
+  private final List<RunPace> pace;
 
   @Builder
   public SessionRunCreateRequest(
       String title,
       String description,
-      ZonedDateTime beginTime,
-      String meetingPoint,
-      String goal,
-      String accessLevel,
-      List<String> exposingCrews,
-      RunPace paceTag) {
+      ZonedDateTime startDateTime,
+      String meetingPlace,
+      SessionAccessLevel accessLevel,
+      String crewPublicId,
+      List<RunPace> pace) {
+    validateCrewPublicId(accessLevel, crewPublicId);
     this.title = title;
     this.description = description;
-    this.beginTime = beginTime;
-    this.meetingPoint = meetingPoint;
-    this.goal = goal;
+    this.startDateTime = startDateTime;
+    this.meetingPlace = meetingPlace;
     this.accessLevel = accessLevel;
-    this.exposingCrews = exposingCrews;
-    this.paceTag = paceTag;
+    this.crewPublicId = crewPublicId;
+    this.pace = pace;
   }
 
   public RunningPreview toRunningPreview() {
     return RunningPreview.builder()
         .title(title)
         .description(description)
-        .beginTime(beginTime)
-        .meetingPoint(meetingPoint)
-        .goal(goal)
+        .beginTime(startDateTime)
+        .meetingPoint(meetingPlace)
         .accessLevel(accessLevel)
-        .paceTag(paceTag)
+        .paceCategories(pace)
         .build();
+  }
+
+  // 크루 공개일 경우 크루 아이디가 필수
+  private void validateCrewPublicId(SessionAccessLevel accessLevel, String crewPublicId) {
+    if(accessLevel == SessionAccessLevel.ONLY_CREW && crewPublicId == null) {
+      throw RunningException.of(RunningErrorCode.RUNNING_SESSION_INVALID);
+    }
   }
 }
