@@ -22,6 +22,4 @@ public class CreateCrewResponse {
                 .crewPublicId(crew.getPublicId())
                 .build();
     }
-
-    // builder?
 }
