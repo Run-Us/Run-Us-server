@@ -5,7 +5,6 @@ import com.run_us.server.domains.running.common.RunningException;
 import com.run_us.server.domains.running.run.domain.RunPace;
 import com.run_us.server.domains.running.run.domain.RunningPreview;
 import com.run_us.server.global.validator.annotation.EnumValid;
-import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -22,7 +21,7 @@ public class SessionRunCreateRequest {
   private final SessionAccessLevel accessLevel;
   private final String crewPublicId;
   @EnumValid(enumClass = RunPace.class)
-  private final List<RunPace> pace;
+  private final List<RunPace> paceCategories;
 
   @Builder
   public SessionRunCreateRequest(
@@ -32,16 +31,16 @@ public class SessionRunCreateRequest {
       String meetingPlace,
       SessionAccessLevel accessLevel,
       String crewPublicId,
-      List<RunPace> pace) {
+      List<RunPace> paceCategories) {
     validateCrewPublicId(accessLevel, crewPublicId);
-    validatePace(pace);
+    validatePace(paceCategories);
     this.title = title;
     this.description = description;
     this.startDateTime = startDateTime;
     this.meetingPlace = meetingPlace;
     this.accessLevel = accessLevel;
     this.crewPublicId = crewPublicId;
-    this.pace = pace;
+    this.paceCategories = paceCategories;
   }
 
   public RunningPreview toRunningPreview() {
@@ -51,7 +50,7 @@ public class SessionRunCreateRequest {
         .beginTime(startDateTime)
         .meetingPoint(meetingPlace)
         .accessLevel(accessLevel)
-        .paceCategories(pace)
+        .paceCategories(paceCategories)
         .build();
   }
 
