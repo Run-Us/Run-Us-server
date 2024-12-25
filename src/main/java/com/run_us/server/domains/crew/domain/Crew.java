@@ -1,5 +1,6 @@
 package com.run_us.server.domains.crew.domain;
 
+import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinType;
 import com.run_us.server.domains.crew.domain.enums.CrewStatus;
 import com.run_us.server.domains.user.domain.User;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @ToString
@@ -48,15 +50,43 @@ public class Crew extends DateAudit {
 
     @ElementCollection
     @CollectionTable(name = "crew_join_requests", joinColumns = @JoinColumn(name="crew_id"))
-    private List<CrewJoinRequest> joinRequests;
+    private List<CrewJoinRequest> joinRequests = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "crew_memberships", joinColumns = @JoinColumn(name="crew_id"))
-    private List<CrewMembership> crewMemberships;
+    private List<CrewMembership> crewMemberships = new ArrayList<>();
 
-    @Column(name = "deleted_at", nullable = false)
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    public boolean isMember(Integer userId) {
+        return crewMemberships.stream()
+                .anyMatch(membership -> membership.getUserId().equals(userId));
+    }
+
+    public boolean isActive() {
+        return this.status == CrewStatus.ACTIVE;
+    }
+
+    public void addJoinRequest(CrewJoinRequest joinRequest) {
+        this.joinRequests.add(joinRequest);
+    }
+
+    public void cancelJoinRequest(CrewJoinRequest joinRequest) {
+        joinRequests.stream()
+                .filter(request -> request.getUserId().equals(joinRequest.getUserId()))
+                .filter(request -> request.getStatus() == CrewJoinRequestStatus.WAITING)
+                .findFirst()
+                .ifPresent(CrewJoinRequest::cancel);
+    }
+
+    public void addMember(Integer userId) {
+        this.crewMemberships.add(CrewMembership.builder()
+            .userId(userId)
+            .build()
+        );
+        this.memberCount++;
+    }
 
     @Override
     public void prePersist() {

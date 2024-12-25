@@ -5,6 +5,7 @@ import com.run_us.server.domains.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.SQLRestriction;
@@ -19,6 +20,9 @@ import java.util.Objects;
 @SQLRestriction("deleted_at is null")
 @Embeddable
 public class CrewJoinRequest {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(nullable = false)
     private Integer userId;
@@ -26,6 +30,9 @@ public class CrewJoinRequest {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CrewJoinRequestStatus status;
+
+    @Column(name="answer", length = 100)
+    private String answer;
 
     @Column(name = "requested_at", nullable = false)
     private ZonedDateTime requestedAt;
@@ -36,6 +43,47 @@ public class CrewJoinRequest {
     @ManyToOne
     @JoinColumn(name = "processed_by")
     private User processedBy;
+
+    @Builder
+    public CrewJoinRequest(
+            Integer userId,
+            CrewJoinRequestStatus status,
+            String answer,
+            ZonedDateTime requestedAt,
+            ZonedDateTime processedAt,
+            User processedBy
+    ){
+        this.userId = userId;
+        this.status = status;
+        this.answer = answer;
+        this.requestedAt = requestedAt;
+        this.processedAt = processedAt;
+        this.processedBy = processedBy;
+    }
+
+    public static CrewJoinRequest from(Integer userId, String answer) {
+        return CrewJoinRequest.builder()
+                .userId(userId)
+                .answer(answer)
+                .build();
+    }
+
+    public void approve(User processedBy) {
+        this.status = CrewJoinRequestStatus.APPROVED;
+        this.processedAt = ZonedDateTime.now();
+        this.processedBy = processedBy;
+    }
+
+    public void reject(User processedBy) {
+        this.status = CrewJoinRequestStatus.REJECTED;
+        this.processedAt = ZonedDateTime.now();
+        this.processedBy = processedBy;
+    }
+
+    public void cancel() {
+        this.status = CrewJoinRequestStatus.CANCELED;
+        this.processedAt = ZonedDateTime.now();
+    }
 
     @Override
     public boolean equals(Object obj) {

@@ -1,4 +1,4 @@
-package com.run_us.server.domains.crew.controller.model.response;
+package com.run_us.server.domains.crew.controller.model.enums;
 
 import com.run_us.server.global.exception.code.CustomResponseCode;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +14,8 @@ public enum CrewHttpResponseCode implements CustomResponseCode {
     CREW_SEARCH_SUCCESS("CSH2006", HttpStatus.OK, "크루 검색 성공", "크루 검색 성공"),
     CREW_CLOSE_SUCCESS("CSH2007", HttpStatus.OK, "크루 폐쇄 성공", "크루 폐쇄 성공"),
 
+    JOIN_REQUEST_CREATED("CSH2021", HttpStatus.CREATED, "크루 가입 요청 성공", "크루 가입 요청 성공"),
+    JOIN_REQUEST_CANCELLED("CSH2008", HttpStatus.OK, "크루 가입 요청 취소 성공", "크루 가입 요청 취소 성공"),
 
     ;
 
