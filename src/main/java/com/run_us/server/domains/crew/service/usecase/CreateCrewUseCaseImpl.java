@@ -1,8 +1,8 @@
 package com.run_us.server.domains.crew.service.usecase;
 
+import com.run_us.server.domains.crew.controller.model.enums.CrewHttpResponseCode;
 import com.run_us.server.domains.crew.controller.model.request.CreateCrewRequest;
 import com.run_us.server.domains.crew.controller.model.response.CreateCrewResponse;
-import com.run_us.server.domains.crew.controller.model.response.CrewHttpResponseCode;
 import com.run_us.server.domains.crew.domain.Crew;
 import com.run_us.server.domains.crew.service.CrewCommandService;
 import com.run_us.server.domains.user.domain.User;
