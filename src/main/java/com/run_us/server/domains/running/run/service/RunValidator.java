@@ -10,7 +10,7 @@ public final class RunValidator {
 
   public void validateRunDeletable(Integer userId, Run run) {
     validateIsRunOwner(userId, run);
-    if (run.isDeletable()) {
+    if (!run.isDeletable()) {
       throw RunningException.of(RunningErrorCode.RUNNING_SESSION_NOT_MODIFIABLE);
     }
   }
