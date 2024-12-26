@@ -2,14 +2,13 @@ package com.run_us.server.domains.running.run.service.usecase;
 
 import com.run_us.server.domains.running.common.PassCodeRegistry;
 import com.run_us.server.domains.running.run.controller.model.RunningHttpResponseCode;
-import com.run_us.server.domains.running.run.service.model.CustomRunCreateResponse;
-import com.run_us.server.domains.running.run.service.model.SessionRunCreateResponse;
 import com.run_us.server.domains.running.run.domain.Run;
 import com.run_us.server.domains.running.run.domain.RunningPreview;
 import com.run_us.server.domains.running.run.service.RunCommandService;
+import com.run_us.server.domains.running.run.service.model.CustomRunCreateResponse;
+import com.run_us.server.domains.running.run.service.model.SessionRunCreateResponse;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.service.UserService;
-
 import com.run_us.server.global.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
