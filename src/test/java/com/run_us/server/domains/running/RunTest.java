@@ -8,12 +8,13 @@ import com.run_us.server.domains.running.run.domain.RunningPreview;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RunTest {
 
@@ -53,4 +54,15 @@ class RunTest {
     Assertions.assertThat(preview.getMeetingPoint()).isEqualTo("평화의문");
   }
 
+  @DisplayName("러닝 상태에 따른 삭제 가능 여부 테스트")
+  @ParameterizedTest
+  @EnumSource(
+      value = RunStatus.class,
+      names = {"WAITING"},
+      mode = EnumSource.Mode.EXCLUDE)
+  void test_deletable_except_WAITING_status(RunStatus runStatus) {
+    Run run = RunFixtures.createRun();
+    run.changeStatus(runStatus);
+    assertFalse(run.isDeletable());
+  }
 }
