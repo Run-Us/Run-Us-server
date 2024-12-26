@@ -51,8 +51,12 @@ public class Run extends CreationTimeAudit {
     this.preview = runningPreview;
   }
 
+  public boolean isDeletable() {
+    return RunStatus.isRunDeletable(this.status);
+  }
+
   public boolean isHost(int userId) {
-    return this.hostId == userId;
+    return this.hostId.equals(userId);
   }
 
   private void validateRunModifiable() {

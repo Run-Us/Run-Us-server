@@ -32,4 +32,10 @@ public class RunCommandService {
     Run run = runQueryService.findByRunId(runId);
     run.changeStatus(updatedStatus);
   }
+
+  public void deleteRun(Integer userId, String runPublicId) {
+    Run run = runQueryService.findByRunPublicId(runPublicId);
+    runValidator.validateRunDeletable(userId, run);
+    runRepository.delete(run);
+  }
 }

@@ -4,5 +4,9 @@ public enum RunStatus {
   WAITING,
   RUNNING,
   CANCELLED,
-  FINISHED
+  FINISHED;
+
+  public static boolean isRunDeletable(RunStatus status) {
+    return status.equals(WAITING);
+  }
 }
