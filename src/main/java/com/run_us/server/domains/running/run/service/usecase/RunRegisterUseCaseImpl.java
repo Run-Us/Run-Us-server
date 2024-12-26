@@ -14,6 +14,7 @@ import com.run_us.server.domains.user.service.UserService;
 import com.run_us.server.global.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class RunRegisterUseCaseImpl implements RunRegisterUseCase {
   private final PassCodeRegistry passCodeRegistry;
 
   @Override
+  @Transactional
   public void registerRun(String userId, String runPublicId) {
     User user = userService.getUserByPublicId(userId);
     Run run = runQueryService.findByRunPublicId(runPublicId);
@@ -34,6 +36,7 @@ public class RunRegisterUseCaseImpl implements RunRegisterUseCase {
   }
 
   @Override
+  @Transactional
   public void cancelRun(String userId, String runPublicId) {
     User user = userService.getUserByPublicId(userId);
     Run run = runQueryService.findByRunPublicId(runPublicId);
@@ -41,12 +44,14 @@ public class RunRegisterUseCaseImpl implements RunRegisterUseCase {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public SuccessResponse<List<ParticipantInfo>> getRunParticipants(String runPublicId) {
     Run run = runQueryService.findByRunPublicId(runPublicId);
     return SuccessResponse.of(RunningHttpResponseCode.PARTICIPANTS_FETCHED,participantService.getParticipants(run));
   }
 
   @Override
+  @Transactional(readOnly = true)
   public SuccessResponse<FetchRunningIdResponse> getRunningIdWithPasscode(String passcode) {
     String runId = passCodeRegistry.getRunIdByPassCode(passcode)
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));

@@ -11,9 +11,10 @@ import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.service.UserService;
 import com.run_us.server.global.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class RunCreateUseCaseImpl implements RunCreateUseCase {
 
@@ -22,6 +23,8 @@ public class RunCreateUseCaseImpl implements RunCreateUseCase {
   private final PassCodeRegistry passCodeRegistry;
 
   // Custom Run은 생성하면서 바로 Passcode를 생성하여 반환한다.
+  @Override
+  @Transactional
   public SuccessResponse<CustomRunCreateResponse> saveNewCustomRun(String userId) {
     User user = userService.getUserByPublicId(userId);
     Run run = runCommandService.saveNewRun(user, null);
@@ -30,6 +33,7 @@ public class RunCreateUseCaseImpl implements RunCreateUseCase {
   }
 
   @Override
+  @Transactional
   public SuccessResponse<SessionRunCreateResponse> saveNewSessionRun(String userId, RunningPreview runningPreview) {
     User user = userService.getUserByPublicId(userId);
     return SuccessResponse.of(RunningHttpResponseCode.SESSION_RUN_CREATED,SessionRunCreateResponse.from(runCommandService.saveNewRun(user, runningPreview)));
