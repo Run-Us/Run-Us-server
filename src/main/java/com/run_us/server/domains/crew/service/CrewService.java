@@ -42,7 +42,7 @@ public class CrewService {
 
         if (crew.getJoinType() == CrewJoinType.OPEN) {
             log.debug("action=auto_approve_join_request crewPublicId={} userInternalId={}", crew.getPublicId(), userInternalId);
-            joinRequest.approve(crew.getOwner());
+            joinRequest.review(crew.getOwner(), CrewJoinRequestStatus.APPROVED);
             crew.addMember(userInternalId);
         }
 

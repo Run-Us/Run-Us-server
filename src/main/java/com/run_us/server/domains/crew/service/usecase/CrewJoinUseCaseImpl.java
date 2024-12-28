@@ -84,16 +84,7 @@ public class CrewJoinUseCaseImpl implements CrewJoinUseCase {
         Map<Integer, User> userMap = userService.getUserMapByIds(userIds);
 
         return joinRequests.stream()
-                .map(request -> {
-                    User userInfo = userMap.get(request.getUserId());
-                    return new FetchJoinRequestResponse(
-                            request.getId(),
-                            userInfo.getPublicId(),
-                            userInfo.getProfile().getNickname(),
-                            userInfo.getProfile().getImgUrl(),
-                            request.getAnswer()
-                    );
-                })
+                .map(request -> FetchJoinRequestResponse.from(request, userMap.get(request.getUserId())))
                 .collect(Collectors.toList());
     }
 

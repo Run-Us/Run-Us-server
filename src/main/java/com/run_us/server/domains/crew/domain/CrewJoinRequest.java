@@ -68,13 +68,13 @@ public class CrewJoinRequest {
                 .build();
     }
 
-    public void approve(User processedBy) {
+    private void approve(User processedBy) {
         this.status = CrewJoinRequestStatus.APPROVED;
         this.processedAt = ZonedDateTime.now();
         this.processedBy = processedBy;
     }
 
-    public void reject(User processedBy) {
+    private void reject(User processedBy) {
         this.status = CrewJoinRequestStatus.REJECTED;
         this.processedAt = ZonedDateTime.now();
         this.processedBy = processedBy;
