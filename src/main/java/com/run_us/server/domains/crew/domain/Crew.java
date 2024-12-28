@@ -88,6 +88,13 @@ public class Crew extends DateAudit {
         this.memberCount++;
     }
 
+    public void reviewJoinRequest(CrewJoinRequest joinRequest, CrewJoinRequestStatus status) {
+        joinRequests.stream()
+                .filter(request -> request.getId().equals(joinRequest.getId()))
+                .findFirst()
+                .ifPresent(request -> request.review(owner, status));
+    }
+
     @Override
     public void prePersist() {
         this.publicId = TSID.Factory.getTsid().toString();

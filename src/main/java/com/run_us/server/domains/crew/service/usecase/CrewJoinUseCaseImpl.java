@@ -3,8 +3,10 @@ package com.run_us.server.domains.crew.service.usecase;
 import com.run_us.server.domains.crew.controller.model.request.CreateJoinRequest;
 import com.run_us.server.domains.crew.controller.model.response.CrewJoinRequestInternalResponse;
 import com.run_us.server.domains.crew.controller.model.response.FetchJoinRequestResponse;
+import com.run_us.server.domains.crew.controller.model.response.ReviewJoinRequestResponse;
 import com.run_us.server.domains.crew.domain.Crew;
 import com.run_us.server.domains.crew.domain.CrewJoinRequest;
+import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
 import com.run_us.server.domains.crew.service.CrewService;
 import com.run_us.server.domains.crew.service.CrewValidator;
 import com.run_us.server.domains.user.domain.User;
@@ -93,5 +95,28 @@ public class CrewJoinUseCaseImpl implements CrewJoinUseCase {
                     );
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public ReviewJoinRequestResponse reviewJoinRequest(String crewPublicId, Integer requestId, CrewJoinRequestStatus status, Integer userInternalId) {
+        log.debug("action=review_join_request_start crewPublicId={} requestId={} status={}",
+                crewPublicId, requestId, status);
+
+        Crew crew = crewService.getCrewByPublicId(crewPublicId);
+        crewValidator.validateCanReviewJoinRequest(userInternalId, requestId, status, crew);
+
+        CrewJoinRequest joinRequest = crewService.reviewJoinRequest(
+                crew,
+                requestId,
+                status,
+                userInternalId
+        );
+
+        log.debug("action=review_join_request_end crewPublicId={} requestId={}", crewPublicId, requestId);
+
+        return new ReviewJoinRequestResponse(
+                joinRequest.getId()
+        );
     }
 }

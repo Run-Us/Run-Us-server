@@ -80,6 +80,14 @@ public class CrewJoinRequest {
         this.processedBy = processedBy;
     }
 
+    public void review(User processedBy, CrewJoinRequestStatus status) {
+        if(status == CrewJoinRequestStatus.APPROVED) {
+            approve(processedBy);
+        } else if(status == CrewJoinRequestStatus.REJECTED) {
+            reject(processedBy);
+        }
+    }
+
     public void cancel() {
         this.status = CrewJoinRequestStatus.CANCELED;
         this.processedAt = ZonedDateTime.now();

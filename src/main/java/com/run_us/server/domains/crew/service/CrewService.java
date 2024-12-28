@@ -4,6 +4,7 @@ import com.run_us.server.domains.crew.controller.model.enums.CrewException;
 import com.run_us.server.domains.crew.controller.model.enums.CrewErrorCode;
 import com.run_us.server.domains.crew.domain.Crew;
 import com.run_us.server.domains.crew.domain.CrewJoinRequest;
+import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinType;
 import com.run_us.server.domains.crew.repository.CrewRepository;
 
@@ -66,5 +67,25 @@ public class CrewService {
         crewRepository.save(crew);
 
         log.debug("action=cancel_join_request_complete crewPublicId={} userInternalId={}", crew.getPublicId(), userInternalId);
+    }
+
+    @Transactional
+    public CrewJoinRequest reviewJoinRequest(Crew crew, Integer requestId, CrewJoinRequestStatus status, Integer userInternalId) {
+        log.debug("action=review_join_request crewPublicId={} requestId={} status={} userInternalId={}",
+                crew.getPublicId(), requestId, status, userInternalId);
+
+        CrewJoinRequest request = crewRepository.findWaitingJoinRequest(crew.getId(), requestId)
+                .orElseThrow(() -> new CrewException(CrewErrorCode.JOIN_REQUEST_NOT_FOUND));
+
+        crew.reviewJoinRequest(request, status);
+
+        if(status == CrewJoinRequestStatus.APPROVED) {
+            crew.addMember(request.getUserId());
+        }
+        crewRepository.save(crew);
+
+        log.debug("action=process_join_request_usecase_complete crewPublicId={} requestId={}",
+                crew.getPublicId(), requestId);
+        return request;
     }
 }

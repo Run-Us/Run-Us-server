@@ -52,4 +52,24 @@ public interface CrewRepository extends JpaRepository<Crew, Integer> {
             @Param("crewId") String publicId,
             PageRequest pageRequest
     );
+
+    @Query("SELECT COUNT(jr) > 0 FROM Crew c " +
+            "JOIN c.joinRequests jr " +
+            "WHERE c.id = :crewId " +
+            "AND jr.id = :requestId " +
+            "AND jr.status = 'WAITING'")
+    boolean existsWaitingJoinRequest(
+            @Param("crewId") Integer crewId,
+            @Param("requestId") Integer requestId
+    );
+
+    @Query("SELECT jr FROM Crew c " +
+            "JOIN c.joinRequests jr " +
+            "WHERE c.id = :crewId " +
+            "AND jr.id = :requestId " +
+            "AND jr.status = 'WAITING'")
+    Optional<CrewJoinRequest> findWaitingJoinRequest(
+            @Param("crewId") Integer crewId,
+            @Param("requestId") Integer requestId
+    );
 }

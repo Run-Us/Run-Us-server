@@ -2,10 +2,9 @@ package com.run_us.server.domains.crew.controller;
 
 import com.run_us.server.domains.crew.controller.model.enums.CrewHttpResponseCode;
 import com.run_us.server.domains.crew.controller.model.request.CreateJoinRequest;
-import com.run_us.server.domains.crew.controller.model.response.CancelJoinRequestResponse;
-import com.run_us.server.domains.crew.controller.model.response.CreateJoinRequestResponse;
-import com.run_us.server.domains.crew.controller.model.response.CrewJoinRequestInternalResponse;
-import com.run_us.server.domains.crew.controller.model.response.FetchJoinRequestResponse;
+import com.run_us.server.domains.crew.controller.model.request.ReviewJoinRequest;
+import com.run_us.server.domains.crew.controller.model.response.*;
+import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
 import com.run_us.server.domains.crew.service.usecase.CrewJoinUseCase;
 import com.run_us.server.global.common.SuccessResponse;
 
@@ -77,6 +76,33 @@ public class CrewController {
                 SuccessResponse.of(
                         CrewHttpResponseCode.JOIN_REQUEST_FETCHED,
                         responses
+                )
+        );
+    }
+
+    @PutMapping("/{crewPublicId}/join-requests/{requestId}")
+    public ResponseEntity<SuccessResponse<ReviewJoinRequestResponse>> reviewJoinRequest(
+            @PathVariable String crewPublicId,
+            @PathVariable Integer requestId,
+            @CurrentUser UserPrincipal userPrincipal,
+            @Valid @RequestBody ReviewJoinRequest request
+    ) {
+        log.info("action=process_join_request_start crewPublicId={} requestId={} status={}",
+                crewPublicId, requestId, request.getStatus());
+
+        ReviewJoinRequestResponse response = crewJoinUseCase.reviewJoinRequest(
+                crewPublicId,
+                requestId,
+                CrewJoinRequestStatus.valueOf(request.getStatus()),
+                userPrincipal.getInternalId()
+        );
+
+        log.info("action=process_join_request_complete crewPublicId={} requestId={}",
+                crewPublicId, requestId);
+        return ResponseEntity.ok(
+                SuccessResponse.of(
+                        CrewHttpResponseCode.JOIN_REQUEST_REVIEWED,
+                        response
                 )
         );
     }
