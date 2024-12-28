@@ -32,7 +32,17 @@ public class CrewValidator {
         }
 
         if (!crew.isActive()) {
-            throw new CrewException(CrewErrorCode.INVALID_JOIN_REQUEST);
+            throw new CrewException(CrewErrorCode.SUSPENDED_CREW);
+        }
+    }
+
+    public void validateCanFetchJoinRequests(Integer userId, Crew crew) {
+        if(!crew.getOwner().getId().equals(userId)) {
+            throw new CrewException(CrewErrorCode.CREW_NOT_FOUND);
+        }
+
+        if(!crew.isActive()) {
+            throw new CrewException(CrewErrorCode.SUSPENDED_CREW);
         }
     }
 }

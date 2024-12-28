@@ -6,10 +6,14 @@ import com.run_us.server.domains.crew.domain.Crew;
 import com.run_us.server.domains.crew.domain.CrewJoinRequest;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinType;
 import com.run_us.server.domains.crew.repository.CrewRepository;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -21,6 +25,12 @@ public class CrewService {
         log.debug("action=fetch_crew crewPublicId={}", crewPublicId);
         return crewRepository.findByPublicId(crewPublicId)
                 .orElseThrow(() -> new CrewException(CrewErrorCode.CREW_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public List<CrewJoinRequest> getJoinRequests(Crew crew, PageRequest pageRequest) {
+        log.debug("action=get_join_requests_start crewId={}", crew.getPublicId());
+        return crewRepository.findJoinRequestsByCrew(crew.getPublicId(), pageRequest);
     }
 
     @Transactional

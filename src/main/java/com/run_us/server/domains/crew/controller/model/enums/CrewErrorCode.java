@@ -12,9 +12,9 @@ public enum CrewErrorCode implements CustomResponseCode {
     INVALID_JOIN_REQUEST("CEH4001", "Invalid join request", "Invalid join request", HttpStatus.BAD_REQUEST),
     ALREADY_CREW_MEMBER("CEH4002", "User is already a crew member", "User is already a crew member", HttpStatus.BAD_REQUEST),
     DUPLICATE_JOIN_REQUEST("CEH4003", "Duplicate join request", "Duplicate join request", HttpStatus.BAD_REQUEST),
+    SUSPENDED_CREW("CEH4004", "Suspended crew", "Suspended crew", HttpStatus.BAD_REQUEST),
 
     // 403
-    NOT_CREW_OWNER("CEH4031", "User is not crew owner", "User is not crew owner", HttpStatus.FORBIDDEN),
     RECENTLY_REJECTED_REQUEST("CEH4032","Recently rejected request","Recently rejected request",HttpStatus.FORBIDDEN)
     ;
 

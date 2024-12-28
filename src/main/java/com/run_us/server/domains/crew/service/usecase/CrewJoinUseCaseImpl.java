@@ -2,14 +2,22 @@ package com.run_us.server.domains.crew.service.usecase;
 
 import com.run_us.server.domains.crew.controller.model.request.CreateJoinRequest;
 import com.run_us.server.domains.crew.controller.model.response.CrewJoinRequestInternalResponse;
+import com.run_us.server.domains.crew.controller.model.response.FetchJoinRequestResponse;
 import com.run_us.server.domains.crew.domain.Crew;
 import com.run_us.server.domains.crew.domain.CrewJoinRequest;
 import com.run_us.server.domains.crew.service.CrewService;
 import com.run_us.server.domains.crew.service.CrewValidator;
+import com.run_us.server.domains.user.domain.User;
+import com.run_us.server.domains.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -17,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class CrewJoinUseCaseImpl implements CrewJoinUseCase {
     private final CrewService crewService;
     private final CrewValidator crewValidator;
+    private final UserService userService;
 
     @Override
     @Transactional
@@ -55,5 +64,34 @@ public class CrewJoinUseCaseImpl implements CrewJoinUseCase {
                 .status(null)
                 .requestedAt(null)
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public List<FetchJoinRequestResponse> getJoinRequests(String crewPublicId, PageRequest pageRequest, Integer userInternalId) {
+        log.debug("action=get_join_requests crewPublicId={} userInternalId={}", crewPublicId, userInternalId);
+
+        Crew crew = crewService.getCrewByPublicId(crewPublicId);
+        crewValidator.validateCanFetchJoinRequests(userInternalId, crew);
+
+        List<CrewJoinRequest> joinRequests = crewService.getJoinRequests(crew, pageRequest);
+
+        List<Integer> userIds = joinRequests.stream()
+                .map(CrewJoinRequest::getUserId)
+                .collect(Collectors.toList());
+        Map<Integer, User> userMap = userService.getUserMapByIds(userIds);
+
+        return joinRequests.stream()
+                .map(request -> {
+                    User userInfo = userMap.get(request.getUserId());
+                    return new FetchJoinRequestResponse(
+                            request.getId(),
+                            userInfo.getPublicId(),
+                            userInfo.getProfile().getNickname(),
+                            userInfo.getProfile().getImgUrl(),
+                            request.getAnswer()
+                    );
+                })
+                .collect(Collectors.toList());
     }
 }

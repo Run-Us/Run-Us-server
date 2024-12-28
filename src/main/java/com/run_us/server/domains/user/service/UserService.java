@@ -9,6 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,5 +32,15 @@ public class UserService {
     return userRepository
         .findByPublicId(publicId)
         .orElseThrow(() -> UserException.of(USER_NOT_FOUND));
+  }
+
+  public Map<Integer, User> getUserMapByIds(List<Integer> userIds) {
+    if (userIds == null || userIds.isEmpty()) {
+      return Collections.emptyMap();
+    }
+
+    List<User> users = userRepository.findAllByIdIn(userIds);
+    return users.stream()
+            .collect(Collectors.toMap(User::getId, Function.identity()));
   }
 }
