@@ -6,9 +6,9 @@ import com.run_us.server.domains.running.run.domain.RunningPreview;
 import com.run_us.server.domains.running.run.repository.RunRepository;
 import com.run_us.server.domains.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class RunCommandService {
 
@@ -31,5 +31,11 @@ public class RunCommandService {
   public void updateRunStatus(Integer runId, RunStatus updatedStatus) {
     Run run = runQueryService.findByRunId(runId);
     run.changeStatus(updatedStatus);
+  }
+
+  public void deleteRun(Integer userId, String runPublicId) {
+    Run run = runQueryService.findByRunPublicId(runPublicId);
+    runValidator.validateRunDeletable(userId, run);
+    runRepository.delete(run);
   }
 }
