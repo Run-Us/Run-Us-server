@@ -13,6 +13,7 @@ public enum RunningHttpResponseCode implements CustomResponseCode {
   RUN_PREVIEW_UPDATED("RSH2005", "러닝 세션글 수정 성공", "러닝 세션글 수정 성공"),
   RUN_PREVIEW_DELETED("RSH2006", "러닝 세션글 삭제 성공", "러닝 세션글 삭제 성공"),
   RUN_RECORD_DELETED("RSH2007", "러닝 기록 삭제 성공", "러닝 기록 삭제 성공"),
+  PARTICIPANT_REGISTERED("RSH2008", "러닝 참여자 등록 성공", "러닝 참여자 등록 성공"),
 
   // 201
   SESSION_RUN_CREATED("RSH2011", "세션런 생성 성공", "러닝 생성 성공"),

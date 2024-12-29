@@ -29,10 +29,12 @@ public class RunRegisterUseCaseImpl implements RunRegisterUseCase {
 
   @Override
   @Transactional
-  public void registerRun(String userId, String runPublicId) {
+  public SuccessResponse<List<ParticipantInfo>> registerRun(String userId, String runPublicId) {
     User user = userService.getUserByPublicId(userId);
     Run run = runQueryService.findByRunPublicId(runPublicId);
+    //TODO: CREW ONLY라면 CREW인지 확인
     participantService.registerParticipant(user.getId(), run);
+    return SuccessResponse.of(RunningHttpResponseCode.PARTICIPANT_REGISTERED, participantService.getParticipants(run));
   }
 
   @Override
