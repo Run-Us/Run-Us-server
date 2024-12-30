@@ -1,10 +1,18 @@
 package com.run_us.server.domains.running.run.domain;
 
+import com.run_us.server.domains.running.run.controller.model.request.SessionAccessLevel;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Enumerated;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-
-import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Embeddable
 @Getter
@@ -13,9 +21,10 @@ public class RunningPreview implements Serializable {
   private String title;
   private String description;
   private String meetingPoint;
-  private RunPace paceTag;
-  private String goal;
-  private String accessLevel;
+  @ElementCollection(targetClass = RunPace.class)
+  @Enumerated
+  private List<RunPace> paceCategories = new ArrayList<>();
+  private SessionAccessLevel accessLevel;
   private ZonedDateTime beginTime;
 
   @Builder
@@ -23,15 +32,13 @@ public class RunningPreview implements Serializable {
       String title,
       String description,
       String meetingPoint,
-      RunPace paceTag,
-      String goal,
-      String accessLevel,
+      List<RunPace> paceCategories,
+      SessionAccessLevel accessLevel,
       ZonedDateTime beginTime) {
     this.title = title;
     this.description = description;
     this.meetingPoint = meetingPoint;
-    this.paceTag = paceTag;
-    this.goal = goal;
+    this.paceCategories = paceCategories;
     this.accessLevel = accessLevel;
     this.beginTime = beginTime;
   }

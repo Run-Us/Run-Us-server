@@ -6,9 +6,9 @@ import com.run_us.server.domains.running.run.domain.Run;
 import com.run_us.server.domains.running.run.repository.RunRepository;
 import com.run_us.server.domains.running.run.service.model.GetRunPreviewResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class RunQueryService {
 

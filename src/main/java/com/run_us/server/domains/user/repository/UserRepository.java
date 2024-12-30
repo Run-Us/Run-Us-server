@@ -1,6 +1,8 @@
 package com.run_us.server.domains.user.repository;
 
 import com.run_us.server.domains.user.domain.User;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +20,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
   @Query("SELECT u FROM User u WHERE u.id = :internalId")
   Optional<User> findByInternalId(Integer internalId);
+
+  @Query("SELECT u FROM User u WHERE u.id IN :userIds")
+  List<User> findAllByIdIn(List<Integer> userIds);
 }

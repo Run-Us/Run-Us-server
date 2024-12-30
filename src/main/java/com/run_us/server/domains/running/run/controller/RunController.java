@@ -1,11 +1,13 @@
 package com.run_us.server.domains.running.run.controller;
 
+import com.run_us.server.domains.running.run.controller.model.RunningHttpResponseCode;
 import com.run_us.server.domains.running.run.controller.model.request.SessionRunCreateRequest;
 import com.run_us.server.domains.running.run.service.model.CustomRunCreateResponse;
 import com.run_us.server.domains.running.run.service.model.FetchRunningIdResponse;
 import com.run_us.server.domains.running.run.service.model.ParticipantInfo;
 import com.run_us.server.domains.running.run.service.model.SessionRunCreateResponse;
 import com.run_us.server.domains.running.run.service.usecase.RunCreateUseCase;
+import com.run_us.server.domains.running.run.service.usecase.RunDeleteUseCase;
 import com.run_us.server.domains.running.run.service.usecase.RunRegisterUseCase;
 import com.run_us.server.global.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class RunController {
 
   private final RunCreateUseCase runCreateUseCase;
   private final RunRegisterUseCase runRegisterUseCase;
+  private final RunDeleteUseCase runDeleteUseCase;
 
   @PostMapping(params = "mode=custom")
   public ResponseEntity<SuccessResponse<CustomRunCreateResponse>> createCustomRun(
@@ -55,5 +58,14 @@ public class RunController {
     log.info("action=fetch_running_id_with_passcode passcode={}", passcode);
     SuccessResponse<FetchRunningIdResponse> response = runRegisterUseCase.getRunningIdWithPasscode(passcode);
     return ResponseEntity.ok().body(response);
+  }
+
+  @DeleteMapping("/{runningId}")
+  public ResponseEntity<SuccessResponse<Void>> deleteRunning(
+      @RequestAttribute("publicUserId") String userId,
+      @PathVariable String runningId) {
+    log.info("action=delete_running running_id={} user_id={}", runningId, userId);
+    runDeleteUseCase.deleteRun(userId, runningId);
+    return ResponseEntity.ok(SuccessResponse.messageOnly(RunningHttpResponseCode.RUN_PREVIEW_DELETED));
   }
 }
