@@ -2,7 +2,6 @@ package com.run_us.server.domains.running.run.domain;
 
 import com.run_us.server.domains.running.common.RunningErrorCode;
 import com.run_us.server.domains.running.common.RunningException;
-import com.run_us.server.domains.running.run.controller.model.request.SessionAccessLevel;
 import com.run_us.server.global.common.CreationTimeAudit;
 import io.hypersistence.tsid.TSID;
 import jakarta.persistence.*;
@@ -60,8 +59,8 @@ public class Run extends CreationTimeAudit {
     return this.hostId.equals(userId);
   }
 
-  public boolean isCrewOnly() {
-    return this.getPreview().getAccessLevel().equals(SessionAccessLevel.ONLY_CREW);
+  public boolean isJoinable() {
+    return RunStatus.isJoinable(this.status);
   }
 
   private void validateRunModifiable() {

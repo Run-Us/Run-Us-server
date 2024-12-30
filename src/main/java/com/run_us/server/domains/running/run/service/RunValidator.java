@@ -20,4 +20,10 @@ public final class RunValidator {
       throw RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND);
     }
   }
+
+  public void validateRunJoinable(Run run) {
+    if (!run.isJoinable()) {
+      throw RunningException.of(RunningErrorCode.RUNNING_NOT_JOINABLE);
+    }
+  }
 }

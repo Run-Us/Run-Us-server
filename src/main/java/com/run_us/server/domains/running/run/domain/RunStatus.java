@@ -6,7 +6,11 @@ public enum RunStatus {
   CANCELLED,
   FINISHED;
 
-  public static boolean isRunDeletable(RunStatus status) {
-    return status.equals(WAITING);
+  public static boolean isRunDeletable(final RunStatus status) {
+    return status == WAITING || status == CANCELLED;
+  }
+
+  public static boolean isJoinable(final RunStatus status) {
+    return status == WAITING;
   }
 }
