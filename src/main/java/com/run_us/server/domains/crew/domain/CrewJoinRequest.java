@@ -10,8 +10,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+
+import static com.run_us.server.global.common.GlobalConst.TIME_ZONE_ID;
 
 @ToString
 @Getter
@@ -29,13 +32,13 @@ public class CrewJoinRequest {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CrewJoinRequestStatus status;
+    private CrewJoinRequestStatus status = CrewJoinRequestStatus.WAITING;
 
     @Column(name="answer", length = 100)
     private String answer;
 
     @Column(name = "requested_at", nullable = false)
-    private ZonedDateTime requestedAt;
+    private ZonedDateTime requestedAt = ZonedDateTime.now(ZoneId.of(TIME_ZONE_ID));
 
     @Column(name = "processed_at")
     private ZonedDateTime processedAt;

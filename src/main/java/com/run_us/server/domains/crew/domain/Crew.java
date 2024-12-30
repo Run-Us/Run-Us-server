@@ -8,7 +8,6 @@ import com.run_us.server.global.common.DateAudit;
 import io.hypersistence.tsid.TSID;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
@@ -19,7 +18,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "crews")
+@Table(name = "crew")
 @SQLRestriction("deleted_at is null")
 public class Crew extends DateAudit {
     @Id
@@ -33,7 +32,6 @@ public class Crew extends DateAudit {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    @ColumnDefault("0")
     @Column(nullable = false)
     private int memberCount;
 
@@ -43,7 +41,7 @@ public class Crew extends DateAudit {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CrewStatus status = CrewStatus.ACTIVE;
+    private CrewStatus status;
 
     @Embedded
     private CrewDescription crewDescription;
@@ -111,6 +109,8 @@ public class Crew extends DateAudit {
         this.owner = owner;
         this.joinType = joinType;
         this.crewDescription = crewDescription;
+        this.memberCount = 1;
+        this.status = CrewStatus.ACTIVE;
         this.crewMemberships = crewMemberships;
     }
 }

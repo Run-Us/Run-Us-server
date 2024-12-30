@@ -28,12 +28,7 @@ public class CrewMembership {
     private CrewMembershipRole role;
 
     @Column(name = "joined_at", nullable = false)
-    private ZonedDateTime joinedAt;
-
-    @PrePersist
-    public void prePersist() {
-        this.joinedAt = ZonedDateTime.now(ZoneId.of(TIME_ZONE_ID));
-    }
+    private ZonedDateTime joinedAt = ZonedDateTime.now(ZoneId.of(TIME_ZONE_ID));
 
     @Builder
     public CrewMembership(
