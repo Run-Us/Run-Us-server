@@ -4,6 +4,7 @@ import com.run_us.server.domains.running.run.controller.model.RunningHttpRespons
 import com.run_us.server.domains.running.run.domain.RunningPreview;
 import com.run_us.server.domains.running.run.service.RunCommandService;
 import com.run_us.server.domains.running.run.service.RunQueryService;
+import com.run_us.server.domains.running.run.service.model.JoinedRunPreviewResponse;
 import com.run_us.server.domains.running.run.service.model.GetRunPreviewResponse;
 import com.run_us.server.domains.running.run.service.model.UpdatePreviewResponse;
 import com.run_us.server.domains.user.domain.User;
@@ -12,6 +13,8 @@ import com.run_us.server.global.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +38,12 @@ public class RunPreviewUseCaseImpl implements RunPreviewUseCase {
   public SuccessResponse<GetRunPreviewResponse> getRunPreview(Integer runId) {
     return SuccessResponse.of(RunningHttpResponseCode.RUN_PREVIEW_FETCHED,
         runQueryService.getRunPreviewById(runId));
+  }
+
+  @Override
+  public SuccessResponse<List<JoinedRunPreviewResponse>> getJoinedRunPreview(String userId, Integer page, Integer size) {
+    User user = userService.getUserByPublicId(userId);
+    return SuccessResponse.of(RunningHttpResponseCode.RUN_PREVIEW_FETCHED,
+        runQueryService.getJoinedRunPreviews(user.getId(), page, size));
   }
 }
