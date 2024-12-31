@@ -2,7 +2,6 @@ package com.run_us.server.domains.running;
 
 import com.run_us.server.domains.running.run.controller.model.request.SessionAccessLevel;
 import com.run_us.server.domains.running.run.domain.Run;
-import com.run_us.server.domains.running.run.domain.RunPace;
 import com.run_us.server.domains.running.run.domain.RunStatus;
 import com.run_us.server.domains.running.run.domain.RunningPreview;
 import org.assertj.core.api.Assertions;
@@ -12,7 +11,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,7 +40,6 @@ class RunTest {
     RunningPreview runningPreview = RunningPreview.builder()
         .title("제목")
         .meetingPoint("평화의문")
-        .paceCategories(List.of(RunPace.PACE_UNDER_500))
         .accessLevel(SessionAccessLevel.ALLOW_ALL)
         .beginTime(now)
         .build();
