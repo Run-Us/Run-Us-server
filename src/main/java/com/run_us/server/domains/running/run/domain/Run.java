@@ -59,6 +59,10 @@ public class Run extends CreationTimeAudit {
     return this.hostId.equals(userId);
   }
 
+  public boolean isJoinable() {
+    return RunStatus.isJoinable(this.status);
+  }
+
   private void validateRunModifiable() {
     if (this.status == RunStatus.FINISHED)
       throw RunningException.of(RunningErrorCode.RUNNING_ALREADY_FINISHED);

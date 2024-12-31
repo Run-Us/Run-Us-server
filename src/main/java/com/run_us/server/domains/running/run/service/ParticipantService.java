@@ -19,7 +19,10 @@ public class ParticipantService {
   private final RunQueryService runQueryService;
 
   public void registerParticipant(Integer userId, Run run) {
-    Participant participant = new Participant(userId, run);
+    Participant participant =
+        participantRepository
+            .findByUserIdAndRunId(userId, run.getId())
+            .orElse(new Participant(userId, run));
     participantRepository.save(participant);
   }
 

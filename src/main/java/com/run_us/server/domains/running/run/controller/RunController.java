@@ -45,6 +45,15 @@ public class RunController {
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
+  @PostMapping("/{runningId}/registration")
+  public ResponseEntity<SuccessResponse<List<ParticipantInfo>>> registerRun(
+      @PathVariable String runningId,
+      @RequestAttribute("publicUserId") String userId) {
+    log.info("action=register_running running_id={}", runningId);
+    SuccessResponse<List<ParticipantInfo>> response = runRegisterUseCase.registerRun(userId, runningId);
+    return ResponseEntity.ok().body(response);
+  }
+
   @GetMapping("/{runningId}/participants")
   public ResponseEntity<SuccessResponse<List<ParticipantInfo>>> joinedParticipants(@PathVariable String runningId) {
     log.info("action=joined_participants running_id={}", runningId);

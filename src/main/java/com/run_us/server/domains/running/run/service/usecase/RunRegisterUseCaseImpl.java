@@ -7,6 +7,7 @@ import com.run_us.server.domains.running.run.controller.model.RunningHttpRespons
 import com.run_us.server.domains.running.run.domain.Run;
 import com.run_us.server.domains.running.run.service.ParticipantService;
 import com.run_us.server.domains.running.run.service.RunQueryService;
+import com.run_us.server.domains.running.run.service.RunValidator;
 import com.run_us.server.domains.running.run.service.model.FetchRunningIdResponse;
 import com.run_us.server.domains.running.run.service.model.ParticipantInfo;
 import com.run_us.server.domains.user.domain.User;
@@ -24,15 +25,19 @@ public class RunRegisterUseCaseImpl implements RunRegisterUseCase {
 
   private final UserService userService;
   private final RunQueryService runQueryService;
+  private final RunValidator runValidator;
   private final ParticipantService participantService;
   private final PassCodeRegistry passCodeRegistry;
 
   @Override
   @Transactional
-  public void registerRun(String userId, String runPublicId) {
+  public SuccessResponse<List<ParticipantInfo>> registerRun(String userId, String runPublicId) {
     User user = userService.getUserByPublicId(userId);
     Run run = runQueryService.findByRunPublicId(runPublicId);
+    //TODO: CREW ONLY라면 CREW인지 확인
+    runValidator.validateRunJoinable(run);
     participantService.registerParticipant(user.getId(), run);
+    return SuccessResponse.of(RunningHttpResponseCode.PARTICIPANT_REGISTERED, participantService.getParticipants(run));
   }
 
   @Override
