@@ -41,6 +41,7 @@ public class RunPreviewUseCaseImpl implements RunPreviewUseCase {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public SuccessResponse<List<JoinedRunPreviewResponse>> getJoinedRunPreview(String userId, Integer page, Integer size) {
     User user = userService.getUserByPublicId(userId);
     return SuccessResponse.of(RunningHttpResponseCode.RUN_PREVIEW_FETCHED,
