@@ -2,12 +2,10 @@ package com.run_us.server.domains.running.run.controller;
 
 import com.run_us.server.domains.running.run.controller.model.RunningHttpResponseCode;
 import com.run_us.server.domains.running.run.controller.model.request.SessionRunCreateRequest;
-import com.run_us.server.domains.running.run.service.model.CustomRunCreateResponse;
-import com.run_us.server.domains.running.run.service.model.FetchRunningIdResponse;
-import com.run_us.server.domains.running.run.service.model.ParticipantInfo;
-import com.run_us.server.domains.running.run.service.model.SessionRunCreateResponse;
+import com.run_us.server.domains.running.run.service.model.*;
 import com.run_us.server.domains.running.run.service.usecase.RunCreateUseCase;
 import com.run_us.server.domains.running.run.service.usecase.RunDeleteUseCase;
+import com.run_us.server.domains.running.run.service.usecase.RunPreviewUseCase;
 import com.run_us.server.domains.running.run.service.usecase.RunRegisterUseCase;
 import com.run_us.server.global.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +24,7 @@ public class RunController {
 
   private final RunCreateUseCase runCreateUseCase;
   private final RunRegisterUseCase runRegisterUseCase;
+  private final RunPreviewUseCase runPreviewUseCase;
   private final RunDeleteUseCase runDeleteUseCase;
 
   @PostMapping(params = "mode=custom")
@@ -41,7 +40,7 @@ public class RunController {
       @RequestBody SessionRunCreateRequest runningCreateRequest,
       @RequestAttribute("publicUserId") String userId) {
     log.info("action=create_session_running user_id={}", userId);
-    SuccessResponse<SessionRunCreateResponse> response = runCreateUseCase.saveNewSessionRun(userId, runningCreateRequest.toRunningPreview());
+    SuccessResponse<SessionRunCreateResponse> response = runCreateUseCase.saveNewSessionRun(userId, runningCreateRequest.toRunCreateDto());
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
@@ -67,5 +66,15 @@ public class RunController {
     log.info("action=delete_running running_id={} user_id={}", runningId, userId);
     runDeleteUseCase.deleteRun(userId, runningId);
     return ResponseEntity.ok(SuccessResponse.messageOnly(RunningHttpResponseCode.RUN_PREVIEW_DELETED));
+  }
+
+  @GetMapping("/registrations")
+  public ResponseEntity<SuccessResponse<List<JoinedRunPreviewResponse>>> getJoinedRunnings(
+      @RequestAttribute("publicUserId") String userId,
+      @RequestParam(defaultValue = "0") int runningPage,
+      @RequestParam(defaultValue = "10") int runningSize){
+    log.info("action=get_joined_runnings user_id={}", userId);
+    SuccessResponse<List<JoinedRunPreviewResponse>> response = runPreviewUseCase.getJoinedRunPreview(userId, runningPage, runningSize);
+    return ResponseEntity.ok().body(response);
   }
 }
