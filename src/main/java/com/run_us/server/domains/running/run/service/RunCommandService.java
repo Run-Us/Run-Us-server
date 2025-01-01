@@ -30,6 +30,15 @@ public class RunCommandService {
     return runRepository.save(run);
   }
 
+  // TODO: 중복 코드
+  public Run saveNewCrewRun(User user, Integer crewId, RunCreateDto createDto) {
+    Run run = new Run(user.getId(), crewId);
+    RunningPreview preview = RunningPreview.from(createDto);
+    run.modifySessionInfo(preview);
+    run.modifyPaceInfo(createDto.getRunPaces());
+    return runRepository.save(run);
+  }
+
   public void updateRunPreview(Integer userId, Integer runId, RunningPreview preview) {
     Run run = runQueryService.findByRunId(runId);
     runValidator.validateIsRunOwner(userId, run);
