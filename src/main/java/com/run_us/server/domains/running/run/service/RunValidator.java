@@ -2,7 +2,9 @@ package com.run_us.server.domains.running.run.service;
 
 import com.run_us.server.domains.running.common.RunningErrorCode;
 import com.run_us.server.domains.running.common.RunningException;
+import com.run_us.server.domains.running.run.domain.SessionAccessLevel;
 import com.run_us.server.domains.running.run.domain.Run;
+import com.run_us.server.domains.running.run.service.model.RunCreateDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,5 +27,14 @@ public final class RunValidator {
     if (!run.isJoinable()) {
       throw RunningException.of(RunningErrorCode.RUNNING_NOT_JOINABLE);
     }
+  }
+
+  public boolean isCrewRunCreateCommand(RunCreateDto createDto) {
+    // ONLY_CREW인데 CREW ID가 없는 경우
+    if(createDto.getAccessLevel() == SessionAccessLevel.ONLY_CREW && createDto.getCrewPublicId() != null) {
+      throw RunningException.of(RunningErrorCode.RUNNING_SESSION_INVALID);
+    }
+    // ONLY_CREW + CREW ID or PUBLIC + CREW ID
+    return createDto.getAccessLevel() == SessionAccessLevel.ONLY_CREW || createDto.getCrewPublicId() != null;
   }
 }
