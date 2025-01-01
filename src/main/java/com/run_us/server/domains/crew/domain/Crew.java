@@ -66,6 +66,14 @@ public class Crew extends DateAudit {
         return this.status == CrewStatus.ACTIVE;
     }
 
+    public boolean isOwner(Integer userId) {
+        return this.owner.getId().equals(userId);
+    }
+
+    public void updateCrewInfo(CrewDescription crewDescription) {
+        this.crewDescription = crewDescription;
+    }
+
     public void addJoinRequest(CrewJoinRequest joinRequest) {
         this.joinRequests.add(joinRequest);
     }
