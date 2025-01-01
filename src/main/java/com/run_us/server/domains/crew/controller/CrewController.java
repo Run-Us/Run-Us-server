@@ -3,8 +3,10 @@ package com.run_us.server.domains.crew.controller;
 import com.run_us.server.domains.crew.controller.model.enums.CrewHttpResponseCode;
 import com.run_us.server.domains.crew.controller.model.request.CreateJoinRequest;
 import com.run_us.server.domains.crew.controller.model.request.ReviewJoinRequest;
+import com.run_us.server.domains.crew.controller.model.request.UpdateCrewInfoRequest;
 import com.run_us.server.domains.crew.controller.model.response.*;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
+import com.run_us.server.domains.crew.service.usecase.CommandCrewUseCase;
 import com.run_us.server.domains.crew.service.usecase.CrewJoinUseCase;
 import com.run_us.server.domains.crew.controller.model.request.CreateCrewRequest;
 import com.run_us.server.domains.crew.controller.model.response.CreateCrewResponse;
@@ -30,6 +32,7 @@ import java.util.List;
 public class CrewController {
     private final CrewJoinUseCase crewJoinUseCase;
     private final CreateCrewUseCase createCrewUseCase;
+    private final CommandCrewUseCase commandCrewUseCase;
 
 
     @PostMapping
@@ -42,6 +45,19 @@ public class CrewController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PatchMapping("/{crewPublicId}")
+    public ResponseEntity<SuccessResponse<UpdateCrewInfoResponse>> updateCrewInfo(
+            @PathVariable String crewPublicId,
+            @RequestBody UpdateCrewInfoRequest requestDto,
+            @CurrentUser UserPrincipal userPrincipal){
+        log.info("action=update_crew_info userPublicId={}, crewPublicId={}", userPrincipal.getPublicId(), crewPublicId);
+
+        SuccessResponse<UpdateCrewInfoResponse> response = commandCrewUseCase.updateCrewInfo(crewPublicId, requestDto, userPrincipal.getInternalId());
+        return ResponseEntity.ok().body(response);
+    }
+
+
 
 
     @PostMapping("/{crewPublicId}/join-requests")
