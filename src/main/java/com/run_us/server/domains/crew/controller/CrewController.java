@@ -31,7 +31,7 @@ public class CrewController {
     private final CrewJoinUseCase crewJoinUseCase;
     private final CreateCrewUseCase createCrewUseCase;
 
-
+    // TODO : validation, currentUser 사용
     @PostMapping
     public ResponseEntity<SuccessResponse<CreateCrewResponse>> createCrew(
             @RequestBody CreateCrewRequest requestDto,
