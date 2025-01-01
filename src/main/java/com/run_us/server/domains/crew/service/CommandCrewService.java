@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CrewCommandService {
+public class CommandCrewService {
 
     private final CrewRepository crewRepository;
 
