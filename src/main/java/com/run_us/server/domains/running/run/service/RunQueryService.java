@@ -3,11 +3,13 @@ package com.run_us.server.domains.running.run.service;
 import com.run_us.server.domains.running.common.RunningErrorCode;
 import com.run_us.server.domains.running.common.RunningException;
 import com.run_us.server.domains.running.run.domain.Run;
+import com.run_us.server.domains.running.run.domain.SessionAccessLevel;
 import com.run_us.server.domains.running.run.repository.RunRepository;
 import com.run_us.server.domains.running.run.service.model.JoinedRunPreviewResponse;
 import com.run_us.server.domains.running.run.service.model.GetRunPreviewResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -31,6 +33,16 @@ public class RunQueryService {
     return runRepository
         .findByPublicId(runPublicId)
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
+  }
+
+  public Slice<Run> findAllByCrewId(Integer crewId, Integer page, Integer size) {
+    PageRequest pageRequest = PageRequest.of(page, size);
+    return runRepository.findAllByCrewId(crewId, pageRequest);
+  }
+
+  public Slice<Run> findAllByCrewIdAndAccessLevel(Integer crewId, SessionAccessLevel accessLevel, Integer page, Integer size) {
+    PageRequest pageRequest = PageRequest.of(page, size);
+    return runRepository.findAllByCrewIdAndAccessLevel(crewId, accessLevel, pageRequest);
   }
 
   public GetRunPreviewResponse getRunPreviewById(Integer runId) {

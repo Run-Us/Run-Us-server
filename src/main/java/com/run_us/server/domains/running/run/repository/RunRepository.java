@@ -1,5 +1,6 @@
 package com.run_us.server.domains.running.run.repository;
 
+import com.run_us.server.domains.running.run.domain.SessionAccessLevel;
 import com.run_us.server.domains.running.run.domain.Run;
 import com.run_us.server.domains.running.run.service.model.JoinedRunPreviewResponse;
 import com.run_us.server.domains.running.run.service.model.GetRunPreviewResponse;
@@ -44,4 +45,12 @@ public interface RunRepository extends JpaRepository<Run, Integer> {
           + "WHERE r.publicId IN :keys")
   List<Run> findAllByPublicId(List<String> keys);
 
+  Slice<Run> findAllByCrewId(Integer crewId, PageRequest pageRequest);
+
+  @Query(
+      "SELECT r "
+          + "FROM Run r "
+          + "WHERE r.crewId = :crewId and r.status = :accessLevel"
+  )
+  Slice<Run> findAllByCrewIdAndAccessLevel(Integer crewId, SessionAccessLevel accessLevel, PageRequest pageRequest);
 }
