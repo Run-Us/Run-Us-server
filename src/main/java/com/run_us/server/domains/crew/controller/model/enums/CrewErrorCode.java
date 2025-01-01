@@ -16,7 +16,8 @@ public enum CrewErrorCode implements CustomResponseCode {
     INVALID_JOIN_REQUEST_STATUS("CEH4005", "Invalid join request status", "Invalid join request status", HttpStatus.BAD_REQUEST),
 
     // 403
-    RECENTLY_REJECTED_REQUEST("CEH4032","Recently rejected request","Recently rejected request",HttpStatus.FORBIDDEN)
+    RECENTLY_REJECTED_REQUEST("CEH4032","Recently rejected request","Recently rejected request",HttpStatus.FORBIDDEN),
+    FORBIDDEN_UPDATE_CREW("CEH4033","Forbidden update crew", "Forbidden update crew",HttpStatus.FORBIDDEN)
     ;
 
     private final String code;
