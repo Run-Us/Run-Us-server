@@ -1,7 +1,5 @@
 package com.run_us.server.domains.crew.service.usecase;
 
-import com.run_us.server.domains.crew.controller.model.enums.CrewErrorCode;
-import com.run_us.server.domains.crew.controller.model.enums.CrewException;
 import com.run_us.server.domains.crew.controller.model.enums.CrewHttpResponseCode;
 import com.run_us.server.domains.crew.controller.model.request.UpdateCrewInfoRequest;
 import com.run_us.server.domains.crew.controller.model.response.UpdateCrewInfoResponse;
@@ -24,11 +22,7 @@ public class CommandCrewUseCaseImpl implements CommandCrewUseCase {
     @Transactional
     public SuccessResponse<UpdateCrewInfoResponse> updateCrewInfo(String crewPublicId, UpdateCrewInfoRequest requestDto, Integer userId) {
         Crew crew = crewService.getCrewByPublicId(crewPublicId);
-        if (!crew.isOwner(userId)) {
-            throw new CrewException(CrewErrorCode.FORBIDDEN_UPDATE_CREW);
-        }
-
-        commandCrewService.updateCrewInfo(requestDto, crew);
+        commandCrewService.updateCrewInfo(requestDto, crew, userId);
         return SuccessResponse.of(CrewHttpResponseCode.CREW_UPDATED, UpdateCrewInfoResponse.from(crew.getPublicId()));
     }
 }
