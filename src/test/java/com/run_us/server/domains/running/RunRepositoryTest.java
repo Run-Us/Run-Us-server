@@ -1,5 +1,6 @@
 package com.run_us.server.domains.running;
 
+import com.run_us.server.domains.running.run.domain.SessionAccessLevel;
 import com.run_us.server.domains.running.run.domain.Participant;
 import com.run_us.server.domains.running.run.domain.Run;
 import com.run_us.server.domains.running.run.repository.ParticipantRepository;
@@ -73,6 +74,40 @@ public class RunRepositoryTest {
     // then
     assertEquals(1, joinedRuns.size());
     assertEquals(joinedRuns.getFirst().getParticipantCount(), participants.size());
+  }
+
+  @DisplayName("크루 러닝 세션 조회")
+  @Test
+  void test_crew_run_save() {
+    // given
+    User user = UserFixtures.getDefaultUser();
+    userRepository.saveAndFlush(user);
+    // when
+    Integer crewId = 3;
+    Run run = new Run(user.getId(), crewId);
+    runRepository.saveAndFlush(run);
+
+    // then
+    List<Run> runs = runRepository.findAllByCrewId(crewId, PageRequest.of(0, 10)).getContent();
+    assertEquals(1, runs.size());
+    assertEquals(crewId, runs.getFirst().getCrewId());
+  }
+
+  @Test
+  void test_crew_run_with_accessLevel() {
+    User user = UserFixtures.getDefaultUser();
+    userRepository.saveAndFlush(user);
+
+    Integer crewId = 3;
+    Run crewOnlyRun = RunFixtures.createRunWithCrewIdAndAccessLevel(crewId, SessionAccessLevel.ONLY_CREW);
+    Run publicRun =  RunFixtures.createRunWithCrewIdAndAccessLevel(crewId, SessionAccessLevel.ALLOW_ALL);
+
+    runRepository.saveAllAndFlush(List.of(crewOnlyRun, publicRun));
+
+    List<Run> publicRuns = runRepository.findAllByCrewIdAndAccessLevel(crewId, SessionAccessLevel.ALLOW_ALL, PageRequest.of(0, 10)).getContent();
+    List<Run> crewRuns = runRepository.findAllByCrewId(crewId, PageRequest.of(0, 10)).getContent();
+    assertEquals(2, crewRuns.size());
+    assertEquals(1, publicRuns.size());
   }
 
   private List<User> saveUsersForParticipants() {

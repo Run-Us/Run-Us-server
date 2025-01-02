@@ -1,6 +1,6 @@
 package com.run_us.server.domains.running;
 
-import com.run_us.server.domains.running.run.controller.model.request.SessionAccessLevel;
+import com.run_us.server.domains.running.run.domain.SessionAccessLevel;
 import com.run_us.server.domains.running.run.domain.Run;
 import com.run_us.server.domains.running.run.domain.RunStatus;
 import com.run_us.server.domains.running.run.domain.RunningPreview;

@@ -26,6 +26,8 @@ public class Run extends CreationTimeAudit {
 
   private String publicId;
 
+  private Integer crewId;
+
   @Enumerated(EnumType.STRING)
   private RunStatus status;
 
@@ -40,6 +42,11 @@ public class Run extends CreationTimeAudit {
   public Run(Integer hostId) {
     this.hostId = hostId;
     this.status = RunStatus.WAITING;
+  }
+
+  public Run (Integer hostId, Integer crewId) {
+    this.hostId = hostId;
+    this.crewId = crewId;
   }
 
   @Override
@@ -62,12 +69,21 @@ public class Run extends CreationTimeAudit {
     return RunStatus.isRunDeletable(this.status);
   }
 
+  public boolean isJoinable() {
+    return RunStatus.isJoinable(this.status);
+  }
+
   public boolean isHost(int userId) {
     return this.hostId.equals(userId);
   }
 
   public void modifyPaceInfo(List<RunPace> runPaces) {
     this.paceCategories = runPaces;
+  }
+
+  public void exposeToCrew(Integer crewPublicId) {
+    validateRunModifiable();
+    this.crewId = crewPublicId;
   }
 
   private void validateRunModifiable() {
