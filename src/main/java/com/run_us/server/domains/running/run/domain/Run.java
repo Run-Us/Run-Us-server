@@ -9,6 +9,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "run")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,6 +28,11 @@ public class Run extends CreationTimeAudit {
 
   @Enumerated(EnumType.STRING)
   private RunStatus status;
+
+  @ElementCollection(targetClass = RunPace.class)
+  @CollectionTable(name = "run_pace", joinColumns = @JoinColumn(name = "run_id"))
+  @Enumerated(EnumType.STRING)
+  List<RunPace> paceCategories;
 
   @Embedded private RunningPreview preview;
 
@@ -59,8 +66,8 @@ public class Run extends CreationTimeAudit {
     return this.hostId.equals(userId);
   }
 
-  public boolean isJoinable() {
-    return RunStatus.isJoinable(this.status);
+  public void modifyPaceInfo(List<RunPace> runPaces) {
+    this.paceCategories = runPaces;
   }
 
   private void validateRunModifiable() {

@@ -3,13 +3,14 @@ package com.run_us.server.domains.running.run.controller.model.request;
 import com.run_us.server.domains.running.common.RunningErrorCode;
 import com.run_us.server.domains.running.common.RunningException;
 import com.run_us.server.domains.running.run.domain.RunPace;
-import com.run_us.server.domains.running.run.domain.RunningPreview;
+import com.run_us.server.domains.running.run.service.model.RunCreateDto;
 import com.run_us.server.global.validator.annotation.EnumValid;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 public class SessionRunCreateRequest {
@@ -21,7 +22,7 @@ public class SessionRunCreateRequest {
   private final SessionAccessLevel accessLevel;
   private final String crewPublicId;
   @EnumValid(enumClass = RunPace.class)
-  private final List<RunPace> paceCategories;
+  private final Set<RunPace> paceCategories;
 
   @Builder
   public SessionRunCreateRequest(
@@ -31,7 +32,7 @@ public class SessionRunCreateRequest {
       String meetingPlace,
       SessionAccessLevel accessLevel,
       String crewPublicId,
-      List<RunPace> paceCategories) {
+      Set<RunPace> paceCategories) {
     validateCrewPublicId(accessLevel, crewPublicId);
     validatePace(paceCategories);
     this.title = title;
@@ -43,15 +44,8 @@ public class SessionRunCreateRequest {
     this.paceCategories = paceCategories;
   }
 
-  public RunningPreview toRunningPreview() {
-    return RunningPreview.builder()
-        .title(title)
-        .description(description)
-        .beginTime(startDateTime)
-        .meetingPoint(meetingPlace)
-        .accessLevel(accessLevel)
-        .paceCategories(paceCategories)
-        .build();
+  public RunCreateDto toRunCreateDto() {
+    return new RunCreateDto(title, description, meetingPlace, accessLevel, startDateTime, List.copyOf(paceCategories));
   }
 
   // 크루 공개일 경우 크루 아이디가 필수
@@ -61,7 +55,7 @@ public class SessionRunCreateRequest {
     }
   }
 
-  private void validatePace(List<RunPace> pace) {
+  private void validatePace(Set<RunPace> pace) {
     if(pace != null && pace.size() > 3) {
       throw RunningException.of(RunningErrorCode.RUNNING_SESSION_INVALID);
     }
