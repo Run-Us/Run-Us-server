@@ -46,7 +46,10 @@ public class RunQueryService {
   }
 
   public GetRunPreviewResponse getRunPreviewById(Integer runId) {
-    return runRepository.findByRunId(runId);
+    Run run = findByRunId(runId);
+    GetRunPreviewResponse response = runRepository.findByRunId(runId);
+    response.setRunPaces(List.copyOf(run.getPaceCategories()));
+    return response;
   }
 
   // 2가지 쿼리 발생 : 1. 세션 정보 2. 페이스 태그 정보
