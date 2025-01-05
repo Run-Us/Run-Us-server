@@ -1,61 +1,64 @@
 package com.run_us.server.domains.crew.domain;
 
+import com.run_us.server.domains.crew.controller.model.enums.CrewErrorCode;
+import com.run_us.server.domains.crew.controller.model.enums.CrewException;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
-import com.run_us.server.domains.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Objects;
 
 import static com.run_us.server.global.common.GlobalConst.TIME_ZONE_ID;
+
 
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "crew_join_requests")
-@SQLRestriction("deleted_at is null")
-@Embeddable
+@Entity
 public class CrewJoinRequest {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(nullable = false)
+    private Integer crewId;
 
     @Column(nullable = false)
     private Integer userId;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CrewJoinRequestStatus status = CrewJoinRequestStatus.WAITING;
+    private CrewJoinRequestStatus status;
 
     @Column(name="answer", length = 100)
     private String answer;
 
     @Column(name = "requested_at", nullable = false)
-    private ZonedDateTime requestedAt = ZonedDateTime.now(ZoneId.of(TIME_ZONE_ID));
+    private ZonedDateTime requestedAt;
 
     @Column(name = "processed_at")
     private ZonedDateTime processedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "processed_by")
-    private User processedBy;
+    @Column(name = "processed_by")
+    private Integer processedBy;
 
     @Builder
     public CrewJoinRequest(
-            Integer userId,
-            CrewJoinRequestStatus status,
-            String answer,
-            ZonedDateTime requestedAt,
-            ZonedDateTime processedAt,
-            User processedBy
+        Integer crewId, Integer userId,
+        CrewJoinRequestStatus status,
+        String answer,
+        ZonedDateTime requestedAt,
+        ZonedDateTime processedAt,
+        Integer processedBy
     ){
+        this.crewId = crewId;
         this.userId = userId;
         this.status = status;
         this.answer = answer;
@@ -64,59 +67,41 @@ public class CrewJoinRequest {
         this.processedBy = processedBy;
     }
 
-    public static CrewJoinRequest from(Integer userId, String answer) {
+    public static CrewJoinRequest from(Integer userId, Integer crewId, String answer) {
         return CrewJoinRequest.builder()
+                .crewId(crewId)
                 .userId(userId)
                 .answer(answer)
+                .requestedAt(ZonedDateTime.now(ZoneId.of(TIME_ZONE_ID)))
+                .status(CrewJoinRequestStatus.WAITING)
                 .build();
     }
 
-    private void approve(User processedBy) {
+    private void approve(Integer processedUserId) {
         this.status = CrewJoinRequestStatus.APPROVED;
         this.processedAt = ZonedDateTime.now();
-        this.processedBy = processedBy;
+        this.processedBy = processedUserId;
     }
 
-    private void reject(User processedBy) {
+    private void reject(Integer processedByUserId) {
         this.status = CrewJoinRequestStatus.REJECTED;
         this.processedAt = ZonedDateTime.now();
-        this.processedBy = processedBy;
+        this.processedBy = processedByUserId;
     }
 
-    public void review(User processedBy, CrewJoinRequestStatus status) {
+    public void review(Integer processedByUserId, CrewJoinRequestStatus status) {
         if(status == CrewJoinRequestStatus.APPROVED) {
-            approve(processedBy);
+            approve(processedByUserId);
         } else if(status == CrewJoinRequestStatus.REJECTED) {
-            reject(processedBy);
+            reject(processedByUserId);
         }
     }
 
     public void cancel() {
+        if(this.status != CrewJoinRequestStatus.WAITING) {
+            throw CrewException.of(CrewErrorCode.JOIN_REQUEST_ALREADY_PROCESSED);
+        }
         this.status = CrewJoinRequestStatus.CANCELED;
         this.processedAt = ZonedDateTime.now();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if (obj == null || obj.getClass() != this.getClass()) {
-            return false;
-        }
-
-        CrewJoinRequest target = (CrewJoinRequest) obj;
-        return this.userId.equals(target.userId) &&
-                this.status.equals(target.status) &&
-                this.requestedAt.equals(target.requestedAt) &&
-                this.processedAt.equals(target.processedAt) &&
-                this.processedBy.equals(target.processedBy);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.userId, this.status, this.requestedAt, this.processedAt, this.processedBy);
     }
 }

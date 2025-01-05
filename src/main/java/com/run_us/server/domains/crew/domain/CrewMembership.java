@@ -16,7 +16,6 @@ import static com.run_us.server.global.common.GlobalConst.TIME_ZONE_ID;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "crew_memberships")
-@SQLRestriction("deleted_at is null")
 @Embeddable
 public class CrewMembership {
 
