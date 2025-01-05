@@ -95,7 +95,7 @@ public class CrewJoinUseCaseImpl implements CrewJoinUseCase {
                 crewPublicId, requestId, status);
 
         Crew crew = crewService.getCrewByPublicId(crewPublicId);
-        crewValidator.validateCanReviewJoinRequest(userInternalId, requestId, status, crew);
+        crewValidator.validateCanReviewJoinRequest(userInternalId, status, crew);
 
         CrewJoinRequest joinRequest = crewService.reviewJoinRequest(
                 crew,
