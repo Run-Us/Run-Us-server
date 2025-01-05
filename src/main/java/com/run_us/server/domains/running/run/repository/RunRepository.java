@@ -21,9 +21,8 @@ public interface RunRepository extends JpaRepository<Run, Integer> {
       "SELECT new com.run_us.server.domains.running.run.service.model.GetRunPreviewResponse"
           + "(u.profile.nickname, u.profile.imgUrl, r.preview) "
           + "FROM Run r "
-          + "join r.paceCategories "
           + "left join User u on r.hostId = u.id "
-          + "WHERE r.id = :runId")
+          + "WHERE r.id = :runId AND r.preview IS NOT NULL")
   GetRunPreviewResponse findByRunId(Integer runId);
 
 
