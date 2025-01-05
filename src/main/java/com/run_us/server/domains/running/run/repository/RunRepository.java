@@ -50,7 +50,7 @@ public interface RunRepository extends JpaRepository<Run, Integer> {
   @Query(
       "SELECT r "
           + "FROM Run r "
-          + "WHERE r.crewId = :crewId and r.status = :accessLevel"
+          + "WHERE r.crewId = :crewId and r.preview.accessLevel = :accessLevel"
   )
   Slice<Run> findAllByCrewIdAndAccessLevel(Integer crewId, SessionAccessLevel accessLevel, PageRequest pageRequest);
 }

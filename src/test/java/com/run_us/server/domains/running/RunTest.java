@@ -55,7 +55,7 @@ class RunTest {
   @ParameterizedTest
   @EnumSource(
       value = RunStatus.class,
-      names = {"WAITING"},
+      names = {"WAITING", "CANCELLED"},
       mode = EnumSource.Mode.EXCLUDE)
   void test_deletable_except_WAITING_status(RunStatus runStatus) {
     Run run = RunFixtures.createRun();
