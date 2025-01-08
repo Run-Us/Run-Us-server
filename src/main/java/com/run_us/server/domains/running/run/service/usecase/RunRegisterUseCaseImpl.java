@@ -42,10 +42,12 @@ public class RunRegisterUseCaseImpl implements RunRegisterUseCase {
 
   @Override
   @Transactional
-  public void cancelRun(String userId, String runPublicId) {
+  public SuccessResponse<Void> cancelRun(String userId, String runPublicId) {
     User user = userService.getUserByPublicId(userId);
     Run run = runQueryService.findByRunPublicId(runPublicId);
+    runValidator.validateRunJoinable(run);
     participantService.cancelParticipant(user.getId(), run);
+    return SuccessResponse.messageOnly(RunningHttpResponseCode.PARTICIPANT_CANCELED);
   }
 
   @Override

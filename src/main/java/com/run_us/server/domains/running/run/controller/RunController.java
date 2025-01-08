@@ -86,4 +86,13 @@ public class RunController {
     SuccessResponse<List<JoinedRunPreviewResponse>> response = runPreviewUseCase.getJoinedRunPreview(userId, runningPage, runningSize);
     return ResponseEntity.ok().body(response);
   }
+
+  @DeleteMapping("/{runningId}/registration")
+  public ResponseEntity<SuccessResponse<Void>> cancelRunningRegistration(
+      @RequestAttribute("publicUserId") String userId,
+      @PathVariable String runningId) {
+    log.info("action=cancel_running_registration running_id={} user_id={}", runningId, userId);
+    SuccessResponse<Void> response = runRegisterUseCase.cancelRun(userId, runningId);
+    return ResponseEntity.ok(response);
+  }
 }
