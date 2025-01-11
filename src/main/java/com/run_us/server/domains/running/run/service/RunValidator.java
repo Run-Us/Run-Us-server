@@ -53,15 +53,12 @@ public final class RunValidator {
     if(!run.isJoinable()) {
       throw RunningException.of(RunningErrorCode.RUNNING_NOT_JOINABLE);
     }
+
     if(!participantService.isRegistered(userId, run)) {
       throw RunningException.of(RunningErrorCode.USER_NOT_JOINED);
     }
-    if(!isHostWaitingTimeOver(run)) {
+    if(!run.isLiveSessionCreatableByAnyone() && run.isLiveSessionCreatableByHost()) {
       validateIsRunOwner(userId, run);
     }
-  }
-
-  private boolean isHostWaitingTimeOver(Run run) {
-    return run.getPreview().getBeginTime().plusMinutes(LIVE_SESSION_ALLOW_ALL_TIME).isBefore(ZonedDateTime.now());
   }
 }

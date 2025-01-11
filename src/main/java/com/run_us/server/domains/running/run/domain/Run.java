@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import static com.run_us.server.domains.running.common.RunningConst.LIVE_SESSION_ALLOW_ALL_TIME;
 import static com.run_us.server.domains.running.common.RunningConst.MAX_LIVE_SESSION_CREATION_TIME;
 
 @Entity
@@ -105,6 +106,14 @@ public class Run extends CreationTimeAudit {
   public void exposeToCrew(Integer crewPublicId) {
     validateRunModifiable();
     this.crewId = crewPublicId;
+  }
+
+  public boolean isLiveSessionCreatableByHost() {
+    return ZonedDateTime.now().isAfter(this.preview.getBeginTime().minusMinutes(10));
+  }
+
+  public boolean isLiveSessionCreatableByAnyone() {
+    return ZonedDateTime.now().isAfter(this.getPreview().getBeginTime().plusMinutes(LIVE_SESSION_ALLOW_ALL_TIME));
   }
 
   private void validateRunModifiable() {
