@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import java.time.ZonedDateTime;
 
+import static com.run_us.server.domains.running.common.RunningConst.MAX_LIVE_SESSION_CREATION_TIME;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RunTest {
@@ -61,5 +62,32 @@ class RunTest {
     Run run = RunFixtures.createRun();
     run.changeStatus(runStatus);
     assertFalse(run.isDeletable());
+  }
+
+  @DisplayName("라이브 세션 생성 시 생성자의 id로 세션 호스트 수정")
+  @Test
+  void test_change_live_session_host() {
+    Run run = RunFixtures.createRun();
+    Integer liveSessionCreatorId = 2;
+
+    //when
+    run.openLiveSession(liveSessionCreatorId);
+
+    //then
+    assertEquals(liveSessionCreatorId, run.getSessionHostId());
+  }
+
+  @DisplayName("세션 시작 시간 10분 초과하면 실시간 러닝을 시작할 수 없음")
+  @Test
+  void test_should_return_true_when_current_time_is_behind_beginning_time(){
+    Run run = RunFixtures.createRun();
+    ZonedDateTime beginsAt = ZonedDateTime.now().minusMinutes(MAX_LIVE_SESSION_CREATION_TIME + 1);
+    run.modifySessionInfo(RunningPreview.builder().beginTime(beginsAt).build());
+
+    //when
+    boolean isBeginningTimePassed = run.isCreationTimeOver();
+
+    //then
+    assertTrue(isBeginningTimePassed);
   }
 }
