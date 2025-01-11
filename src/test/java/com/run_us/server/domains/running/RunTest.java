@@ -90,4 +90,18 @@ class RunTest {
     //then
     assertTrue(isBeginningTimePassed);
   }
+
+  @DisplayName("세션 시작 시간 10분 전에는 세션글 작성자만 시작할 수 있음.")
+  @Test
+  void test_should_return_false_when_participant_creates_before_10_min() {
+    Run run = RunFixtures.createRun();
+    ZonedDateTime beginsIn10Min = ZonedDateTime.now().plusMinutes(MAX_LIVE_SESSION_CREATION_TIME);
+    run.modifySessionInfo(RunningPreview.builder().beginTime(beginsIn10Min).build());
+
+    //when
+    boolean isLiveSessionCreatableByAnyone = run.isLiveSessionCreatableByAnyone();
+    boolean isLiveSessionCreatableByHost = run.isLiveSessionCreatableByHost();
+    assertFalse(isLiveSessionCreatableByAnyone);
+    assertTrue(isLiveSessionCreatableByHost);
+  }
 }
