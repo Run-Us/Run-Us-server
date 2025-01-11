@@ -26,7 +26,11 @@ public enum RunningErrorCode implements CustomResponseCode {
   RUNNING_SESSION_NOT_MODIFIABLE(
       "REH4006", "Running Session Not Modifiable", "Running Session Not Modifiable", HttpStatus.BAD_REQUEST),
   RUNNING_NOT_JOINABLE(
-      "REH4007", "Running Not Joinable", "Running Not Joinable", HttpStatus.BAD_REQUEST),;
+      "REH4007", "Running Not Joinable", "Running Not Joinable", HttpStatus.BAD_REQUEST),
+  LIVE_RUNNING_ALREADY_CREATED(
+      "REH4008", "Live Running Already Created", "Live Running Already Created", HttpStatus.BAD_REQUEST),
+  LIVE_RUNNING_CREATION_TIME_OVER(
+      "REH4009", "Live Running Creation Time Over", "Live Running Creation Time Over", HttpStatus.BAD_REQUEST),;
 
   private final String code;
   private final String clientMessage;

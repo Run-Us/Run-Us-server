@@ -1,6 +1,6 @@
 package com.run_us.server.domains.running.live.service;
 
-import static com.run_us.server.domains.running.live.service.model.RunningConst.RUNNING_PREFIX;
+import static com.run_us.server.domains.running.common.RunningConst.RUNNING_PREFIX;
 import static com.run_us.server.domains.running.live.service.util.RunningKeyUtil.createLiveKey;
 
 import com.run_us.server.domains.running.live.controller.model.RunningSocketResponse;
@@ -9,7 +9,7 @@ import com.run_us.server.domains.running.live.repository.RunningRedisRepository;
 import com.run_us.server.domains.running.live.repository.UpdateLocationRepository;
 import com.run_us.server.domains.running.live.service.model.LocationData;
 import com.run_us.server.domains.running.live.service.model.ParticipantStatus;
-import com.run_us.server.domains.running.live.service.model.RunningConst;
+import com.run_us.server.domains.running.common.RunningConst;
 import com.run_us.server.domains.running.run.domain.Run;
 import com.run_us.server.domains.running.run.service.ParticipantService;
 import com.run_us.server.domains.running.run.service.RunCommandService;

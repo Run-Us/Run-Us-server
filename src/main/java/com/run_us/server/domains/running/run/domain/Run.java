@@ -9,7 +9,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.ZonedDateTime;
 import java.util.List;
+
+import static com.run_us.server.domains.running.common.RunningConst.MAX_LIVE_SESSION_CREATION_TIME;
 
 @Entity
 @Table(name = "run")
@@ -22,7 +25,11 @@ public class Run extends CreationTimeAudit {
   @Column(name = "run_id")
   private Integer id;
 
+  @Column(name = "run_host_id")
   private Integer hostId;
+
+  @Column(name = "session_host_id")
+  private Integer sessionHostId;
 
   private String publicId;
 
@@ -41,11 +48,13 @@ public class Run extends CreationTimeAudit {
   // 생성
   public Run(Integer hostId) {
     this.hostId = hostId;
+    this.sessionHostId = hostId;
     this.status = RunStatus.WAITING;
   }
 
   public Run (Integer hostId, Integer crewId) {
     this.hostId = hostId;
+    this.sessionHostId = hostId;
     this.crewId = crewId;
   }
 
@@ -75,6 +84,18 @@ public class Run extends CreationTimeAudit {
 
   public boolean isHost(int userId) {
     return this.hostId.equals(userId);
+  }
+
+  public boolean isCreationTimeOver() {
+    return this.preview.getBeginTime()
+        .plusMinutes(MAX_LIVE_SESSION_CREATION_TIME)
+        .isBefore(ZonedDateTime.now());
+  }
+
+  public void openLiveSession(Integer userId) {
+    validateRunModifiable();
+    this.sessionHostId = userId;
+    this.status = RunStatus.RUNNING;
   }
 
   public void modifyPaceInfo(List<RunPace> runPaces) {
