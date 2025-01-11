@@ -6,7 +6,7 @@ import static com.run_us.server.domains.running.live.service.util.RunningKeyUtil
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.run_us.server.domains.running.live.service.model.LocationData;
 import com.run_us.server.domains.running.live.service.model.ParticipantStatus;
-import com.run_us.server.domains.running.live.service.model.RunningConst;
+import com.run_us.server.domains.running.common.RunningConst;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
