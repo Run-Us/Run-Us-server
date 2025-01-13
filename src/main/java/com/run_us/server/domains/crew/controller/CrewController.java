@@ -12,7 +12,6 @@ import com.run_us.server.domains.crew.service.usecase.CreateCrewUseCase;
 import com.run_us.server.global.common.SuccessResponse;
 
 import com.run_us.server.global.security.annotation.CurrentUser;
-import com.run_us.server.global.security.principal.UserPrincipal;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
@@ -47,24 +46,24 @@ public class CrewController {
     @PostMapping("/{crewPublicId}/join-requests")
     public ResponseEntity<SuccessResponse<CreateJoinRequestResponse>> requestJoin(
             @PathVariable String crewPublicId,
-            @CurrentUser UserPrincipal userPrincipal,
+            @CurrentUser String curentUserPublicId,
             @Valid @RequestBody CreateJoinRequest request
     ) {
-        log.info("action=request_join crewPublicId={} userPublicId={}", crewPublicId, userPrincipal.getPublicId());
-        CrewJoinRequestInternalResponse response = crewJoinUseCase.createJoinRequest(crewPublicId, userPrincipal.getInternalId(), request);
+        log.info("action=request_join crewPublicId={} userPublicId={}", crewPublicId, curentUserPublicId);
+        CrewJoinRequestInternalResponse response = crewJoinUseCase.createJoinRequest(crewPublicId, curentUserPublicId, request);
         return ResponseEntity.ok(
                 SuccessResponse.of(
                         CrewHttpResponseCode.JOIN_REQUEST_CREATED,
-                        response.toPublicCreateResponse(userPrincipal.getPublicId())));
+                        response.toPublicCreateResponse(curentUserPublicId)));
     }
 
     @DeleteMapping("/{crewPublicId}/join-requests")
     public ResponseEntity<SuccessResponse<CancelJoinRequestResponse>> cancelJoinRequest(
             @PathVariable String crewPublicId,
-            @CurrentUser UserPrincipal userPrincipal
+            @CurrentUser String curentUserPublicId
     ) {
-        log.info("action=cancel_join_request crewPublicId={} userPublicId={}", crewPublicId, userPrincipal.getPublicId());
-        CrewJoinRequestInternalResponse response = crewJoinUseCase.cancelJoinRequest(crewPublicId, userPrincipal.getInternalId());
+        log.info("action=cancel_join_request crewPublicId={} userPublicId={}", crewPublicId, curentUserPublicId);
+        CrewJoinRequestInternalResponse response = crewJoinUseCase.cancelJoinRequest(crewPublicId, curentUserPublicId);
         return ResponseEntity.ok(
                 SuccessResponse.of(
                         CrewHttpResponseCode.JOIN_REQUEST_CANCELLED,
@@ -78,14 +77,14 @@ public class CrewController {
             @PathVariable String crewPublicId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int limit,
-            @CurrentUser UserPrincipal userPrincipal
+            @CurrentUser String curentUserPublicId
     ) {
         log.info("action=get_join_requests_start crewPublicId={} page={} limit={}", crewPublicId, page, limit);
 
         List<FetchJoinRequestResponse> responses = crewJoinUseCase.getJoinRequests(
                 crewPublicId,
                 PageRequest.of(page, limit),
-                userPrincipal.getInternalId()
+                curentUserPublicId
         );
 
         log.info("action=get_join_requests_complete crewPublicId={} page={} limit={} result_count={}",
@@ -102,7 +101,7 @@ public class CrewController {
     public ResponseEntity<SuccessResponse<ReviewJoinRequestResponse>> reviewJoinRequest(
             @PathVariable String crewPublicId,
             @PathVariable Integer requestId,
-            @CurrentUser UserPrincipal userPrincipal,
+            @CurrentUser String curentUserPublicId,
             @Valid @RequestBody ReviewJoinRequest request
     ) {
         log.info("action=process_join_request_start crewPublicId={} requestId={} status={}",
@@ -112,7 +111,7 @@ public class CrewController {
                 crewPublicId,
                 requestId,
                 CrewJoinRequestStatus.valueOf(request.getStatus()),
-                userPrincipal.getInternalId()
+                curentUserPublicId
         );
 
         log.info("action=process_join_request_complete crewPublicId={} requestId={}",

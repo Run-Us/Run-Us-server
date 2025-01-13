@@ -10,8 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import java.util.List;
 
 public interface CrewJoinUseCase {
-    CrewJoinRequestInternalResponse createJoinRequest(String crewPublicId, Integer userId, CreateJoinRequest request);
-    CrewJoinRequestInternalResponse cancelJoinRequest(String crewPublicId, Integer userId);
-    List<FetchJoinRequestResponse> getJoinRequests(String crewPublicId, PageRequest pageRequest, Integer userId);
-    ReviewJoinRequestResponse reviewJoinRequest(String crewPublicId, Integer requestId, CrewJoinRequestStatus status, Integer userId);
+    CrewJoinRequestInternalResponse createJoinRequest(String crewPublicId, String userPublicId, CreateJoinRequest request);
+    CrewJoinRequestInternalResponse cancelJoinRequest(String crewPublicId, String userPublicId);
+    List<FetchJoinRequestResponse> getJoinRequests(String crewPublicId, PageRequest pageRequest, String userPublicId);
+    ReviewJoinRequestResponse reviewJoinRequest(String crewPublicId, Integer requestId, CrewJoinRequestStatus status, String userPublicId);
 }
