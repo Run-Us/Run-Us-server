@@ -1,6 +1,5 @@
 package com.run_us.server.domains.crew.controller;
 
-import com.run_us.server.domains.crew.controller.model.enums.CrewHttpResponseCode;
 import com.run_us.server.domains.crew.controller.model.request.CreateJoinRequest;
 import com.run_us.server.domains.crew.controller.model.request.ReviewJoinRequest;
 import com.run_us.server.domains.crew.controller.model.response.*;
@@ -46,30 +45,22 @@ public class CrewController {
     @PostMapping("/{crewPublicId}/join-requests")
     public ResponseEntity<SuccessResponse<CreateJoinRequestResponse>> requestJoin(
             @PathVariable String crewPublicId,
-            @CurrentUser String curentUserPublicId,
+            @CurrentUser String currentUserPublicId,
             @Valid @RequestBody CreateJoinRequest request
     ) {
-        log.info("action=request_join crewPublicId={} userPublicId={}", crewPublicId, curentUserPublicId);
-        CrewJoinRequestInternalResponse response = crewJoinUseCase.createJoinRequest(crewPublicId, curentUserPublicId, request);
-        return ResponseEntity.ok(
-                SuccessResponse.of(
-                        CrewHttpResponseCode.JOIN_REQUEST_CREATED,
-                        response.toPublicCreateResponse(curentUserPublicId)));
+        log.info("action=request_join crewPublicId={} userPublicId={}", crewPublicId, currentUserPublicId);
+        SuccessResponse<CreateJoinRequestResponse> response = crewJoinUseCase.createJoinRequest(crewPublicId, currentUserPublicId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/{crewPublicId}/join-requests")
     public ResponseEntity<SuccessResponse<CancelJoinRequestResponse>> cancelJoinRequest(
             @PathVariable String crewPublicId,
-            @CurrentUser String curentUserPublicId
+            @CurrentUser String currentUserPublicId
     ) {
-        log.info("action=cancel_join_request crewPublicId={} userPublicId={}", crewPublicId, curentUserPublicId);
-        CrewJoinRequestInternalResponse response = crewJoinUseCase.cancelJoinRequest(crewPublicId, curentUserPublicId);
-        return ResponseEntity.ok(
-                SuccessResponse.of(
-                        CrewHttpResponseCode.JOIN_REQUEST_CANCELLED,
-                        response.toPublicCancelResponse()
-                )
-        );
+        log.info("action=cancel_join_request crewPublicId={} userPublicId={}", crewPublicId, currentUserPublicId);
+        SuccessResponse<CancelJoinRequestResponse> response = crewJoinUseCase.cancelJoinRequest(crewPublicId, currentUserPublicId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/{crewPublicId}/join-requests")
@@ -77,50 +68,40 @@ public class CrewController {
             @PathVariable String crewPublicId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int limit,
-            @CurrentUser String curentUserPublicId
+            @CurrentUser String currentUserPublicId
     ) {
         log.info("action=get_join_requests_start crewPublicId={} page={} limit={}", crewPublicId, page, limit);
 
-        List<FetchJoinRequestResponse> responses = crewJoinUseCase.getJoinRequests(
+        SuccessResponse<List<FetchJoinRequestResponse>> responses = crewJoinUseCase.getJoinRequests(
                 crewPublicId,
                 PageRequest.of(page, limit),
-                curentUserPublicId
+                currentUserPublicId
         );
 
         log.info("action=get_join_requests_complete crewPublicId={} page={} limit={} result_count={}",
-                crewPublicId, page, limit, responses.size());
-        return ResponseEntity.ok(
-                SuccessResponse.of(
-                        CrewHttpResponseCode.JOIN_REQUEST_FETCHED,
-                        responses
-                )
-        );
+                crewPublicId, page, limit, responses.getPayload().size());
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
     }
 
     @PutMapping("/{crewPublicId}/join-requests/{requestId}")
     public ResponseEntity<SuccessResponse<ReviewJoinRequestResponse>> reviewJoinRequest(
             @PathVariable String crewPublicId,
             @PathVariable Integer requestId,
-            @CurrentUser String curentUserPublicId,
+            @CurrentUser String currentUserPublicId,
             @Valid @RequestBody ReviewJoinRequest request
     ) {
         log.info("action=process_join_request_start crewPublicId={} requestId={} status={}",
                 crewPublicId, requestId, request.getStatus());
 
-        ReviewJoinRequestResponse response = crewJoinUseCase.reviewJoinRequest(
+        SuccessResponse<ReviewJoinRequestResponse> response = crewJoinUseCase.reviewJoinRequest(
                 crewPublicId,
                 requestId,
                 CrewJoinRequestStatus.valueOf(request.getStatus()),
-                curentUserPublicId
+                currentUserPublicId
         );
 
         log.info("action=process_join_request_complete crewPublicId={} requestId={}",
                 crewPublicId, requestId);
-        return ResponseEntity.ok(
-                SuccessResponse.of(
-                        CrewHttpResponseCode.JOIN_REQUEST_REVIEWED,
-                        response
-                )
-        );
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
