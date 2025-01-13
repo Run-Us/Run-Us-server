@@ -8,10 +8,6 @@ import com.run_us.server.domains.running.run.service.model.RunCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.ZonedDateTime;
-
-import static com.run_us.server.domains.running.common.RunningConst.LIVE_SESSION_ALLOW_ALL_TIME;
-
 @Component
 @RequiredArgsConstructor
 public final class RunValidator {

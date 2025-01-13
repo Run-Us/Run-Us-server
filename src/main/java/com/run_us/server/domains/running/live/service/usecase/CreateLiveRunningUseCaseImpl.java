@@ -7,10 +7,13 @@ import com.run_us.server.domains.running.run.domain.Run;
 import com.run_us.server.domains.running.run.service.ParticipantService;
 import com.run_us.server.domains.running.run.service.RunQueryService;
 import com.run_us.server.domains.running.run.service.RunValidator;
+import com.run_us.server.domains.running.run.service.model.ParticipantInfo;
 import com.run_us.server.global.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,9 @@ public class CreateLiveRunningUseCaseImpl implements CreateLiveRunningUseCase {
     participantService.joinLiveRunning(userId, selectedRun);
     String passcode = passCodeRegistry.generateAndGetPassCode(runPublicId);
     selectedRun.openLiveSession(userId);
-    return SuccessResponse.of(RunningHttpResponseCode.LIVE_ROOM_CREATED, LiveRunningCreateResponse.from(selectedRun, passcode));
+    List<ParticipantInfo> participantInfos = participantService.getParticipants(selectedRun);
+    return SuccessResponse.of(RunningHttpResponseCode.LIVE_ROOM_CREATED, LiveRunningCreateResponse.from(selectedRun, passcode, participantInfos));
   }
+
+
 }
