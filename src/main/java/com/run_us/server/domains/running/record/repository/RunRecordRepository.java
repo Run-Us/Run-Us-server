@@ -6,6 +6,7 @@ import com.run_us.server.domains.running.record.service.model.MonthlyRecordStats
 import com.run_us.server.domains.running.record.service.model.RecordStatsAggregation;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -73,4 +74,12 @@ public interface RunRecordRepository extends JpaRepository<RunRecord, Long> {
       nativeQuery = true)
   List<MonthlyRecordStats> getMonthlyRunDistancesOfYear(
       Integer userId, ZonedDateTime start, ZonedDateTime end);
+
+  @Query("""
+        SELECT r.userId, SUM(r.recordStat.runningDistanceInMeters)
+        FROM RunRecord r
+        WHERE r.userId IN :userIds
+        GROUP BY r.userId
+    """)
+  Map<Integer, Integer> findTotalDistanceByUserIds(List<Integer> userIds);
 }

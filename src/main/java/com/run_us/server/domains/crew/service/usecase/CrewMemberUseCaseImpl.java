@@ -1,19 +1,31 @@
 package com.run_us.server.domains.crew.service.usecase;
 
 import com.run_us.server.domains.crew.controller.model.enums.CrewHttpResponseCode;
+import com.run_us.server.domains.crew.controller.model.response.FetchMemberResponse;
 import com.run_us.server.domains.crew.controller.model.response.KickMemberResponse;
 import com.run_us.server.domains.crew.domain.Crew;
+import com.run_us.server.domains.crew.domain.CrewMembership;
 import com.run_us.server.domains.crew.domain.CrewPrincipal;
 import com.run_us.server.domains.crew.service.CrewService;
 import com.run_us.server.domains.crew.service.CrewValidator;
 import com.run_us.server.domains.crew.service.resolver.CrewIdResolver;
+import com.run_us.server.domains.running.record.service.RecordQueryService;
+import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.domain.UserPrincipal;
+import com.run_us.server.domains.user.service.UserService;
 import com.run_us.server.domains.user.service.resolver.UserIdResolver;
 import com.run_us.server.global.common.SuccessResponse;
-import jakarta.transaction.Transactional;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -23,6 +35,8 @@ public class CrewMemberUseCaseImpl implements CrewMemberUseCase {
     private final CrewValidator crewValidator;
     private final CrewIdResolver crewIdResolver;
     private final UserIdResolver userIdResolver;
+    private final UserService userService;
+    private final RecordQueryService runRecordService;
 
     @Override
     @Transactional
@@ -52,6 +66,82 @@ public class CrewMemberUseCaseImpl implements CrewMemberUseCase {
             KickMemberResponse.builder()
                 .userPublicId(targetMemberPrincipal.getPublicId())
                 .build()
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public SuccessResponse<List<FetchMemberResponse>> getMembers(
+        String crewPublicId, String userPublicId, PageRequest pageRequest){
+        CrewPrincipal crewPrincipal = crewIdResolver.resolve(crewPublicId);
+        UserPrincipal userPrincipal = userIdResolver.resolve(userPublicId);
+
+        log.info("action=get_members_start crewPublicId={} userPublicId={} page={} size={}",
+            crewPrincipal.getPublicId(), userPrincipal.getPublicId(),
+            pageRequest.getPageNumber(), pageRequest.getPageSize());
+
+        Crew crew = crewService.getCrewByPublicId(crewPrincipal.getPublicId());
+        crewValidator.validateCanFetchMembers(userPrincipal.getInternalId(), crew);
+
+        List<FetchMemberResponse> memberResponses = getMemberResponses(crew, pageRequest);
+
+        log.info("action=get_members_end crewPublicId={} userPublicId={}",
+            crewPrincipal.getPublicId(), userPrincipal.getPublicId());
+
+        return SuccessResponse.of(
+            CrewHttpResponseCode.GET_MEMBERS_SUCCESS,
+            memberResponses
+        );
+    }
+
+    private List<FetchMemberResponse> getMemberResponses(
+        Crew crew,
+        PageRequest pageRequest
+    ) {
+        List<CrewMembership> memberships = crew.getCrewMemberships().stream()
+            .sorted(Comparator.comparing(CrewMembership::getJoinedAt).reversed())
+            .skip((long) pageRequest.getPageNumber() * pageRequest.getPageSize())
+            .limit(pageRequest.getPageSize())
+            .toList();
+
+        if (memberships.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Integer> userIds = getUserIds(memberships);
+
+        Map<Integer, User> userMap = userService.getUserMapByIds(userIds);
+        Map<Integer, Integer> distanceMap = runRecordService.getTotalDistanceMapByUserIds(userIds);
+
+        return mapToMemberResponses(memberships, userMap, distanceMap);
+    }
+
+    private List<Integer> getUserIds(List<CrewMembership> memberships) {
+        return memberships.stream()
+            .map(CrewMembership::getUserId)
+            .toList();
+    }
+
+    private List<FetchMemberResponse> mapToMemberResponses(
+        List<CrewMembership> memberships,
+        Map<Integer, User> userMap,
+        Map<Integer, Integer> distanceMap
+    ) {
+        return memberships.stream()
+            .map(membership -> createMemberResponse(membership, userMap, distanceMap))
+            .toList();
+    }
+
+    private FetchMemberResponse createMemberResponse(
+        CrewMembership membership,
+        Map<Integer, User> userMap,
+        Map<Integer, Integer> distanceMap
+    ) {
+        Integer userId = membership.getUserId();
+        return FetchMemberResponse.from(
+            userMap.get(userId),
+            membership,
+            distanceMap.getOrDefault(userId, 0)
         );
     }
 }

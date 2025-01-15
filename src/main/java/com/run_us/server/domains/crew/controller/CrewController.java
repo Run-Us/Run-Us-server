@@ -107,6 +107,24 @@ public class CrewController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @GetMapping("/{crewPublicId}/members")
+    public ResponseEntity<SuccessResponse<List<FetchMemberResponse>>> getMembers(
+        @PathVariable String crewPublicId,
+        @CurrentUser String currentUserPublicId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "20") int limit
+    ) {
+        log.info("action=get_members_request_start crewPublicId={} currentUserPublicId={}",
+            crewPublicId, currentUserPublicId);
+
+        SuccessResponse<List<FetchMemberResponse>> response =
+            crewMemberUseCase.getMembers(crewPublicId, currentUserPublicId, PageRequest.of(page, limit));
+
+        log.info("action=get_members_request_end crewPublicId={} currentUserPublicId={}",
+            crewPublicId, currentUserPublicId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @DeleteMapping("/{crewPublicId}/members/{userPublicId}")
     public ResponseEntity<SuccessResponse<KickMemberResponse>> kickMember(
         @PathVariable String crewPublicId,
