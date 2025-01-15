@@ -8,6 +8,7 @@ import com.run_us.server.domains.crew.service.usecase.CrewJoinUseCase;
 import com.run_us.server.domains.crew.controller.model.request.CreateCrewRequest;
 import com.run_us.server.domains.crew.controller.model.response.CreateCrewResponse;
 import com.run_us.server.domains.crew.service.usecase.CreateCrewUseCase;
+import com.run_us.server.domains.crew.service.usecase.CrewMemberUseCase;
 import com.run_us.server.global.common.SuccessResponse;
 
 import com.run_us.server.global.security.annotation.CurrentUser;
@@ -28,6 +29,7 @@ import java.util.List;
 public class CrewController {
     private final CrewJoinUseCase crewJoinUseCase;
     private final CreateCrewUseCase createCrewUseCase;
+    private final CrewMemberUseCase crewMemberUseCase;
 
 
     @PostMapping
@@ -102,6 +104,23 @@ public class CrewController {
 
         log.info("action=process_join_request_complete crewPublicId={} requestId={}",
                 crewPublicId, requestId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @DeleteMapping("/{crewPublicId}/members/{userPublicId}")
+    public ResponseEntity<SuccessResponse<KickMemberResponse>> kickMember(
+        @PathVariable String crewPublicId,
+        @PathVariable String userPublicId,
+        @CurrentUser String currentUserPublicId
+    ) {
+        log.info("action=remove_member_request_start crewPublicId={} userPublicId={} currentUserPublicId={}",
+            crewPublicId, userPublicId, currentUserPublicId);
+
+        SuccessResponse<KickMemberResponse> response =
+            crewMemberUseCase.kickMember(crewPublicId, currentUserPublicId, userPublicId);
+
+        log.info("action=remove_member_request_end crewPublicId={} userPublicId={} currentUserPublicId={}",
+            crewPublicId, userPublicId, currentUserPublicId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

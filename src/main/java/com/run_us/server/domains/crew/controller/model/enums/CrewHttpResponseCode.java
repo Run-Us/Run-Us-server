@@ -18,6 +18,8 @@ public enum CrewHttpResponseCode implements CustomResponseCode {
     JOIN_REQUEST_CANCELLED("CSH2008", HttpStatus.OK, "크루 가입 요청 취소 성공", "크루 가입 요청 취소 성공"),
     JOIN_REQUEST_FETCHED("CSH2009", HttpStatus.OK, "크루 가입 요청 조회 성공", "크루 가입 요청 조회 성공"),
     JOIN_REQUEST_REVIEWED("CSH2010", HttpStatus.OK, "크루 가입 요청 처리 성공", "크루 가입 요청 처리 성공"),
+
+    KICK_MEMBER_SUCCESS("CSH2031", HttpStatus.OK, "크루 멤버 추방 성공", "크루 멤버 추방 성공"),
     ;
 
     private final String code;

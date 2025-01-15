@@ -68,4 +68,18 @@ public class CrewValidator {
             throw new CrewException(CrewErrorCode.SUSPENDED_CREW);
         }
     }
+
+    public void validateCanKickMember(Integer userId, Integer targetMemberId, Crew crew) {
+        if(!crew.getOwner().getId().equals(userId)) {
+            throw new CrewException(CrewErrorCode.CREW_NOT_FOUND);
+        }
+
+        if (!crewRepository.existsMembershipByCrewIdAndUserId(crew.getId(), targetMemberId)) {
+            throw new CrewException(CrewErrorCode.NOT_CREW_MEMBER);
+        }
+
+        if(!crew.isActive()) {
+            throw new CrewException(CrewErrorCode.SUSPENDED_CREW);
+        }
+    }
 }

@@ -70,6 +70,11 @@ public class Crew extends DateAudit {
         this.memberCount++;
     }
 
+    public void removeMember(Integer userId) {
+        this.crewMemberships.removeIf(membership -> membership.getUserId().equals(userId));
+        this.memberCount--;
+    }
+
     @Override
     public void prePersist() {
         this.publicId = TSID.Factory.getTsid().toString();

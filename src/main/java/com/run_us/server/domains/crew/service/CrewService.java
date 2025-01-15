@@ -77,4 +77,14 @@ public class CrewService {
                 crew.getPublicId(), requestId);
         return request;
     }
+
+    @Transactional
+    public void removeMember(Crew crew, Integer targetUserId) {
+        log.debug("action=remove_member_start crewPublicId={} targetUserId={}", crew.getPublicId(), targetUserId);
+
+        crew.removeMember(targetUserId);
+        crewRepository.save(crew);
+
+        log.debug("action=remove_member_end crewPublicId={} targetUserId={}", crew.getPublicId(), targetUserId);
+    }
 }
