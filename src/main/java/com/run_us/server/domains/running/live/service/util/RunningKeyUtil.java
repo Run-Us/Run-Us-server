@@ -1,6 +1,6 @@
 package com.run_us.server.domains.running.live.service.util;
 
-import com.run_us.server.domains.running.live.service.model.RunningConst;
+import com.run_us.server.domains.running.common.RunningConst;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

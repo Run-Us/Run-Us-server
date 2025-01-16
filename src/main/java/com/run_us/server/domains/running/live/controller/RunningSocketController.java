@@ -6,7 +6,7 @@ import com.run_us.server.domains.running.live.controller.model.RunningSocketRequ
 import com.run_us.server.domains.running.live.controller.model.RunningSocketResponse;
 import com.run_us.server.domains.running.live.controller.model.RunningSocketResponseCode;
 import com.run_us.server.domains.running.live.service.RunningLiveService;
-import com.run_us.server.domains.running.live.service.model.RunningConst;
+import com.run_us.server.domains.running.common.RunningConst;
 import com.run_us.server.global.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
