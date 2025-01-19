@@ -4,6 +4,7 @@ import com.run_us.server.domains.crew.controller.model.enums.CrewException;
 import com.run_us.server.domains.crew.controller.model.enums.CrewErrorCode;
 import com.run_us.server.domains.crew.domain.Crew;
 import com.run_us.server.domains.crew.domain.CrewJoinRequest;
+import com.run_us.server.domains.crew.domain.CrewMembership;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinType;
 import com.run_us.server.domains.crew.repository.CrewJoinRequestRepository;
@@ -34,6 +35,12 @@ public class CrewService {
     public List<CrewJoinRequest> getJoinRequests(Crew crew, PageRequest pageRequest) {
         log.debug("action=get_join_requests_start crewId={}", crew.getPublicId());
         return crewJoinRequestRepository.findAllByCrewId(crew.getId(), pageRequest).getContent();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CrewMembership> getMemberships(Crew crew, PageRequest pageRequest) {
+        log.debug("action=get_memberships_start crewId={}", crew.getPublicId());
+        return crewRepository.findMembershipsByCrewId(crew.getId(), pageRequest);
     }
 
     @Transactional

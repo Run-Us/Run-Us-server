@@ -3,8 +3,8 @@ package com.run_us.server.global.common;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
 import java.time.ZoneId;
-import java.util.List;
 
 import static com.run_us.server.global.common.SocketConst.WS_CONNECT_ENDPOINT;
 
@@ -17,7 +17,7 @@ public final class GlobalConst {
   public static final String WS_USER_AUTH_HEADER = "user-id";
   public static final String SESSION_ATTRIBUTE_USER = "user-info";
 
-  public static final List<String> WHITE_LIST_PATHS = List.of(
+  public static final Set<String> WHITE_LIST_PATHS = Set.of(
           "/test/auth",
           WS_CONNECT_ENDPOINT,
           "/auth"

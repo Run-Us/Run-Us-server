@@ -9,7 +9,6 @@ import com.run_us.server.domains.running.record.service.model.MonthlyRecordStats
 import com.run_us.server.domains.running.record.service.model.RecordStatsAggregation;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -70,9 +69,5 @@ public class RecordQueryService {
   public List<MonthlyRecordStats> getMonthlyRunDistancesOfYear(
       Integer userId, ZonedDateTime start, ZonedDateTime end) {
     return runRecordRepository.getMonthlyRunDistancesOfYear(userId, start, end);
-  }
-
-  public Map<Integer, Integer> getTotalDistanceMapByUserIds(List<Integer> userIds) {
-    return runRecordRepository.findTotalDistanceByUserIds(userIds);
   }
 }

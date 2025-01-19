@@ -17,9 +17,9 @@ import com.run_us.server.domains.user.service.resolver.UserIdResolver;
 import com.run_us.server.global.common.SuccessResponse;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +36,6 @@ public class CrewMemberUseCaseImpl implements CrewMemberUseCase {
     private final CrewIdResolver crewIdResolver;
     private final UserIdResolver userIdResolver;
     private final UserService userService;
-    private final RecordQueryService runRecordService;
 
     @Override
     @Transactional
@@ -98,11 +97,7 @@ public class CrewMemberUseCaseImpl implements CrewMemberUseCase {
         Crew crew,
         PageRequest pageRequest
     ) {
-        List<CrewMembership> memberships = crew.getCrewMemberships().stream()
-            .sorted(Comparator.comparing(CrewMembership::getJoinedAt).reversed())
-            .skip((long) pageRequest.getPageNumber() * pageRequest.getPageSize())
-            .limit(pageRequest.getPageSize())
-            .toList();
+        List<CrewMembership> memberships = crewService.getMemberships(crew, pageRequest);
 
         if (memberships.isEmpty()) {
             return Collections.emptyList();
@@ -111,7 +106,7 @@ public class CrewMemberUseCaseImpl implements CrewMemberUseCase {
         List<Integer> userIds = getUserIds(memberships);
 
         Map<Integer, User> userMap = userService.getUserMapByIds(userIds);
-        Map<Integer, Integer> distanceMap = runRecordService.getTotalDistanceMapByUserIds(userIds);
+        Map<Integer, Integer> distanceMap = getUserTotalDistance(userMap);
 
         return mapToMemberResponses(memberships, userMap, distanceMap);
     }
@@ -120,6 +115,22 @@ public class CrewMemberUseCaseImpl implements CrewMemberUseCase {
         return memberships.stream()
             .map(CrewMembership::getUserId)
             .toList();
+    }
+
+    private Map<Integer, Integer> getUserTotalDistance(Map<Integer, User> userMap) {
+        return userMap.entrySet().parallelStream()
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                entry -> getDistanceOrDefault(entry.getValue())
+            ));
+    }
+
+    private int getDistanceOrDefault(User user) {
+        if (user == null || user.getProfile() == null) {
+            return 0;
+        }
+        Integer distance = user.getProfile().getTotalDistance();
+        return distance != null ? distance : 0;
     }
 
     private List<FetchMemberResponse> mapToMemberResponses(
