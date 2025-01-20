@@ -5,7 +5,6 @@ import com.run_us.server.domains.user.domain.UserPrincipal;
 import com.run_us.server.global.common.cache.InMemoryCache;
 import com.run_us.server.global.common.cache.SpringInMemoryCache;
 import com.run_us.server.domains.user.domain.TokenStatus;
-import com.run_us.server.global.common.resolver.DomainPrincipal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
