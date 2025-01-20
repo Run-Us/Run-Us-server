@@ -11,11 +11,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
-import static com.run_us.server.global.common.SocketConst.WS_CONNECT_ENDPOINT;
+import static com.run_us.server.global.common.GlobalConst.WHITE_LIST_PATHS;
 
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -33,15 +37,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
       throws ServletException, IOException {
-    if (!hasValidAuthorizationHeader(request)) {
-      setErrorResponse(UserErrorCode.JWT_NOT_FOUND, response);
-      return;
+    try{
+      if (!hasValidAuthorizationHeader(request)) {
+        setErrorResponse(UserErrorCode.JWT_NOT_FOUND, response);
+        return;
+      }
+      String jwt = extractToken(request);
+      if (!processToken(jwt, request, response)) {
+        return;
+      }
+      filterChain.doFilter(request, response);
+    } catch (Exception e) {
+      log.warn("[ERROR]JWT broken : {}", e.getMessage());
+      setErrorResponse(UserErrorCode.JWT_BROKEN, response);
     }
-    String jwt = extractToken(request);
-    if (!processToken(jwt, request, response)) {
-      return;
+    finally {
+      SecurityContextHolder.clearContext();
     }
-    filterChain.doFilter(request, response);
   }
 
   private boolean hasValidAuthorizationHeader(HttpServletRequest request) {
@@ -56,6 +68,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private boolean processToken(String jwt, HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
       String publicId = jwtService.getUserIdFromAccessToken(jwt);
+      Authentication authentication = new UsernamePasswordAuthenticationToken(
+              publicId,
+              null,
+              Collections.emptyList()
+      );
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+
       request.setAttribute("publicUserId", publicId);
       return true;
     } catch (TokenExpiredException e) {
@@ -77,9 +96,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   // JWT 필터는 로그인, 회원가입, 테스트용 API, 웹소켓 연결 요청에 대해서는 필터링을 하지 않는다.
   @Override
-  protected boolean shouldNotFilter(HttpServletRequest request) {
-    return request.getServletPath().startsWith("/test/auth")
-        || request.getServletPath().startsWith(WS_CONNECT_ENDPOINT)
-        || request.getServletPath().startsWith("/auth");
+  protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+    return WHITE_LIST_PATHS.stream()
+            .anyMatch(path -> request.getServletPath().startsWith(path));
   }
 }

@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ReviewJoinRequestResponse {
-    private Integer requestId;
+public class KickMemberResponse {
+    private String userPublicId;
 }

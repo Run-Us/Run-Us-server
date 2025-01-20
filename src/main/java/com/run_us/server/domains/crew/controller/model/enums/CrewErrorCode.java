@@ -15,6 +15,7 @@ public enum CrewErrorCode implements CustomResponseCode {
     SUSPENDED_CREW("CEH4004", "Suspended crew", "Suspended crew", HttpStatus.BAD_REQUEST),
     INVALID_JOIN_REQUEST_STATUS("CEH4005", "Invalid join request status", "Invalid join request status", HttpStatus.BAD_REQUEST),
     JOIN_REQUEST_ALREADY_PROCESSED("CEH4006", "Join request already processed", "Join request already processed", HttpStatus.BAD_REQUEST),
+    NOT_CREW_MEMBER("CEH4007", "User is not a crew member", "User is not a crew member", HttpStatus.BAD_REQUEST),
 
 
     // 403
