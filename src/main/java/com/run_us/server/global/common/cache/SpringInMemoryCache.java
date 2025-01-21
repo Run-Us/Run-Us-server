@@ -82,7 +82,6 @@ public class SpringInMemoryCache<K, V> implements InMemoryCache<K, V>, Initializ
         cache.remove(key);
     }
 
-    @Override
     public void cleanup() {
         cache.entrySet().removeIf(entry ->
                         entry.getValue().expiresAt() != null &&
