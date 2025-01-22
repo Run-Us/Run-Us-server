@@ -8,6 +8,7 @@ import com.run_us.server.domains.user.domain.TokenPair;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.domains.user.service.verifier.TokenVerifierFactory;
 import com.run_us.server.global.common.cache.InMemoryCache;
+import java.time.Duration;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +52,8 @@ public class JwtService {
                             .withClaim("tokenType", "refresh")
                             .sign(Algorithm.HMAC256(jwtSecret));
 
-    refreshTokenCache.put("auth:refresh:"+user.getPublicId(), refreshToken);
+    refreshTokenCache.put("auth:refresh:"+user.getPublicId(),
+                              refreshToken, Duration.ofSeconds(jwtExpiration));
     return refreshToken;
   }
 
