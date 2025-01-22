@@ -15,4 +15,5 @@ public interface InMemoryCache<K, V> {
     Optional<CacheEntry<V>> getEntry(K key);
 
     boolean remove(K key);
+    boolean remove(K key, V value);
 }

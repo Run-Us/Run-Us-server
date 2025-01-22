@@ -81,6 +81,15 @@ public class SpringInMemoryCache<K, V> implements InMemoryCache<K, V>, Initializ
         return cache.remove(key) != null;
     }
 
+    @Override
+    public boolean remove(K key, V value) {
+        CacheEntry<V> entry = cache.get(key);
+        if(entry == null || !entry.value().equals(value)) {
+            return false;
+        }
+        return cache.remove(key) != null;
+    }
+
     public void cleanup() {
         cache.entrySet().removeIf(entry ->
                         entry.getValue().expiresAt() != null &&

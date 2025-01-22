@@ -57,7 +57,7 @@ public class JwtService {
 
   public boolean nonceRefreshToken(String refreshToken) {
     String userPublicId = getUserIdFromAccessToken(refreshToken);
-    return refreshTokenCache.remove("auth:refresh:"+userPublicId);
+    return refreshTokenCache.remove("auth:refresh:"+userPublicId, refreshToken);
   }
 
   public TokenPair generateTokenPair(User user) {

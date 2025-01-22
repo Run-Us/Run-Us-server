@@ -57,7 +57,7 @@ public class UserAuthService {
 
   @Transactional(readOnly = true)
   public AuthResult refresh(String refreshToken) {
-    if (jwtService.nonceRefreshToken(refreshToken)) {
+    if (!jwtService.nonceRefreshToken(refreshToken)) {
       throw UserAuthException.of(UserErrorCode.REFRESH_FAILED);
     }
 

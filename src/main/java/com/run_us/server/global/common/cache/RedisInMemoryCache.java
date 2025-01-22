@@ -56,4 +56,14 @@ public class RedisInMemoryCache<K, V> implements InMemoryCache<K, V> {
         return Boolean.TRUE.equals(
             cache.delete(key));
     }
+
+    @Override
+    public boolean remove(K key, V value) {
+        V currentValue = cache.opsForValue().get(key);
+        if (value == null || !value.equals(currentValue)) {
+            return false;
+        }
+        return Boolean.TRUE.equals(
+            cache.delete(key));
+    }
 }
