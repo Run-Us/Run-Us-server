@@ -3,11 +3,13 @@ package com.run_us.server.global.config;
 import com.run_us.server.domains.crew.domain.CrewPrincipal;
 import com.run_us.server.domains.user.domain.UserPrincipal;
 import com.run_us.server.global.common.cache.InMemoryCache;
+import com.run_us.server.global.common.cache.RedisInMemoryCache;
 import com.run_us.server.global.common.cache.SpringInMemoryCache;
 import com.run_us.server.domains.user.domain.TokenStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
@@ -59,5 +61,12 @@ public class CacheConfig {
             cacheCleanupScheduler,
             Duration.ofSeconds(cleanupIntervalSeconds)
         );
+    }
+
+    @Bean
+    public InMemoryCache<String, String> generalStringCache(
+        RedisTemplate<String, String> redisTemplate
+    ) {
+        return new RedisInMemoryCache<>(redisTemplate);
     }
 }

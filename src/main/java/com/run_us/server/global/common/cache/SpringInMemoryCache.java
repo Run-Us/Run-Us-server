@@ -65,7 +65,6 @@ public class SpringInMemoryCache<K, V> implements InMemoryCache<K, V>, Initializ
         return Optional.of(entry.value());
     }
 
-    @Override
     public Optional<CacheEntry<V>> getEntry(K key) {
         CacheEntry<V> entry = cache.get(key);
         if (entry == null || entry.isExpired()) {
@@ -78,8 +77,8 @@ public class SpringInMemoryCache<K, V> implements InMemoryCache<K, V>, Initializ
     }
 
     @Override
-    public void remove(K key) {
-        cache.remove(key);
+    public boolean remove(K key) {
+        return cache.remove(key) != null;
     }
 
     public void cleanup() {
