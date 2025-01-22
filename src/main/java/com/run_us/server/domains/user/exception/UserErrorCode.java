@@ -14,6 +14,7 @@ public enum UserErrorCode implements CustomResponseCode {
   JWT_NOT_FOUND("UEH4012", HttpStatus.UNAUTHORIZED, "JWT 토큰이 존재하지 않습니다.", "JWT 토큰이 존재하지 않습니다."),
   JWT_EXPIRED("UEH4013", HttpStatus.UNAUTHORIZED, "JWT 토큰이 만료되었습니다.", "JWT 토큰이 만료되었습니다."),
   JWT_BROKEN("UEH4014", HttpStatus.UNAUTHORIZED, "JWT 토큰이 손상되었습니다", "JWT 토큰이 손상되었습니다"),
+  REFRESH_FAILED("UEH4015", HttpStatus.UNAUTHORIZED, "리프레시 토큰이 만료되었습니다.", "리프레시 토큰이 만료되었습니다."),
 
   // 404
   USER_NOT_FOUND("UEH4041", HttpStatus.NOT_FOUND, "사용자를 찾을 수 없음", "사용자를 찾을 수 없음"),;

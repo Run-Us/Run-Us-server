@@ -57,9 +57,18 @@ public class UserAuthService {
 
   @Transactional(readOnly = true)
   public AuthResult refresh(String refreshToken) {
-      String userPublicId = jwtService.getUserIdFromAccessToken(refreshToken);
-      User user = userService.getUserByPublicId(userPublicId);
-      return new AuthResult(AuthResultType.REFRESH_SUCCESS, login(user));
+    if (jwtService.nonceRefreshToken(refreshToken)) {
+      throw UserAuthException.of(UserErrorCode.REFRESH_FAILED);
+    }
+
+    String userPublicId = jwtService.getUserIdFromAccessToken(refreshToken);
+
+    User user = userService.getUserByPublicId(userPublicId);
+    if (user == null) {
+      throw UserAuthException.of(UserErrorCode.USER_NOT_FOUND);
+    }
+
+    return new AuthResult(AuthResultType.REFRESH_SUCCESS, login(user));
   }
 
   private TokenPair login(User user) {
