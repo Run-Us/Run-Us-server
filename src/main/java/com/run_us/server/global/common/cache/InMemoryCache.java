@@ -13,6 +13,7 @@ public interface InMemoryCache<K, V> {
 
     Optional<V> get(K key);
     Optional<CacheEntry<V>> getEntry(K key);
-    void remove(K key);
-    void cleanup();
+
+    boolean remove(K key);
+    boolean remove(K key, V value);
 }

@@ -43,4 +43,12 @@ public class AuthController {
     return SuccessResponse.of(
         UserHttpResponseCode.SIGNUP_SUCCESS, new AuthResponse(authResult.tokenPair()));
   }
+
+  @PreAuthorize("permitAll()")
+  @PostMapping("/refresh")
+  public SuccessResponse<AuthResponse> refresh(@Valid @RequestBody AuthRefreshRequest request) {
+    AuthResult authResult = userAuthService.refresh(request.getRefreshToken());
+    return SuccessResponse.of(
+        UserHttpResponseCode.REFRESH_SUCCESS, new AuthResponse(authResult.tokenPair()));
+  }
 }
