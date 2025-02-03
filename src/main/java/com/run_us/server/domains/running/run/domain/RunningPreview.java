@@ -1,6 +1,5 @@
 package com.run_us.server.domains.running.run.domain;
 
-import com.run_us.server.domains.running.run.controller.model.request.SessionAccessLevel;
 import com.run_us.server.domains.running.run.service.model.RunCreateDto;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -18,7 +17,7 @@ public class RunningPreview implements Serializable {
   private String title;
   private String description;
   private String meetingPoint;
-  private SessionAccessLevel accessLevel;
+  private SessionAccessLevel accessLevel = SessionAccessLevel.ALLOW_ALL;
   private ZonedDateTime beginTime;
 
   @Builder

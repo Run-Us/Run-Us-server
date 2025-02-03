@@ -3,11 +3,13 @@ package com.run_us.server.domains.running.run.service;
 import com.run_us.server.domains.running.common.RunningErrorCode;
 import com.run_us.server.domains.running.common.RunningException;
 import com.run_us.server.domains.running.run.domain.Run;
+import com.run_us.server.domains.running.run.domain.SessionAccessLevel;
 import com.run_us.server.domains.running.run.repository.RunRepository;
 import com.run_us.server.domains.running.run.service.model.JoinedRunPreviewResponse;
 import com.run_us.server.domains.running.run.service.model.GetRunPreviewResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -33,8 +35,21 @@ public class RunQueryService {
         .orElseThrow(() -> RunningException.of(RunningErrorCode.RUNNING_NOT_FOUND));
   }
 
+  public Slice<Run> findAllByCrewId(Integer crewId, Integer page, Integer size) {
+    PageRequest pageRequest = PageRequest.of(page, size);
+    return runRepository.findAllByCrewId(crewId, pageRequest);
+  }
+
+  public Slice<Run> findAllByCrewIdAndAccessLevel(Integer crewId, SessionAccessLevel accessLevel, Integer page, Integer size) {
+    PageRequest pageRequest = PageRequest.of(page, size);
+    return runRepository.findAllByCrewIdAndAccessLevel(crewId, accessLevel, pageRequest);
+  }
+
   public GetRunPreviewResponse getRunPreviewById(Integer runId) {
-    return runRepository.findByRunId(runId);
+    Run run = findByRunId(runId);
+    GetRunPreviewResponse response = runRepository.findByRunId(runId);
+    response.setRunPaces(List.copyOf(run.getPaceCategories()));
+    return response;
   }
 
   // 2가지 쿼리 발생 : 1. 세션 정보 2. 페이스 태그 정보

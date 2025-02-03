@@ -1,6 +1,6 @@
 package com.run_us.server.domains.running.live.controller.model;
 
-import static com.run_us.server.domains.running.live.service.model.RunningConst.RUNNING_WS_SUBSCRIBE_PATH;
+import static com.run_us.server.domains.running.common.RunningConst.RUNNING_WS_SUBSCRIBE_PATH;
 import static com.run_us.server.global.common.SocketConst.USER_WS_SUBSCRIBE_PATH;
 
 import lombok.Getter;

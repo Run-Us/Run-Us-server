@@ -3,6 +3,7 @@ package com.run_us.server.domains.running.run.controller.model.request;
 import com.run_us.server.domains.running.common.RunningErrorCode;
 import com.run_us.server.domains.running.common.RunningException;
 import com.run_us.server.domains.running.run.domain.RunPace;
+import com.run_us.server.domains.running.run.domain.SessionAccessLevel;
 import com.run_us.server.domains.running.run.service.model.RunCreateDto;
 import com.run_us.server.global.validator.annotation.EnumValid;
 import lombok.Builder;
@@ -45,7 +46,7 @@ public class SessionRunCreateRequest {
   }
 
   public RunCreateDto toRunCreateDto() {
-    return new RunCreateDto(title, description, meetingPlace, accessLevel, startDateTime, List.copyOf(paceCategories));
+    return new RunCreateDto(title, description, meetingPlace, accessLevel, crewPublicId, startDateTime, List.copyOf(paceCategories));
   }
 
   // 크루 공개일 경우 크루 아이디가 필수

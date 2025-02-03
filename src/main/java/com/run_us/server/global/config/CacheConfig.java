@@ -1,12 +1,15 @@
 package com.run_us.server.global.config;
 
+import com.run_us.server.domains.crew.domain.CrewPrincipal;
+import com.run_us.server.domains.user.domain.UserPrincipal;
 import com.run_us.server.global.common.cache.InMemoryCache;
+import com.run_us.server.global.common.cache.RedisInMemoryCache;
 import com.run_us.server.global.common.cache.SpringInMemoryCache;
 import com.run_us.server.domains.user.domain.TokenStatus;
-import com.run_us.server.global.security.principal.UserPrincipal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
@@ -41,10 +44,29 @@ public class CacheConfig {
     }
 
     @Bean
-    public InMemoryCache<String, UserPrincipal> userPrincipalCache(TaskScheduler cacheCleanupScheduler) {
+    public InMemoryCache<String, UserPrincipal> userPrincipalCache(
+        TaskScheduler cacheCleanupScheduler
+    ) {
         return new SpringInMemoryCache<>(
-                cacheCleanupScheduler,
-                Duration.ofSeconds(cleanupIntervalSeconds)
+            cacheCleanupScheduler,
+            Duration.ofSeconds(cleanupIntervalSeconds)
         );
+    }
+
+    @Bean
+    public InMemoryCache<String, CrewPrincipal> crewPrincipalCache(
+        TaskScheduler cacheCleanupScheduler
+    ) {
+        return new SpringInMemoryCache<>(
+            cacheCleanupScheduler,
+            Duration.ofSeconds(cleanupIntervalSeconds)
+        );
+    }
+
+    @Bean
+    public InMemoryCache<String, String> generalStringCache(
+        RedisTemplate<String, String> redisTemplate
+    ) {
+        return new RedisInMemoryCache<>(redisTemplate);
     }
 }

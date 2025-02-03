@@ -9,7 +9,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.ZonedDateTime;
 import java.util.List;
+
+import static com.run_us.server.domains.running.common.RunningConst.LIVE_SESSION_ALLOW_ALL_TIME;
+import static com.run_us.server.domains.running.common.RunningConst.MAX_LIVE_SESSION_CREATION_TIME;
 
 @Entity
 @Table(name = "run")
@@ -22,9 +26,15 @@ public class Run extends CreationTimeAudit {
   @Column(name = "run_id")
   private Integer id;
 
+  @Column(name = "run_host_id")
   private Integer hostId;
 
+  @Column(name = "session_host_id")
+  private Integer sessionHostId;
+
   private String publicId;
+
+  private Integer crewId;
 
   @Enumerated(EnumType.STRING)
   private RunStatus status;
@@ -39,7 +49,14 @@ public class Run extends CreationTimeAudit {
   // 생성
   public Run(Integer hostId) {
     this.hostId = hostId;
+    this.sessionHostId = hostId;
     this.status = RunStatus.WAITING;
+  }
+
+  public Run (Integer hostId, Integer crewId) {
+    this.hostId = hostId;
+    this.sessionHostId = hostId;
+    this.crewId = crewId;
   }
 
   @Override
@@ -62,12 +79,41 @@ public class Run extends CreationTimeAudit {
     return RunStatus.isRunDeletable(this.status);
   }
 
+  public boolean isJoinable() {
+    return RunStatus.isJoinable(this.status);
+  }
+
   public boolean isHost(int userId) {
     return this.hostId.equals(userId);
   }
 
+  public boolean isCreationTimeOver() {
+    return this.preview.getBeginTime()
+        .plusMinutes(MAX_LIVE_SESSION_CREATION_TIME)
+        .isBefore(ZonedDateTime.now());
+  }
+
+  public void openLiveSession(Integer userId) {
+    validateRunModifiable();
+    this.sessionHostId = userId;
+    this.status = RunStatus.RUNNING;
+  }
+
   public void modifyPaceInfo(List<RunPace> runPaces) {
     this.paceCategories = runPaces;
+  }
+
+  public void exposeToCrew(Integer crewPublicId) {
+    validateRunModifiable();
+    this.crewId = crewPublicId;
+  }
+
+  public boolean isLiveSessionCreatableByHost() {
+    return ZonedDateTime.now().isAfter(this.preview.getBeginTime().minusMinutes(10));
+  }
+
+  public boolean isLiveSessionCreatableByAnyone() {
+    return ZonedDateTime.now().isAfter(this.getPreview().getBeginTime().plusMinutes(LIVE_SESSION_ALLOW_ALL_TIME));
   }
 
   private void validateRunModifiable() {

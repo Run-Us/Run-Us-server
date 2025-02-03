@@ -21,4 +21,6 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
           + "join User u on p.userId = u.id "
           + "WHERE p.run.id = :runId")
   List<ParticipantInfo> findByRunId(Integer runId);
+
+  boolean existsByUserIdAndRunId(Integer userId, Integer runId);
 }

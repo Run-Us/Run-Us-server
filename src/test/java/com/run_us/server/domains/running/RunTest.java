@@ -1,6 +1,6 @@
 package com.run_us.server.domains.running;
 
-import com.run_us.server.domains.running.run.controller.model.request.SessionAccessLevel;
+import com.run_us.server.domains.running.run.domain.SessionAccessLevel;
 import com.run_us.server.domains.running.run.domain.Run;
 import com.run_us.server.domains.running.run.domain.RunStatus;
 import com.run_us.server.domains.running.run.domain.RunningPreview;
@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import java.time.ZonedDateTime;
 
+import static com.run_us.server.domains.running.common.RunningConst.MAX_LIVE_SESSION_CREATION_TIME;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RunTest {
@@ -55,11 +56,52 @@ class RunTest {
   @ParameterizedTest
   @EnumSource(
       value = RunStatus.class,
-      names = {"WAITING"},
+      names = {"WAITING", "CANCELLED"},
       mode = EnumSource.Mode.EXCLUDE)
   void test_deletable_except_WAITING_status(RunStatus runStatus) {
     Run run = RunFixtures.createRun();
     run.changeStatus(runStatus);
     assertFalse(run.isDeletable());
+  }
+
+  @DisplayName("라이브 세션 생성 시 생성자의 id로 세션 호스트 수정")
+  @Test
+  void test_change_live_session_host() {
+    Run run = RunFixtures.createRun();
+    Integer liveSessionCreatorId = 2;
+
+    //when
+    run.openLiveSession(liveSessionCreatorId);
+
+    //then
+    assertEquals(liveSessionCreatorId, run.getSessionHostId());
+  }
+
+  @DisplayName("세션 시작 시간 10분 초과하면 실시간 러닝을 시작할 수 없음")
+  @Test
+  void test_should_return_true_when_current_time_is_behind_beginning_time(){
+    Run run = RunFixtures.createRun();
+    ZonedDateTime beginsAt = ZonedDateTime.now().minusMinutes(MAX_LIVE_SESSION_CREATION_TIME + 1);
+    run.modifySessionInfo(RunningPreview.builder().beginTime(beginsAt).build());
+
+    //when
+    boolean isBeginningTimePassed = run.isCreationTimeOver();
+
+    //then
+    assertTrue(isBeginningTimePassed);
+  }
+
+  @DisplayName("세션 시작 시간 10분 전에는 세션글 작성자만 시작할 수 있음.")
+  @Test
+  void test_should_return_false_when_participant_creates_before_10_min() {
+    Run run = RunFixtures.createRun();
+    ZonedDateTime beginsIn10Min = ZonedDateTime.now().plusMinutes(MAX_LIVE_SESSION_CREATION_TIME);
+    run.modifySessionInfo(RunningPreview.builder().beginTime(beginsIn10Min).build());
+
+    //when
+    boolean isLiveSessionCreatableByAnyone = run.isLiveSessionCreatableByAnyone();
+    boolean isLiveSessionCreatableByHost = run.isLiveSessionCreatableByHost();
+    assertFalse(isLiveSessionCreatableByAnyone);
+    assertTrue(isLiveSessionCreatableByHost);
   }
 }

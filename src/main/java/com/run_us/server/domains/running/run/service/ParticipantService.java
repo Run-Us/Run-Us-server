@@ -46,4 +46,8 @@ public class ParticipantService {
   public List<ParticipantInfo> getParticipants(Run run) {
     return participantRepository.findByRunId(run.getId());
   }
+
+  public boolean isRegistered(Integer userId, Run selectedRun) {
+    return participantRepository.existsByUserIdAndRunId(userId, selectedRun.getId());
+  }
 }

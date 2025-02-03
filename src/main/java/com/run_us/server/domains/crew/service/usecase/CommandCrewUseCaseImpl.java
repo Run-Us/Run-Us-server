@@ -6,6 +6,8 @@ import com.run_us.server.domains.crew.controller.model.response.UpdateCrewInfoRe
 import com.run_us.server.domains.crew.domain.Crew;
 import com.run_us.server.domains.crew.service.CommandCrewService;
 import com.run_us.server.domains.crew.service.CrewService;
+import com.run_us.server.domains.user.domain.UserPrincipal;
+import com.run_us.server.domains.user.service.resolver.UserIdResolver;
 import com.run_us.server.global.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,12 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommandCrewUseCaseImpl implements CommandCrewUseCase {
     private final CrewService crewService;
     private final CommandCrewService commandCrewService;
+    private final UserIdResolver userIdResolver;
 
     @Override
     @Transactional
-    public SuccessResponse<UpdateCrewInfoResponse> updateCrewInfo(String crewPublicId, UpdateCrewInfoRequest requestDto, Integer userId) {
+    public SuccessResponse<UpdateCrewInfoResponse> updateCrewInfo(String crewPublicId, UpdateCrewInfoRequest requestDto, String userPublicId) {
+        UserPrincipal userPrincipal = userIdResolver.resolve(userPublicId);
+
         Crew crew = crewService.getCrewByPublicId(crewPublicId);
-        commandCrewService.updateCrewInfo(requestDto, crew, userId);
+        commandCrewService.updateCrewInfo(requestDto, crew, userPrincipal.getInternalId());
         return SuccessResponse.of(CrewHttpResponseCode.CREW_UPDATED, UpdateCrewInfoResponse.from(crew.getPublicId()));
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 public interface RunRegisterUseCase {
   SuccessResponse<List<ParticipantInfo>> registerRun(String userId, String runPublicId);
 
-  void cancelRun(String userId, String runPublicId);
+  SuccessResponse<Void> cancelRun(String userId, String runPublicId);
 
   SuccessResponse<List<ParticipantInfo>> getRunParticipants(String runPublicId);
 

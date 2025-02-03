@@ -27,6 +27,7 @@ public class UserAuthService {
   private final OAuthInfoRepository oAuthInfoRepository;
   private final OAuthTokenRepository oAuthTokenRepository;
   private final JwtService jwtService;
+  private final UserService userService;
 
   @Transactional(readOnly = true)
   public AuthResult authenticateOAuth(String rawToken, SocialProvider provider) {
@@ -52,6 +53,22 @@ public class UserAuthService {
     } catch (Exception e) {
       throw UserAuthException.of(UserErrorCode.SIGNUP_FAILED);
     }
+  }
+
+  @Transactional(readOnly = true)
+  public AuthResult refresh(String refreshToken) {
+    if (!jwtService.nonceRefreshToken(refreshToken)) {
+      throw UserAuthException.of(UserErrorCode.REFRESH_FAILED);
+    }
+
+    String userPublicId = jwtService.getUserIdFromAccessToken(refreshToken);
+
+    User user = userService.getUserByPublicId(userPublicId);
+    if (user == null) {
+      throw UserAuthException.of(UserErrorCode.USER_NOT_FOUND);
+    }
+
+    return new AuthResult(AuthResultType.REFRESH_SUCCESS, login(user));
   }
 
   private TokenPair login(User user) {

@@ -47,10 +47,6 @@ public class Crew extends DateAudit {
     private CrewDescription crewDescription;
 
     @ElementCollection
-    @CollectionTable(name = "crew_join_requests", joinColumns = @JoinColumn(name="crew_id"))
-    private List<CrewJoinRequest> joinRequests = new ArrayList<>();
-
-    @ElementCollection
     @CollectionTable(name = "crew_memberships", joinColumns = @JoinColumn(name="crew_id"))
     private List<CrewMembership> crewMemberships = new ArrayList<>();
 
@@ -66,26 +62,6 @@ public class Crew extends DateAudit {
         return this.status == CrewStatus.ACTIVE;
     }
 
-    public boolean isOwner(Integer userId) {
-        return this.owner.getId().equals(userId);
-    }
-
-    public void updateCrewInfo(CrewDescription crewDescription) {
-        this.crewDescription = crewDescription;
-    }
-
-    public void addJoinRequest(CrewJoinRequest joinRequest) {
-        this.joinRequests.add(joinRequest);
-    }
-
-    public void cancelJoinRequest(CrewJoinRequest joinRequest) {
-        joinRequests.stream()
-                .filter(request -> request.getUserId().equals(joinRequest.getUserId()))
-                .filter(request -> request.getStatus() == CrewJoinRequestStatus.WAITING)
-                .findFirst()
-                .ifPresent(CrewJoinRequest::cancel);
-    }
-
     public void addMember(Integer userId) {
         this.crewMemberships.add(CrewMembership.builder()
             .userId(userId)
@@ -94,12 +70,19 @@ public class Crew extends DateAudit {
         this.memberCount++;
     }
 
-    public void reviewJoinRequest(CrewJoinRequest joinRequest, CrewJoinRequestStatus status) {
-        joinRequests.stream()
-                .filter(request -> request.getId().equals(joinRequest.getId()))
-                .findFirst()
-                .ifPresent(request -> request.review(owner, status));
+    public void removeMember(Integer userId) {
+        this.crewMemberships.removeIf(membership -> membership.getUserId().equals(userId));
+        this.memberCount--;
     }
+
+    public boolean isOwner(Integer userId) {
+        return this.owner.getId().equals(userId);
+    }
+
+    public void updateCrewInfo(CrewDescription crewDescription) {
+        this.crewDescription = crewDescription;
+    }
+
 
     @Override
     public void prePersist() {
