@@ -63,4 +63,19 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
     }
+
+    @Bean
+    public RedisTemplate<String, Serializable> serializableRedisTemplate() {
+        RedisTemplate<String, Serializable> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericToStringSerializer<>(String.class));
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        return redisTemplate;
+    }
+
+    @Bean
+    public DefaultRedisScript<Boolean> updateLocationScript() throws IOException {
+        ScriptSource source = new ResourceScriptSource(new ClassPathResource("META-INF/scripts/update_location.lua"));
+        return new DefaultRedisScript<>(source.getScriptAsString(), Boolean.class);
+    }
 }
