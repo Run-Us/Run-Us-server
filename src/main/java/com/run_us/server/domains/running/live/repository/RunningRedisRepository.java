@@ -7,24 +7,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.run_us.server.domains.running.live.service.model.LocationData;
 import com.run_us.server.domains.running.live.service.model.ParticipantStatus;
 import com.run_us.server.domains.running.common.RunningConst;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+
+import java.io.Serializable;
+import java.util.*;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Repository;
 
+@Slf4j
 @Repository
+@RequiredArgsConstructor
 public class RunningRedisRepository {
 
   private final RedisTemplate<String, String> redisTemplate;
+  private final RedisTemplate<String, Serializable> serializableRedisTemplate;
   private final ObjectMapper objectMapper;
-
-  public RunningRedisRepository(
-      RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper) {
-    this.redisTemplate = redisTemplate;
-    this.objectMapper = objectMapper;
-  }
+  private final DefaultRedisScript<Boolean> updateLocationScript;
 
   /***
    * 러닝세션 참가자의 상태를 업데이트
@@ -60,20 +61,16 @@ public class RunningRedisRepository {
   public void updateParticipantLocation(
       String runningId, String userId, double latitude, double longitude, long count) {
     String key = createLiveKey(runningId, userId, RunningConst.LOCATION_SUFFIX);
-    String currentValue = redisTemplate.opsForValue().get(key);
-
     try {
-      if (currentValue != null) {
-        LocationData current = objectMapper.readValue(currentValue, LocationData.class);
-        if (count <= current.getCount()) {
-          return; // 기존 정보보다 과거 정보라면 업데이트 하지 않고 폐기
-        }
-      }
-
-      LocationData newLocation = new LocationData(latitude, longitude, count);
-      String newValue = objectMapper.writeValueAsString(newLocation);
-      redisTemplate.opsForValue().set(key, newValue);
+      serializableRedisTemplate.execute(
+          updateLocationScript,
+          List.of(key),
+          latitude,
+          longitude,
+          10,
+          count);
     } catch (Exception e) {
+      log.error("Failed to update location", e);
       throw new RuntimeException("Failed to update location", e);
     }
   }
@@ -133,7 +130,7 @@ public class RunningRedisRepository {
    * @param runningId 러닝세션 외부 노출용 ID
    * @return 러닝세션 참가자 전체의 위치정보 목록
    */
-  private Map<String, LocationData.RunnerPos> getAllParticipantsLocations(String runningId) {
+  public Map<String, LocationData.RunnerPos> getAllParticipantsLocations(String runningId) {
     Map<String, LocationData.RunnerPos> participantsLocations = new HashMap<>();
     String pattern = createLiveKey(runningId, "*", RunningConst.LOCATION_SUFFIX);
     Set<String> keys = redisTemplate.keys(pattern);
