@@ -65,6 +65,16 @@ public class CrewController {
         return ResponseEntity.ok().body(response);
     }
 
+    @DeleteMapping("/{crewPublicId}")
+    public ResponseEntity<SuccessResponse<CloseCrewResponse>> closeCrew(
+            @PathVariable String crewPublicId,
+            @CurrentUser String currentUserPublicId){
+        log.info("action=delete_crew userPublicId={}, crewPublicId={}", currentUserPublicId, crewPublicId);
+
+        SuccessResponse<CloseCrewResponse> response = commandCrewUseCase.closeCrew(crewPublicId, currentUserPublicId);
+        return ResponseEntity.ok().body(response);
+    }
+
     @PostMapping("/{crewPublicId}/join-requests")
     public ResponseEntity<SuccessResponse<CreateJoinRequestResponse>> requestJoin(
             @PathVariable String crewPublicId,

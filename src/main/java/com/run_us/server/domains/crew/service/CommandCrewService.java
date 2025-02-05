@@ -33,10 +33,17 @@ public class CommandCrewService {
     public void updateCrewJoinRule(UpdateCrewJoinTypeRequest requestDto, Crew crew, Integer userId) {
         checkCrewOwner(crew, userId);
 
-        crew.updateCrewJoinRule(requestDto.getJoinType(), requestDto.getJoinQuestion());
+        crew.updateJoinRule(requestDto.getJoinType(), requestDto.getJoinQuestion());
     }
 
-    private static void checkCrewOwner(Crew crew, Integer userId) {
+    public void closeCrew(Crew crew, Integer userId) {
+        checkCrewOwner(crew, userId);
+
+        crew.close();
+    }
+
+
+    private void checkCrewOwner(Crew crew, Integer userId) {
         if (!crew.isOwner(userId)) {
             throw new CrewException(CrewErrorCode.FORBIDDEN_UPDATE_CREW);
         }

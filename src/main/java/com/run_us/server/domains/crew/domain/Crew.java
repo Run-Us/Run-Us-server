@@ -1,6 +1,5 @@
 package com.run_us.server.domains.crew.domain;
 
-import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinType;
 import com.run_us.server.domains.crew.domain.enums.CrewStatus;
 import com.run_us.server.domains.user.domain.User;
@@ -105,8 +104,12 @@ public class Crew extends DateAudit {
         this.crewMemberships = crewMemberships;
     }
 
-    public void updateCrewJoinRule(CrewJoinType joinType, String joinQuestion) {
+    public void updateJoinRule(CrewJoinType joinType, String joinQuestion) {
         this.joinType = joinType;
         this.getCrewDescription().updateJoinQuestion(joinQuestion);
+    }
+
+    public void close() {
+        this.status = CrewStatus.SUSPENDED;
     }
 }
