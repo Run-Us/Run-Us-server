@@ -104,4 +104,9 @@ public class Crew extends DateAudit {
         this.status = CrewStatus.ACTIVE;
         this.crewMemberships = crewMemberships;
     }
+
+    public void updateCrewJoinRule(CrewJoinType joinType, String joinQuestion) {
+        this.joinType = joinType;
+        this.getCrewDescription().updateJoinQuestion(joinQuestion);
+    }
 }

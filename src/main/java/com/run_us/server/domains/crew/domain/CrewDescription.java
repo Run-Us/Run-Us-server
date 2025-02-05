@@ -74,4 +74,8 @@ public class CrewDescription {
     public int hashCode() {
         return Objects.hash(this.title, this.profileImageUrl, this.location, this.intro, this.themeType, this.joinQuestion);
     }
+
+    public void updateJoinQuestion(String joinQuestion) {
+        this.joinQuestion = joinQuestion;
+    }
 }

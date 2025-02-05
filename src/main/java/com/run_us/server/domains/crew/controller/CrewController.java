@@ -1,13 +1,10 @@
 package com.run_us.server.domains.crew.controller;
 
-import com.run_us.server.domains.crew.controller.model.request.CreateJoinRequest;
-import com.run_us.server.domains.crew.controller.model.request.ReviewJoinRequest;
-import com.run_us.server.domains.crew.controller.model.request.UpdateCrewInfoRequest;
+import com.run_us.server.domains.crew.controller.model.request.*;
 import com.run_us.server.domains.crew.controller.model.response.*;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
 import com.run_us.server.domains.crew.service.usecase.CommandCrewUseCase;
 import com.run_us.server.domains.crew.service.usecase.CrewJoinUseCase;
-import com.run_us.server.domains.crew.controller.model.request.CreateCrewRequest;
 import com.run_us.server.domains.crew.controller.model.response.CreateCrewResponse;
 import com.run_us.server.domains.crew.service.usecase.CreateCrewUseCase;
 import com.run_us.server.domains.crew.service.usecase.CrewMemberUseCase;
@@ -57,8 +54,16 @@ public class CrewController {
         return ResponseEntity.ok().body(response);
     }
 
+    @PatchMapping("/{crewPublicId}/join-rule")
+    public ResponseEntity<SuccessResponse<UpdateCrewJoinRuleResponse>> updateCrewJoinRule(
+            @PathVariable String crewPublicId,
+            @RequestBody UpdateCrewJoinTypeRequest requestDto,
+            @CurrentUser String currentUserPublicId){
+        log.info("action=update_crew_join_rule userPublicId={}, crewPublicId={}", currentUserPublicId, crewPublicId);
 
-
+        SuccessResponse<UpdateCrewJoinRuleResponse> response = commandCrewUseCase.updateCrewJoinRule(crewPublicId, requestDto, currentUserPublicId);
+        return ResponseEntity.ok().body(response);
+    }
 
     @PostMapping("/{crewPublicId}/join-requests")
     public ResponseEntity<SuccessResponse<CreateJoinRequestResponse>> requestJoin(
