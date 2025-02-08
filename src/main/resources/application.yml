@@ -1,6 +1,11 @@
 server:
   port: 8080
-
+  tomcat:
+    threads:
+      max: 200
+    accept-count: 100
+    max-connections: 8912
+    max-keep-alive-requests: 200
 spring:
   config:
     import:
@@ -17,7 +22,6 @@ spring:
     properties:
       hibernate:
         dialect: ${JPA_DIALECT}
-        format_sql: true
     open-in-view: false
   jackson:
     property-naming-strategy: SNAKE_CASE

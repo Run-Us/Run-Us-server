@@ -6,28 +6,33 @@ import com.run_us.server.domains.crew.domain.CrewFixtures;
 import com.run_us.server.domains.crew.domain.CrewJoinRequest;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
 import com.run_us.server.domains.crew.repository.CrewJoinRequestRepository;
+import com.run_us.server.domains.crew.repository.CrewRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 @ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
 class CrewValidatorTest {
 
-  @MockBean
+  @Mock
+  private CrewRepository crewRepository;
+  @Mock
   private CrewJoinRequestRepository crewJoinRequestRepository;
 
-  @Autowired
+  @InjectMocks
   private CrewValidator crewValidator;
 
   @DisplayName("한달 이내에 제출한 가입신청이 아직 처리되지 않은 경우 에러 반환")
@@ -45,6 +50,7 @@ class CrewValidatorTest {
             .processedAt(null)
             .build())
     );
+    when(crewRepository.existsMembershipByCrewIdAndUserId(any(), any())).thenReturn(false);
     assertThrows(CrewException.class, () -> crewValidator.validateCanJoinCrew(userId, crew));
   }
 
@@ -63,6 +69,8 @@ class CrewValidatorTest {
             .processedAt(ZonedDateTime.now())
             .build())
     );
+    when(crewRepository.existsMembershipByCrewIdAndUserId(any(), any())).thenReturn(false);
+
     assertThrows(CrewException.class, () -> crewValidator.validateCanJoinCrew(userId, crew));
   }
 }

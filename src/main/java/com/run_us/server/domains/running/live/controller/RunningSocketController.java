@@ -7,6 +7,7 @@ import com.run_us.server.domains.running.live.controller.model.RunningSocketResp
 import com.run_us.server.domains.running.live.controller.model.RunningSocketResponseCode;
 import com.run_us.server.domains.running.live.service.RunningLiveService;
 import com.run_us.server.domains.running.common.RunningConst;
+import com.run_us.server.domains.running.live.service.RunningWebsocketService;
 import com.run_us.server.global.common.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ public class RunningSocketController {
 
   private final SimpMessagingTemplate simpMessagingTemplate;
   private final RunningLiveService runningLiveService;
-
+  private final RunningWebsocketService runningWebsocketService;
   /**
    * 러닝 시작
    * @param userId 사용자 (고유번호 세션에서 추출)
@@ -32,7 +33,7 @@ public class RunningSocketController {
   public void startRunning(@UserId String userId, RunningSocketRequest.StartRunning requestDto) {
     log.info("action=start_running user_id={} running_id={}", userId, requestDto.getRunningPublicId());
     SuccessResponse<RunningSocketResponse.StartRunning> response =
-        runningLiveService.startRunning(requestDto.getRunningPublicId(), userId, requestDto.getCount());
+        runningWebsocketService.startRunningSession(requestDto.getRunningPublicId(), requestDto.getCount());
     simpMessagingTemplate.convertAndSend(
         RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningPublicId(), response);
   }
@@ -45,13 +46,12 @@ public class RunningSocketController {
   @MessageMapping("/users/runnings/location")
   public void updateLocation(@UserId String userId,  RunningSocketRequest.LocationUpdate requestDto) {
     log.info("action=update_running user_id={} running_id={}", userId, requestDto.getRunningPublicId());
-    SuccessResponse<RunningSocketResponse.LocationUpdate> response = runningLiveService.updateLocation(
+    runningLiveService.updateLocation(
         requestDto.getRunningPublicId(),
         userId,
         requestDto.getLatitude(),
         requestDto.getLongitude(),
         requestDto.getCount());
-    simpMessagingTemplate.convertAndSend(RunningConst.RUNNING_WS_SEND_PREFIX + requestDto.getRunningPublicId(), response);
   }
 
   /***

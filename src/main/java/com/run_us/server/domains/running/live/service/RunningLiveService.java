@@ -12,19 +12,14 @@ import com.run_us.server.domains.running.live.service.model.ParticipantStatus;
 import com.run_us.server.domains.running.common.RunningConst;
 import com.run_us.server.domains.running.run.domain.Run;
 import com.run_us.server.domains.running.run.service.ParticipantService;
-import com.run_us.server.domains.running.run.service.RunCommandService;
 import com.run_us.server.domains.running.run.service.RunQueryService;
 import com.run_us.server.domains.user.domain.User;
 import com.run_us.server.global.common.SuccessResponse;
 import jakarta.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,12 +28,9 @@ import org.springframework.stereotype.Service;
 public class RunningLiveService {
 
   private final RunningRedisRepository runningRedisRepository;
-  private final RunCommandService runCommandService;
   private final RunQueryService runQueryService;
   private final ParticipantService participantService;
   private final UpdateLocationRepository locationRepository;
-  private final Map<String, ScheduledExecutorService> sessionSchedulers = new ConcurrentHashMap<>();
-
   /***
    * 러닝세션 참가: 참가자 상태를 READY로 변경
    * @param runningId 러닝세션 외부 노출용 ID
@@ -110,40 +102,7 @@ public class RunningLiveService {
     return Collections.emptyList();
   }
 
-  /***
-   * 러닝세션 시작: 전체 참가자 상태를 RUN으로 변경하고, 위치 업데이트 스케줄러 시작
-   * @param runningId 러닝세션 외부 노출용 ID
-   */
-  public void startRunningSession(String runningId, long count) {
-    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    scheduler.scheduleAtFixedRate(
-        () -> runningRedisRepository.publishLocationUpdatesAll(runningId),
-        0,
-        RunningConst.UPDATE_INTERVAL,
-        TimeUnit.MILLISECONDS);
-    sessionSchedulers.put(runningId, scheduler);
 
-    Set<String> participants = runningRedisRepository.getSessionParticipants(runningId);
-    for (String userId : participants) {
-      startRunning(runningId, userId, count);
-    }
-  }
-
-  /***
-   * 러닝세션 종료: 전체 참가자 상태를 END로 변경하고, 위치 업데이트 스케줄러 종료
-   * @param runningId 러닝세션 외부 노출용 ID
-   */
-  public void finishRunningSession(String runningId) {
-    ScheduledExecutorService scheduler = sessionSchedulers.remove(runningId);
-    if (scheduler != null) {
-      scheduler.shutdown();
-    }
-
-    Set<String> participants = runningRedisRepository.getSessionParticipants(runningId);
-    for (String userId : participants) {
-      endRunning(runningId, userId);
-    }
-  }
 
   /***
    * 러닝세션 참가자 위치 업데이트: 참가자의 위치를 업데이트하고, 이동 거리가 일정 이상일 경우 즉시 publish
@@ -153,21 +112,9 @@ public class RunningLiveService {
    * @param longitude 경도
    * @param count 송신 횟수
    */
-  public SuccessResponse<RunningSocketResponse.LocationUpdate> updateLocation(
+  public void updateLocation(
       String runningId, String userId, float latitude, float longitude, long count) {
     runningRedisRepository.updateParticipantLocation(runningId, userId, latitude, longitude, count);
-
-    LocationData.RunnerPos lastLocation =
-        runningRedisRepository.getParticipantLocation(runningId, userId);
-    LocationData.RunnerPos newLocation = new LocationData.RunnerPos(latitude, longitude);
-    locationRepository.saveLocation(createLiveKey(runningId, userId, RUNNING_PREFIX), newLocation);
-
-    if (lastLocation != null && isSignificantMove(lastLocation, newLocation)) {
-      runningRedisRepository.publishLocationUpdateSingle(runningId, userId, latitude, longitude);
-    }
-    return SuccessResponse.of(
-        RunningSocketResponseCode.UPDATE_LOCATION,
-        new RunningSocketResponse.LocationUpdate(userId, latitude, longitude, count));
   }
 
   /***
