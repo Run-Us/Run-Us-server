@@ -20,7 +20,7 @@ public final class RunFixtures {
     return run;
   }
 
-  private static RunningPreview createRunningPreview() {
+  public static RunningPreview createRunningPreview() {
     return RunningPreview.builder()
         .title("title")
         .description("description")
