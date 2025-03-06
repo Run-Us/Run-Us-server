@@ -1,5 +1,7 @@
 package com.run_us.server.domains.running.run.repository;
 
+import com.run_us.server.domains.running.run.domain.RunStatus;
+import com.run_us.server.domains.running.run.domain.RunType;
 import com.run_us.server.domains.running.run.domain.SessionAccessLevel;
 import com.run_us.server.domains.running.run.domain.Run;
 import com.run_us.server.domains.running.run.service.model.JoinedRunPreviewResponse;
@@ -8,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -52,4 +55,12 @@ public interface RunRepository extends JpaRepository<Run, Integer> {
           + "WHERE r.crewId = :crewId and r.preview.accessLevel = :accessLevel"
   )
   Slice<Run> findAllByCrewIdAndAccessLevel(Integer crewId, SessionAccessLevel accessLevel, PageRequest pageRequest);
+
+  @Query(
+      "SELECT r " +
+            "FROM Run r " +
+            "WHERE r.crewId = :crewId AND r.status = :status AND r.preview.type = :type " +
+            "ORDER BY r.preview.beginTime ASC"
+  )
+  Optional<Run> findFirstForCrewCard(@Param("crewId") Integer crewId, @Param("type") RunType type, @Param("status") RunStatus status);
 }
