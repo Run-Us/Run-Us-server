@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class CommandCrewService {
 
     private final CrewRepository crewRepository;
+    private final CrewValidator crewValidator;
 
     public Crew saveCrew(CreateCrewRequest requestDto, User creator) {
         Crew crew = requestDto.toEntity(creator);
@@ -24,28 +25,21 @@ public class CommandCrewService {
     }
 
     public void updateCrewInfo(UpdateCrewInfoRequest requestDto, Crew crew, Integer userId) {
-        checkCrewOwner(crew, userId);
+        crewValidator.validateCrewOwner(crew, userId);
 
         CrewDescription newCrewDescription = requestDto.from(crew.getCrewDescription());
         crew.updateCrewInfo(newCrewDescription);
     }
 
     public void updateCrewJoinRule(UpdateCrewJoinTypeRequest requestDto, Crew crew, Integer userId) {
-        checkCrewOwner(crew, userId);
+        crewValidator.validateCrewOwner(crew, userId);
 
         crew.updateJoinRule(requestDto.getJoinType(), requestDto.getJoinQuestion());
     }
 
     public void closeCrew(Crew crew, Integer userId) {
-        checkCrewOwner(crew, userId);
+        crewValidator.validateCrewOwner(crew, userId);
 
         crew.close();
-    }
-
-
-    private void checkCrewOwner(Crew crew, Integer userId) {
-        if (!crew.isOwner(userId)) {
-            throw new CrewException(CrewErrorCode.FORBIDDEN_UPDATE_CREW);
-        }
     }
 }

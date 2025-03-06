@@ -51,7 +51,6 @@ public class CommandCrewUseCaseImpl implements CommandCrewUseCase {
 
         Crew crew = crewService.getCrewByPublicId(crewPublicId);
         commandCrewService.closeCrew(crew, userPrincipal.getInternalId());
-
         return SuccessResponse.of(CrewHttpResponseCode.CREW_CLOSE_SUCCESS, CloseCrewResponse.from(crew));
     }
 }

@@ -92,4 +92,16 @@ public class CrewValidator {
             throw new CrewException(CrewErrorCode.SUSPENDED_CREW);
         }
     }
+
+    public void validateCrewOwner(Crew crew, Integer userId) {
+        if (!crew.isOwner(userId)) {
+            throw new CrewException(CrewErrorCode.FORBIDDEN_UPDATE_CREW);
+        }
+    }
+
+    public void validateCrewMember(Crew crew, Integer userId) {
+        if (!crew.isMember(userId)) {
+            throw new CrewException(CrewErrorCode.NOT_CREW_MEMBER);
+        }
+    }
 }
