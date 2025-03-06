@@ -34,6 +34,12 @@ public class UserService {
         .orElseThrow(() -> UserException.of(USER_NOT_FOUND));
   }
 
+  public User getUserByInternalId(int internalId) {
+    return userRepository
+        .findByInternalId(internalId)
+        .orElseThrow(() -> UserException.of(USER_NOT_FOUND));
+  }
+
   public Map<Integer, User> getUserMapByIds(List<Integer> userIds) {
     if (userIds == null || userIds.isEmpty()) {
       return Collections.emptyMap();
