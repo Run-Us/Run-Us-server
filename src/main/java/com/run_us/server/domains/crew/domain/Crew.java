@@ -45,6 +45,9 @@ public class Crew extends DateAudit {
     @Embedded
     private CrewDescription crewDescription;
 
+    @Embedded
+    private CrewMonthlyRecord monthlyRecord;
+
     @ElementCollection
     @CollectionTable(name = "crew_memberships", joinColumns = @JoinColumn(name="crew_id"))
     private List<CrewMembership> crewMemberships = new ArrayList<>();
@@ -94,7 +97,8 @@ public class Crew extends DateAudit {
         User owner,
         CrewJoinType joinType,
         CrewDescription crewDescription,
-        List<CrewMembership> crewMemberships
+        List<CrewMembership> crewMemberships,
+        CrewMonthlyRecord monthlyRecord
     ){
         this.owner = owner;
         this.joinType = joinType;
@@ -102,6 +106,7 @@ public class Crew extends DateAudit {
         this.memberCount = 1;
         this.status = CrewStatus.ACTIVE;
         this.crewMemberships = crewMemberships;
+        this.monthlyRecord = monthlyRecord;
     }
 
     public void updateJoinRule(CrewJoinType joinType, String joinQuestion) {
