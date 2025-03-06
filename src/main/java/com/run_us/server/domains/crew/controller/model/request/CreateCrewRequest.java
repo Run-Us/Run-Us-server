@@ -3,6 +3,7 @@ package com.run_us.server.domains.crew.controller.model.request;
 import com.run_us.server.domains.crew.domain.Crew;
 import com.run_us.server.domains.crew.domain.CrewDescription;
 import com.run_us.server.domains.crew.domain.CrewMembership;
+import com.run_us.server.domains.crew.domain.CrewMonthlyRecord;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinType;
 import com.run_us.server.domains.crew.domain.enums.CrewMembershipRole;
 import com.run_us.server.domains.crew.domain.enums.CrewThemeType;
@@ -37,11 +38,17 @@ public class CreateCrewRequest {
                 .userId(creator.getId())
                 .role(CrewMembershipRole.OWNER)
                 .build();
+        CrewMonthlyRecord monthlyRecord = CrewMonthlyRecord.builder()
+                .totalRunningCount(0)
+                .totalDistance(0)
+                .totalTime(0)
+                .build();
         return Crew.builder()
                 .crewDescription(description)
                 .joinType(CrewJoinType.valueOf(this.joinType))
                 .owner(creator)
                 .crewMemberships(List.of(ownerMembership))
+                .monthlyRecord(monthlyRecord)
                 .build();
     }
 }
