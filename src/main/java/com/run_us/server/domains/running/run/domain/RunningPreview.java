@@ -16,6 +16,7 @@ import java.time.ZonedDateTime;
 public class RunningPreview implements Serializable {
   private String title;
   private String description;
+  private RunType type;
   private String meetingPoint;
   private SessionAccessLevel accessLevel = SessionAccessLevel.ALLOW_ALL;
   private ZonedDateTime beginTime;
@@ -24,16 +25,19 @@ public class RunningPreview implements Serializable {
   public RunningPreview(
       String title,
       String description,
+      RunType type,
       String meetingPoint,
       SessionAccessLevel accessLevel,
       ZonedDateTime beginTime) {
     this.title = title;
     this.description = description;
+    this.type = type;
     this.meetingPoint = meetingPoint;
     this.accessLevel = accessLevel;
     this.beginTime = beginTime;
   }
 
+  // TODO : run type 추가
   public static RunningPreview from(RunCreateDto runCreateDto) {
     return RunningPreview.builder()
         .title(runCreateDto.getTitle())
