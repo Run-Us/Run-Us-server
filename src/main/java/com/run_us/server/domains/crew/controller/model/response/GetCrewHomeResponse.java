@@ -31,7 +31,7 @@ public class GetCrewHomeResponse {
     private RunCardInfo irregularRunning;
 
     @Builder
-    public GetCrewHomeResponse( // TODO : 가독성 이게 최선인가..
+    public GetCrewHomeResponse(
                                 String crewPublicId, String title, String profileImg, String location, String intro,
                                 CrewJoinType joinType, String joinQuestion, CrewThemeType crewType,
                                 Integer memberCount, ZonedDateTime createdAt, SimpleUserInfo crewOwner,
