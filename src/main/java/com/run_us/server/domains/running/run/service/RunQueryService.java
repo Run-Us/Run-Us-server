@@ -3,8 +3,11 @@ package com.run_us.server.domains.running.run.service;
 import com.run_us.server.domains.running.common.RunningErrorCode;
 import com.run_us.server.domains.running.common.RunningException;
 import com.run_us.server.domains.running.run.domain.Run;
+import com.run_us.server.domains.running.run.domain.RunStatus;
+import com.run_us.server.domains.running.run.domain.RunType;
 import com.run_us.server.domains.running.run.domain.SessionAccessLevel;
 import com.run_us.server.domains.running.run.repository.RunRepository;
+import com.run_us.server.domains.running.run.service.model.GetCrewCardRun;
 import com.run_us.server.domains.running.run.service.model.JoinedRunPreviewResponse;
 import com.run_us.server.domains.running.run.service.model.GetRunPreviewResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -68,5 +72,12 @@ public class RunQueryService {
       JoinedRunPreviewResponse preview = previews.get(run.getPublicId());
       preview.setRunPaces(run.getPaceCategories());
     }
+  }
+
+  public GetCrewCardRun getCrewCardRun(Integer crewId) {
+    Optional<Run> regularRunOp = runRepository.findFirstForCrewCard(crewId, RunType.GROUP_REGULAR, RunStatus.WAITING);
+    Optional<Run> irregularRunOp = runRepository.findFirstForCrewCard(crewId, RunType.GROUP_IRREGULAR, RunStatus.WAITING);
+
+    return GetCrewCardRun.from(regularRunOp.orElse(null), irregularRunOp.orElse(null));
   }
 }

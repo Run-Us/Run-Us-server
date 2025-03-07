@@ -9,6 +9,7 @@ import com.run_us.server.domains.crew.controller.model.response.UpdateCrewJoinRu
 import com.run_us.server.domains.crew.domain.Crew;
 import com.run_us.server.domains.crew.service.CommandCrewService;
 import com.run_us.server.domains.crew.service.CrewService;
+import com.run_us.server.domains.crew.service.model.UpdateCrewInfo;
 import com.run_us.server.domains.user.domain.UserPrincipal;
 import com.run_us.server.domains.user.service.resolver.UserIdResolver;
 import com.run_us.server.global.common.SuccessResponse;
@@ -30,7 +31,7 @@ public class CommandCrewUseCaseImpl implements CommandCrewUseCase {
         UserPrincipal userPrincipal = userIdResolver.resolve(userPublicId);
 
         Crew crew = crewService.getCrewByPublicId(crewPublicId);
-        commandCrewService.updateCrewInfo(requestDto, crew, userPrincipal.getInternalId());
+        commandCrewService.updateCrewInfo(UpdateCrewInfo.from(requestDto), crew, userPrincipal.getInternalId());
         return SuccessResponse.of(CrewHttpResponseCode.CREW_UPDATED, UpdateCrewInfoResponse.from(crew.getPublicId()));
     }
 
@@ -51,7 +52,6 @@ public class CommandCrewUseCaseImpl implements CommandCrewUseCase {
 
         Crew crew = crewService.getCrewByPublicId(crewPublicId);
         commandCrewService.closeCrew(crew, userPrincipal.getInternalId());
-
         return SuccessResponse.of(CrewHttpResponseCode.CREW_CLOSE_SUCCESS, CloseCrewResponse.from(crew));
     }
 }

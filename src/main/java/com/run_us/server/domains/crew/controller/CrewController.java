@@ -35,10 +35,10 @@ public class CrewController {
     @PostMapping
     public ResponseEntity<SuccessResponse<CreateCrewResponse>> createCrew(
             @RequestBody CreateCrewRequest requestDto,
-            @RequestAttribute("publicUserId") String userId) {
-        log.info("action=create_crew user_id={}", userId);
+            @CurrentUser String currentUserPublicId) {
+        log.info("action=create_crew user_id={}", currentUserPublicId);
 
-        SuccessResponse<CreateCrewResponse> response = createCrewUseCase.createCrew(requestDto, userId);
+        SuccessResponse<CreateCrewResponse> response = createCrewUseCase.createCrew(requestDto, currentUserPublicId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

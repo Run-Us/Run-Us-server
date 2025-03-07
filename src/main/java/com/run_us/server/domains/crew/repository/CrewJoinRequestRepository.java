@@ -1,6 +1,7 @@
 package com.run_us.server.domains.crew.repository;
 
 import com.run_us.server.domains.crew.domain.CrewJoinRequest;
+import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,4 +26,6 @@ public interface CrewJoinRequestRepository extends JpaRepository<CrewJoinRequest
       Integer userId,
       ZonedDateTime recentDate
   );
+
+  boolean existsByCrewIdAndStatus(Integer crewId, CrewJoinRequestStatus status);
 }

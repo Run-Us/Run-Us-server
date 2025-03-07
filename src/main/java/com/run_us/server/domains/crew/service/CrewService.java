@@ -94,4 +94,9 @@ public class CrewService {
 
         log.debug("action=remove_member_end crewPublicId={} targetUserId={}", crew.getPublicId(), targetUserId);
     }
+
+    @Transactional(readOnly = true)
+    public boolean existNewJoinRequest(Integer crewId) {
+        return crewJoinRequestRepository.existsByCrewIdAndStatus(crewId, CrewJoinRequestStatus.WAITING);
+    }
 }
