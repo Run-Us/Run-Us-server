@@ -1,6 +1,10 @@
 package com.run_us.server.domains.crew.controller.model.response;
 
+import com.run_us.server.domains.crew.controller.model.enums.CrewErrorCode;
+import com.run_us.server.domains.crew.controller.model.enums.CrewException;
+import com.run_us.server.domains.user.domain.Profile;
 import com.run_us.server.domains.user.domain.User;
+import com.run_us.server.domains.user.exception.UserErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,13 +22,15 @@ public class SimpleUserInfo {
     }
 
     public static SimpleUserInfo from(User user) {
-//        String profileImgUrl = user.getProfile()==null ? "tempUrl" : user.getProfile().getImgUrl();
-//        String profileImgUrl = user.getProfile()==null ? "temp" : user.getProfile().getImgUrl();
+        Profile profile = user.getProfile();
+        if(profile == null){
+            throw new CrewException(UserErrorCode.GET_USER_PROFILE_FAILED);
+        }
 
         return SimpleUserInfo.builder()
                 .userPublicId(user.getPublicId())
-                .profileImageUrl(user.getProfile().getImgUrl())
-                .nickname(user.getProfile().getNickname())
+                .profileImageUrl(profile.getImgUrl())
+                .nickname(profile.getNickname())
                 .build();
     }
 }

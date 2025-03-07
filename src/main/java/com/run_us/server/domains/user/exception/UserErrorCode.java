@@ -17,7 +17,10 @@ public enum UserErrorCode implements CustomResponseCode {
   REFRESH_FAILED("UEH4015", HttpStatus.UNAUTHORIZED, "리프레시 토큰이 만료되었습니다.", "리프레시 토큰이 만료되었습니다."),
 
   // 404
-  USER_NOT_FOUND("UEH4041", HttpStatus.NOT_FOUND, "사용자를 찾을 수 없음", "사용자를 찾을 수 없음"),;
+  USER_NOT_FOUND("UEH4041", HttpStatus.NOT_FOUND, "사용자를 찾을 수 없음", "사용자를 찾을 수 없음"),
+
+  // 409
+  GET_USER_PROFILE_FAILED("UEH4091", HttpStatus.CONFLICT, "사용자의 프로필 정보를 가져올 수 없음", "사용자의 프로필 정보를 가져올 수 없음");
 
   private final String code;
   private final HttpStatus httpStatusCode;
