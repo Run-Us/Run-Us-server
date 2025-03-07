@@ -1,6 +1,5 @@
 package com.run_us.server.domains.crew.domain;
 
-import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinType;
 import com.run_us.server.domains.crew.domain.enums.CrewStatus;
 import com.run_us.server.domains.user.domain.User;
@@ -76,6 +75,15 @@ public class Crew extends DateAudit {
         this.memberCount--;
     }
 
+    public boolean isOwner(Integer userId) {
+        return this.owner.getId().equals(userId);
+    }
+
+    public void updateCrewInfo(CrewDescription crewDescription) {
+        this.crewDescription = crewDescription;
+    }
+
+
     @Override
     public void prePersist() {
         this.publicId = TSID.Factory.getTsid().toString();
@@ -95,5 +103,14 @@ public class Crew extends DateAudit {
         this.memberCount = 1;
         this.status = CrewStatus.ACTIVE;
         this.crewMemberships = crewMemberships;
+    }
+
+    public void updateJoinRule(CrewJoinType joinType, String joinQuestion) {
+        this.joinType = joinType;
+        this.getCrewDescription().updateJoinQuestion(joinQuestion);
+    }
+
+    public void close() {
+        this.status = CrewStatus.SUSPENDED;
     }
 }

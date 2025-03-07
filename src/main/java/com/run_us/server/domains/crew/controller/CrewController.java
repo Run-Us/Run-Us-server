@@ -1,11 +1,10 @@
 package com.run_us.server.domains.crew.controller;
 
-import com.run_us.server.domains.crew.controller.model.request.CreateJoinRequest;
-import com.run_us.server.domains.crew.controller.model.request.ReviewJoinRequest;
+import com.run_us.server.domains.crew.controller.model.request.*;
 import com.run_us.server.domains.crew.controller.model.response.*;
 import com.run_us.server.domains.crew.domain.enums.CrewJoinRequestStatus;
+import com.run_us.server.domains.crew.service.usecase.CommandCrewUseCase;
 import com.run_us.server.domains.crew.service.usecase.CrewJoinUseCase;
-import com.run_us.server.domains.crew.controller.model.request.CreateCrewRequest;
 import com.run_us.server.domains.crew.controller.model.response.CreateCrewResponse;
 import com.run_us.server.domains.crew.service.usecase.CreateCrewUseCase;
 import com.run_us.server.domains.crew.service.usecase.CrewMemberUseCase;
@@ -30,6 +29,7 @@ public class CrewController {
     private final CrewJoinUseCase crewJoinUseCase;
     private final CreateCrewUseCase createCrewUseCase;
     private final CrewMemberUseCase crewMemberUseCase;
+    private final CommandCrewUseCase commandCrewUseCase;
 
 
     @PostMapping
@@ -43,6 +43,37 @@ public class CrewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PatchMapping("/{crewPublicId}")
+    public ResponseEntity<SuccessResponse<UpdateCrewInfoResponse>> updateCrewInfo(
+            @PathVariable String crewPublicId,
+            @RequestBody UpdateCrewInfoRequest requestDto,
+            @CurrentUser String currentUserPublicId){
+        log.info("action=update_crew_info userPublicId={}, crewPublicId={}", currentUserPublicId, crewPublicId);
+
+        SuccessResponse<UpdateCrewInfoResponse> response = commandCrewUseCase.updateCrewInfo(crewPublicId, requestDto, currentUserPublicId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PatchMapping("/{crewPublicId}/join-rule")
+    public ResponseEntity<SuccessResponse<UpdateCrewJoinRuleResponse>> updateCrewJoinRule(
+            @PathVariable String crewPublicId,
+            @RequestBody UpdateCrewJoinTypeRequest requestDto,
+            @CurrentUser String currentUserPublicId){
+        log.info("action=update_crew_join_rule userPublicId={}, crewPublicId={}", currentUserPublicId, crewPublicId);
+
+        SuccessResponse<UpdateCrewJoinRuleResponse> response = commandCrewUseCase.updateCrewJoinRule(crewPublicId, requestDto, currentUserPublicId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/{crewPublicId}")
+    public ResponseEntity<SuccessResponse<CloseCrewResponse>> closeCrew(
+            @PathVariable String crewPublicId,
+            @CurrentUser String currentUserPublicId){
+        log.info("action=delete_crew userPublicId={}, crewPublicId={}", currentUserPublicId, crewPublicId);
+
+        SuccessResponse<CloseCrewResponse> response = commandCrewUseCase.closeCrew(crewPublicId, currentUserPublicId);
+        return ResponseEntity.ok().body(response);
+    }
 
     @PostMapping("/{crewPublicId}/join-requests")
     public ResponseEntity<SuccessResponse<CreateJoinRequestResponse>> requestJoin(

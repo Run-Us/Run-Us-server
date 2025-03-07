@@ -19,7 +19,8 @@ public enum CrewErrorCode implements CustomResponseCode {
 
 
     // 403
-    RECENTLY_REJECTED_REQUEST("CEH4032","Recently rejected request","Recently rejected request",HttpStatus.FORBIDDEN)
+    RECENTLY_REJECTED_REQUEST("CEH4032","Recently rejected request","Recently rejected request",HttpStatus.FORBIDDEN),
+    FORBIDDEN_UPDATE_CREW("CEH4033","Forbidden update crew", "Forbidden update crew",HttpStatus.FORBIDDEN)
     ;
 
     private final String code;
