@@ -14,15 +14,4 @@ public class UpdateCrewInfoRequest {
     private String location;
     private String profileImageUrl;
     private CrewThemeType crewType;
-
-    public CrewDescription from(CrewDescription old) {
-        return CrewDescription.builder()
-                .title(this.title)
-                .intro(this.intro)
-                .location(this.location)
-                .profileImageUrl(this.profileImageUrl)
-                .themeType(this.crewType)
-                .joinQuestion(old.getJoinQuestion())
-                .build();
-    }
 }
